@@ -7,7 +7,7 @@ app.set('views', path.join(__dirname, '/views'));
 app.use(express.static(__dirname + '/assets'));
 
 app.get('/', function(req, res) {
-    res.send("Hello World");
+    res.render('pages/index');
 });
 
 app.listen(5000);
