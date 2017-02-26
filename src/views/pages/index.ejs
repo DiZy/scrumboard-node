@@ -1,6 +1,26 @@
 <html lang="en">
 <% include ../partials/head %>
 <body>
-Hello World
+	Hello World
+	<button class="btn btn-default" id="signUp">Sign Up</button>
+	<script>
+		$('#signUp').click(function() {
+			$.ajax({
+				type: 'POST',
+				url: '/signUp',
+				data: {
+					test: 'test'
+				},
+				dataType: "json",
+				contentType: "application/x-www-form-urlencoded"
+
+			})
+			.done(function(response) {
+			})
+			.fail(function(response) {
+				console.log(response);
+			});
+		});
+	</script>
 </body>
 </html>
