@@ -1,15 +1,22 @@
 <html lang="en">
 <% include ../partials/head %>
 <body>
-	Hello World
-	<button class="btn btn-default" id="signUp">Sign Up</button>
+	<div class="container center">
+
+		<h1>ScrumBoard</h1>
+		<h2>Sign Up</h2>
+		<input class="input form-control" placeholder="Username" id="username">
+		<input class="input form-control" placeholder="Password" id="password" type="password">
+		<button class="btn btn-default" id="signIn">Sign In</button>
+	</div>
 	<script>
-		$('#signUp').click(function() {
+		$('#signIn').click(function() {
 			$.ajax({
 				type: 'POST',
-				url: '/signUp',
+				url: '/signIn',
 				data: {
-					test: 'test'
+					username: $('#username').val(),
+					password: $('#password').val()
 				},
 				dataType: "json",
 				contentType: "application/x-www-form-urlencoded"

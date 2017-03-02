@@ -1,3 +1,7 @@
+.center {
+	text-align: center;
+}
+
 .bootstrap-select{
 	width:100% !important;
 	/*height:75px;*/
@@ -9,4 +13,17 @@
 }
 .no-results {
 	display: none;
+}
+
+.btn {
+	margin:auto;
+	text-align:center;
+	display:block;
+}
+
+.form-control {
+	width:250px;
+	margin:0 auto;
+	margin-bottom: 15px;
+	max-width:100%;
 }

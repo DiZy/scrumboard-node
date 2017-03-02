@@ -7,4 +7,6 @@ teampicker = (function() {
 
     });
 
+    //Add on change event handler to initialize team
+
 })();

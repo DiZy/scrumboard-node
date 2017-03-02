@@ -3,6 +3,7 @@ var app = express();
 var path = require('path');
 var assert = require('assert');
 var bodyParser = require('body-parser');
+var bcrypt = require('bcryptjs');
 
 var mongoUrl = process.env.SCRUM_MONGO;
 var MongoClient = require('mongodb').MongoClient;
@@ -17,7 +18,10 @@ app.get('/', function(req, res) {
     res.render('pages/index');
 });
 
-app.post('/signUp', function(req, res) {
+app.post('/signIn', function(req, res) {
+	var username = req.body.username;
+	var password = req.body.password;
+
 	MongoClient.connect(mongoUrl, function(err, db) {
 		assert.equal(null, err);
 	  	var scrumDb = db.db('scrumboardnode');
@@ -30,9 +34,8 @@ app.post('/signUp', function(req, res) {
 		db.close();
 	});
 
-	console.log(req.body);
 
-	res.json({type: "success"});
+	res.json({type: "error"});
 });
 
 app.listen(5000);

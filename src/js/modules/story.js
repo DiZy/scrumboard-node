@@ -1,11 +1,15 @@
-var story = function(parameter) {
+var story = function() {
+	var _storyJson;
 
-    function privateFuncExample() {
-
-
+    function render() {
+    	//render each task in appropriate spot
     }
 
     return {
+    	initialize: function(storyJson) {
+    		_storyJson = storyJson;
+    		render();
+    	}
 
     }
 }

@@ -1,15 +1,23 @@
 board = (function(){
 
-    var _privateVarExample;
+    var _teamJson;
 
-    function privateFuncExample() {
-
+    function renderStories() {
+    	var storyList = getListOfStoryJson();
+    	for(var i = 0; i < storyList.length; i++) {
+    		var story = story.initialize(storyList[i]);
+    	}
 
     }
 
+    function getListOfStoryJson() {
+    	return [];
+    }
+
     return {
-        publicFuncExample: function() {
-        	
+        render: function(teamjson) {
+        	_teamJson = teamjson;
+        	renderStories();
         }
     }
 
