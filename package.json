@@ -18,6 +18,7 @@
         "ejs":"2.5.6",
         "mongodb": "2.2.24",
         "body-parser": "1.16.1",
-        "bcryptjs": "2.4.3"
+        "bcryptjs": "2.4.3",
+        "uuid": "3.0.1"
     }
 }
