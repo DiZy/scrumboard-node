@@ -9,6 +9,7 @@ var uuidV4 = require('uuid/v4');
 
 //Mongo Modules
 var usersCollection = require('./mongoModules/UsersCollection');
+var companiesCollection = require('./mongoModules/CompaniesCollection');
 
 //App Settings
 app.set('view engine', 'ejs');
@@ -55,8 +56,14 @@ app.post('/signUp', function(req, res) {
 		else {
 			var salt = bcrypt.genSaltSync(10);
 			password = bcrypt.hashSync(password, salt);
+			var companyId = uuidV4();
 			usersCollection.insert(
-			{"_id": uuidV4(), "username": username,"password": password,"name":fullName,'email':email},
+			{"_id": uuidV4(), "username": username,"password": password,"name":fullName,'email':email, 'companyId': companyId},
+			function(err, result) {
+				assert.equal(err, null);
+			});
+			companiesCollection.insert(
+			{"_id": companyId, "name": fullName},
 			function(err, result) {
 				assert.equal(err, null);
 				res.json({type: "success"});
