@@ -7,9 +7,10 @@ var bodyParser = require('body-parser');
 var bcrypt = require('bcryptjs');
 var uuidV4 = require('uuid/v4');
 
-//Mongo Modules
-var usersCollection = require('./mongoModules/UsersCollection');
-var companiesCollection = require('./mongoModules/CompaniesCollection');
+//Mongo
+var MongoCollection = require('./modules/MongoCollection');
+var usersCollection = new MongoCollection('users');
+var companiesCollection = new MongoCollection('companies');
 
 //App Settings
 app.set('view engine', 'ejs');
@@ -57,16 +58,19 @@ app.post('/signUp', function(req, res) {
 			var salt = bcrypt.genSaltSync(10);
 			password = bcrypt.hashSync(password, salt);
 			var companyId = uuidV4();
-			usersCollection.insert(
-			{"_id": uuidV4(), "username": username,"password": password,"name":fullName,'email':email, 'companyId': companyId},
-			function(err, result) {
-				assert.equal(err, null);
-			});
+			
 			companiesCollection.insert(
 			{"_id": companyId, "name": fullName},
 			function(err, result) {
 				assert.equal(err, null);
-				res.json({type: "success"});
+
+				usersCollection.insert(
+				{"_id": uuidV4(), "username": username,"password": password,"name":fullName,'email':email, 'companyId': companyId},
+				function(err, result) {
+					assert.equal(err, null);
+					res.json({type: "success"});
+				});
+				
 			});
 
 		}
