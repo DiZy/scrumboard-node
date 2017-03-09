@@ -44,6 +44,7 @@
 
 
 		$('#signIn').click(function() {
+			console.log("test");
 			$('#signIn').attr('disabled', true);
 			$.ajax({
 				type: 'POST',
@@ -56,12 +57,20 @@
 				contentType: "application/x-www-form-urlencoded"
 
 			})
-			.done(function(response) {
+			.done(function(data) {
+				console.log(data);
 				$('#signIn').attr('disabled', false);
+				if(data.type == 'success'){
+					location.href = '/teamhome';
+				}
+				else {
+					alert(data.error);
+				}
+
 			})
-			.fail(function(response) {
+			.fail(function(data) {
 				$('#signIn').attr('disabled', false);
-				console.log(response);
+				console.log(data);
 			});
 		});
 
@@ -77,12 +86,12 @@
 			})
 			.done(function(data) {
 				console.log(data);
-				if(data.status == 'success'){
+				$('#signUpFormButton').attr('disabled', false);
+				if(data.type == 'success'){
 					location.href = '/teamhome';
 				}
 				else {
 					alert(data.error);
-					$('#signUpFormButton').attr('disabled', false);
 				}
 			})
 			.fail(function(data) {
