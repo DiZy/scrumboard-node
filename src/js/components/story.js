@@ -3,13 +3,13 @@ var story = function() {
 
     function render() {
         var storyRow = $('<div>').addClass('row story');
-        var leftcol = $('<div>').addClass('col-xs-2 progresscol').appendTo(storyRow);
+        var leftcol = $('<div>').addClass('col-xs-2 progresscol').attr('data-column', -1).appendTo(storyRow);
 
         var maxColumn = 4;
-        $('<div>').addClass('progress-0').addClass('col-xs-4 progresscol').appendTo(storyRow);
-        $('<div>').addClass('progress-1').addClass('col-xs-2 progresscol').appendTo(storyRow);
-        $('<div>').addClass('progress-2').addClass('col-xs-2 progresscol').appendTo(storyRow);
-        $('<div>').addClass('progress-3').addClass('col-xs-2 progresscol').appendTo(storyRow);
+        $('<div>').addClass('progress-0 col-xs-4 progresscol').attr('data-column', 0).appendTo(storyRow);
+        $('<div>').addClass('progress-1 col-xs-2 progresscol').attr('data-column', 1).appendTo(storyRow);
+        $('<div>').addClass('progress-2 col-xs-2 progresscol').attr('data-column', 2).appendTo(storyRow);
+        $('<div>').addClass('progress-3 col-xs-2 progresscol done-col').attr('data-column', 3).appendTo(storyRow);
 
         var allTasks = getTasks();
         for(var i = 0; i < allTasks.length; i++) {
