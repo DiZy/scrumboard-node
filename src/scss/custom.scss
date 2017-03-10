@@ -27,3 +27,32 @@
 	margin-bottom: 15px;
 	max-width:100%;
 }
+
+.row {
+	clear:both;
+}
+
+.progresscol {
+	margin:0;
+	padding:0;
+}
+
+#board {
+	margin: 0;
+	width:100%;
+}
+
+.task {
+	border: 1px solid black;
+	float: left;
+	width:150px;
+	max-width:100%;
+
+
+}
+
+.taskpanel {
+	padding:0;
+	text-align: center;
+	border: 1px solid black;
+}

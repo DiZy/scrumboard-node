@@ -79,3 +79,7 @@ gulp.task('default', ['build', 'run'], function() {
 gulp.task('debug', ['build', 'scss-debug', 'css-debug', 'nodejs-debug', 'js-debug', 'views-debug', 'supervisor'], function() {
 
 });
+
+gulp.task('debug-assets', ['build', 'scss-debug', 'css-debug', 'nodejs-debug', 'js-debug', 'views-debug', 'run'], function() {
+
+});

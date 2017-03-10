@@ -25,6 +25,9 @@ app.use(session({
   secret: 'everything is secret'
 }));
 
+//Routes
+require('./routes/taskRouter')(app);
+
 app.get('/logout', function(req, res) {
 	logOut(req);
     res.redirect('/');
