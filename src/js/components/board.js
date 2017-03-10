@@ -5,11 +5,11 @@ board = (function(){
     function renderHeader() {
         var boardDiv = $('<div>').attr('id', 'board').addClass('container').appendTo('body');
         boardDiv[0].innerHTML = '<div class="row">' +
-                            '<div class="col-xs-2">Story</div>' +
-                            '<div class="col-xs-4">Not started</div>' +
-                            '<div class="col-xs-2">In Progress</div>' +
-                            '<div class="col-xs-2">To Be Verified</div>' +
-                            '<div class="col-xs-2">Done</div>' +
+                            '<div class="col-xs-2 progresscol"><h4>Story</h4></div>' +
+                            '<div class="col-xs-4 progresscol"><h4>Not started</h4></div>' +
+                            '<div class="col-xs-2 progresscol"><h4>In Progress</h4></div>' +
+                            '<div class="col-xs-2 progresscol"><h4>To Be Verified</h4></div>' +
+                            '<div class="col-xs-2 progresscol"><h4>Done</h4></div>' +
                         '</div>';
     }
 
@@ -35,6 +35,9 @@ board = (function(){
         testFunctionality: function() {
             renderHeader();
             story().initialize();
+            task().initialize({statusCode: 0}, $('.story'));
+            task().initialize({statusCode: 0}, $('.story'));
+            task().initialize({statusCode: 1}, $('.story'));
             task().initialize({statusCode: 2}, $('.story'));
         }
     }

@@ -3,7 +3,7 @@ var story = function() {
 
     function render() {
         var storyRow = $('<div>').addClass('row story');
-        var leftcol = $('<div>').addClass('col-xs-2').appendTo(storyRow);
+        var leftcol = $('<div>').addClass('col-xs-2 progresscol').appendTo(storyRow);
 
         var maxColumn = 4;
         $('<div>').addClass('progress-0').addClass('col-xs-4 progresscol').appendTo(storyRow);

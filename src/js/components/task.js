@@ -3,11 +3,11 @@ var task = function() {
 	var _$storyRow;
 
 	function render() {
-		var taskDiv = $('<div>').addClass('row task');
+		var taskDiv = $('<div>').addClass('task');
 
-		var leftPanel = $('<div>').addClass('col-xs-2 taskpanel').text('test').appendTo(taskDiv);
-		var middlePanel = $('<div>').addClass('col-xs-8 taskpanel').text('test').appendTo(taskDiv);
-		var rightPanel = $('<div>').addClass('col-xs-2 taskpanel').text('test').appendTo(taskDiv);
+		var leftPanel = $('<div>').addClass('col-xs-2 taskpanel').text('<').appendTo(taskDiv);
+		var middlePanel = $('<div>').addClass('col-xs-8 taskpanel taskcenter').text('Task Name').appendTo(taskDiv);
+		var rightPanel = $('<div>').addClass('col-xs-2 taskpanel').text('>').appendTo(taskDiv);
 
 
 		//if board.maxColumn == _taskJson.statusCode: dont display right arrow
