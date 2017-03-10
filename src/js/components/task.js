@@ -14,6 +14,17 @@ var task = function() {
 
 		var colSelector = "." + 'progress-' + _taskJson.statusCode;
 		_$storyRow.children(colSelector).append(taskDiv);
+
+
+		taskDiv.resizable({
+			classes: {
+				"ui-resizable-se": "ui-icon ui-icon-gripsmall-diagonal-se"
+			},
+			resize: function(e, ui) {
+				$('.task').height($(this).height());
+				$('.task').width($(this).width());
+			}
+		});
 	}
 
 

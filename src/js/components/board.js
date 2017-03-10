@@ -39,6 +39,9 @@ board = (function(){
             task().initialize({statusCode: 0}, $('.story'));
             task().initialize({statusCode: 1}, $('.story'));
             task().initialize({statusCode: 2}, $('.story'));
+            $('.progresscol').resizable({
+                handles: 'e'
+            });
         }
     }
 
