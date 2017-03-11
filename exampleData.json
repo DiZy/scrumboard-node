@@ -1,0 +1,40 @@
+{
+	"users": {
+		{
+			'_id' : 512,
+			'name' : 'David',
+			'companyId' : 6000
+
+		}
+
+	},
+
+	"companies": {
+		'_id': 6000,
+		'name': 'David'
+
+	},
+
+	'teams': {
+		{
+			'_id': 6,
+			'companyId': 6000,
+			'name': 'david team'
+		}
+	},
+
+	'stories': {
+		{
+			'_id': 7,
+			'teamId': 6,
+			'tasks': [{
+						'_id': 2000,
+						'name': 'call daniel'
+					},
+					{
+						'_id': 20001,
+						'name': 'create google doc'
+					}]
+		}
+	}
+}
