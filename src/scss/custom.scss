@@ -27,57 +27,58 @@
 	margin-bottom: 15px;
 	max-width:100%;
 }
-
-.row {
-	clear:both;
-}
-
-.progresscol {
-	margin:0;
-	padding:0;
-	border-right:1px solid black;
-	min-height:50px;
-}
-
 #board {
 	margin: 0;
 	width:100%;
-}
 
-.done-col {
-	border: none;
-}
+	.row {
+		clear:both;
 
-.task {
-	float: left;
-	width:150px;
-	max-width:100%;
-	padding: 5px 5px;
-	height:50px;
-
-	.taskpanel {
-		height:100%;
-		padding:1px;
-		text-align: center;
-
-		.arrow-row {
-			height:33%;
+		.progresscol {
+			margin:0;
+			padding:0;
+			border-right:1px solid black;
+			min-height:50px;
 		}
 
-		.people-row {
-			height:50%;
+		.done-col {
+			border: none;
 		}
 	}
 
-	.taskcenter {
-		box-shadow: 0px 3px 5px #888888;
-		background-color:FFFBD0;
-	}
 
-	.glyphicon {
-		cursor: pointer;
+	.task {
+		float: left;
+		width:150px;
+		max-width:100%;
+		padding: 5px 5px;
+		height:50px;
+
+		.taskpanel {
+			height:100%;
+			padding:1px;
+			text-align: center;
+
+			.arrow-row {
+				height:33%;
+			}
+
+			.people-row {
+				height:50%;
+			}
+		}
+
+		.taskcenter {
+			box-shadow: 0px 3px 5px #888888;
+			background-color:FFFBD0;
+		}
+
+		.glyphicon {
+			cursor: pointer;
+		}
 	}
 }
+
 
 .ui-icon-gripsmall-diagonal-se {
 	background-color: black;

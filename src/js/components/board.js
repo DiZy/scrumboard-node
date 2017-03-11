@@ -63,15 +63,10 @@ board = (function(){
                     var tooBig = (ui.size.width + otherColWidths) >= headerWidth;
                     ui.size.width = tooBig ? (headerWidth - otherColWidths - 5) : ui.size.width;
                     board.resizeColumn($(this).attr('data-column'), ui.size.width);
+                },
+                stop: function(e, ui) {
+                    board.resizeColumn($(this).attr('data-column'), $(this).width());
                 }
-                // stop: function(e, ui) {
-                //     var headerWidth = $('#boardHeader').width();
-
-                //     if($(this).width() >= headerWidth){
-                //         $(this).width(headerWidth - otherColWidths - 5);
-                //         board.resizeColumn($(this).attr('data-column'), $(this).width());
-                //     }
-                // }
             });
         }
     }

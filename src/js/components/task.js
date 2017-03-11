@@ -20,9 +20,7 @@ var task = function() {
 
 
 		_taskDiv.resizable({
-			classes: {
-				"ui-resizable-se": "ui-icon ui-icon-gripsmall-diagonal-se"
-			}
+			handles: 'se'
 		});
 
 		_taskDiv.hover(
@@ -67,8 +65,6 @@ var task = function() {
 		var topArrow = $('<div>').addClass('arrow-row').css('display', 'none').appendTo($rightPanel);
 		var middleArrow = $('<div>').addClass('arrow-row').css('display', 'none').appendTo($rightPanel);
 		var bottomArrow = $('<div>').addClass('arrow-row').css('display', 'none').appendTo($rightPanel);
-
-		var top
 
 		middleArrow[0].innerHTML = '<span class="glyphicon glyphicon-menu-right"></span>';
 
