@@ -1,30 +1,85 @@
 var task = function() {
 	var _taskJson;
 	var _$storyRow;
+	var _taskDiv;
 
 	function render() {
-		var taskDiv = $('<div>').addClass('task');
+		_taskDiv = $('<div>').addClass('task');
 
-		var leftPanel = $('<div>').addClass('col-xs-2 taskpanel').text('<').appendTo(taskDiv);
-		var middlePanel = $('<div>').addClass('col-xs-8 taskpanel taskcenter').text('Task Name').appendTo(taskDiv);
-		var rightPanel = $('<div>').addClass('col-xs-2 taskpanel').text('>').appendTo(taskDiv);
-
+		var leftPanel = $('<div>').addClass('col-xs-2 taskpanel').appendTo(_taskDiv);
+		var middlePanel = $('<div>').addClass('col-xs-8 taskpanel taskcenter').text('Task Name').appendTo(_taskDiv);
+		var rightPanel = $('<div>').addClass('col-xs-2 taskpanel').appendTo(_taskDiv);
+		var people = getPeople();
+		leftPanelInit(leftPanel, people);
+		rightPanelInit(rightPanel, people);
 
 		//if board.maxColumn == _taskJson.statusCode: dont display right arrow
 
 		var colSelector = "." + 'progress-' + _taskJson.statusCode;
-		_$storyRow.children(colSelector).append(taskDiv);
+		_$storyRow.children(colSelector).append(_taskDiv);
 
 
-		taskDiv.resizable({
+		_taskDiv.resizable({
 			classes: {
 				"ui-resizable-se": "ui-icon ui-icon-gripsmall-diagonal-se"
-			},
-			resize: function(e, ui) {
-				$('.task').height($(this).height());
-				$('.task').width($(this).width());
 			}
 		});
+
+		_taskDiv.hover(
+		//Hover in
+		function() {
+			$(this).children('.taskpanel').children('.arrow-row').fadeIn( "slow", function() {
+				$(this).show();
+			});
+
+		},
+		//Hover out
+		function() {
+			$(this).children('.taskpanel').children('.arrow-row').fadeOut( "slow", function() {
+				$(this).hide();
+			});
+		});
+	}
+
+	function getPeople() {
+
+	}
+
+	function leftPanelInit($leftPanel, people) {
+		var topArrow = $('<div>').addClass('arrow-row').css('display', 'none').appendTo($leftPanel);
+		var middleArrow = $('<div>').addClass('arrow-row').css('display', 'none').appendTo($leftPanel);
+		var bottomArrow = $('<div>').addClass('arrow-row').css('display', 'none').appendTo($leftPanel);
+
+		middleArrow[0].innerHTML = '<span class="glyphicon glyphicon-menu-left"></span>';
+
+		middleArrow.click(function() {
+			_taskJson.statusCode -= 1;
+			_taskDiv.remove();
+			render();
+			//TODO: send request
+
+		});
+
+	}
+
+	function rightPanelInit($rightPanel, people) {
+
+		var topArrow = $('<div>').addClass('arrow-row').css('display', 'none').appendTo($rightPanel);
+		var middleArrow = $('<div>').addClass('arrow-row').css('display', 'none').appendTo($rightPanel);
+		var bottomArrow = $('<div>').addClass('arrow-row').css('display', 'none').appendTo($rightPanel);
+
+		var top
+
+		middleArrow[0].innerHTML = '<span class="glyphicon glyphicon-menu-right"></span>';
+
+		middleArrow.click(function() {
+			_taskJson.statusCode += 1;
+			_taskDiv.remove();
+			render();
+			//TODO: send request
+
+		});
+
 	}
 
 

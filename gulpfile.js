@@ -34,6 +34,16 @@ gulp.task('views', function() {
         .pipe(gulp.dest('build/views'));
 });
 
+gulp.task('images', function() {
+    gulp.src('src/images/**')
+        .pipe(gulp.dest('build/assets/images'));
+});
+
+gulp.task('fonts', function() {
+    gulp.src('src/fonts/**')
+        .pipe(gulp.dest('build/assets/fonts'));
+});
+
 gulp.task('run', function() {
     nodemon({
         script: 'build/app.js'
@@ -67,8 +77,16 @@ gulp.task('views-debug', function() {
     return watch('src/views/**', { ignoreInitial: false }).pipe(gulp.dest('build/views'));
 });
 
+gulp.task('images-debug', function() {
+    return watch('src/images/**', { ignoreInitial: false }).pipe(gulp.dest('build/assets/images'));
+});
 
-gulp.task('build', ['clean', 'scss', 'css', 'nodejs', 'js', 'views'], function() {
+gulp.task('fonts-debug', function() {
+    return watch('src/fonts/**', { ignoreInitial: false }).pipe(gulp.dest('build/assets/fonts'));
+});
+
+
+gulp.task('build', ['clean', 'scss', 'css', 'nodejs', 'js', 'images', 'fonts', 'views'], function() {
 
 });
 
@@ -80,6 +98,6 @@ gulp.task('debug', ['build', 'scss-debug', 'css-debug', 'nodejs-debug', 'js-debu
 
 });
 
-gulp.task('debug-assets', ['build', 'scss-debug', 'css-debug', 'nodejs-debug', 'js-debug', 'views-debug', 'run'], function() {
+gulp.task('debug-assets', ['build', 'scss-debug', 'css-debug', 'nodejs-debug', 'js-debug', 'images-debug', 'views-debug', 'fonts-debug', 'run'], function() {
 
 });
