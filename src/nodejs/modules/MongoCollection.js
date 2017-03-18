@@ -47,8 +47,36 @@ MongoCollection.prototype.insert = function(user, callback) {
 		}
 		else {
 
-			thisCollection.insert(user, function() {
-				callback(null, user);
+			thisCollection.insert(user, function(error, results) {
+				callback(error, results, user);
+			});
+		}
+	});	
+};
+
+MongoCollection.prototype.insert = function(user, callback) {
+	this.getCollection(function(error, thisCollection) {
+		if(error){
+			callback(error);
+		}
+		else {
+
+			thisCollection.insert(user, function(error, results) {
+				callback(error, results, user);
+			});
+		}
+	});	
+};
+
+MongoCollection.prototype.updateOne = function(user, updatedData, callback) {
+	this.getCollection(function(error, thisCollection) {
+		if(error){
+			callback(error);
+		}
+		else {
+
+			thisCollection.updateOne(user, updatedData, {upsert:false}, function(error, results) {
+				callback(error, results);
 			});
 		}
 	});	

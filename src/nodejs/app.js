@@ -106,7 +106,7 @@ app.post('/signUp', function(req, res) {
 				{"_id": uuidV4(), "username": username,"password": password,"name":fullName,'email':email, 'companyId': companyId},
 				function(err, result) {
 					assert.equal(err, null);
-					res.json({type: "success"});
+					return res.json({type: "success"});
 				});
 				
 			});
@@ -116,28 +116,80 @@ app.post('/signUp', function(req, res) {
 	});
 });
 
-app.get('/addTeam', requiresLogin, function(req, res) {
+app.post('/addTeam', requiresLogin, function(req, res) {
 	var name = req.body.name;
-
-});
-
-app.get('/getTeams', requiresLogin, function(req, res) {
-	teamsCollection.find({'companyId': req.session.companyId}, function(err, results) {
+	teamsCollection.insert({"_id": uuidV4(), "name": name, "companyId": req.session.companyId}, function(err, results, team) {
 		assert.equal(err, null);
-		res.json({type: "success", teams: results});
+		return res.json({type: "success", team: team});
 	});
 
 });
 
-app.get('/getStories', requiresLogin, function(req, res, next) {
+//update to only return names and id's
+app.get('/getTeams', requiresLogin, function(req, res) {
+	teamsCollection.find({'companyId': req.session.companyId}, function(err, results) {
+		assert.equal(err, null);
+		return res.json({type: "success", teams: results});
+	});
+
+});
+
+app.get('/getTeamDetails', requiresLogin, function(req, res) {
 	var teamId = req.body.teamId;
+	assert(teamId);
 
 	teamsCollection.find({'_id': teamId}, function(err, results) {
 		assert.equal(err, null);
 		if(results.length > 0) {
 			var team = results[0];
 			if(team.companyId == req.session.companyId) {
-				storiesCollection.find({teamId: teamId}, function(err, results) {
+				return res.json({type: "success", teamJson: team});
+			}
+			else {
+				return res.json({type: "error", error: "You do not have permissions to load to this team's info."});
+			}
+		}
+		else {
+			return res.json({type: "error", error: "This team does not exist."});
+		}
+	});
+});
+
+app.post('/addStory', requiresLogin, function(req, res) {
+	var name = req.body.name;
+	var teamId = req.body.teamId;
+	assert(teamId);
+
+	teamsCollection.find({'_id': teamId}, function(err, results) {
+		assert.equal(err, null);
+		if(results.length > 0) {
+			var team = results[0];
+			if(team.companyId == req.session.companyId) {
+				storiesCollection.insert({"_id": uuidV4(), "name": name, "teamId": teamId, "companyId": team.companyId}, function(err, results, story) {
+					assert.equal(err, null);
+					return res.json({type: "success", story: story});
+				});
+			}
+			else {
+				return res.json({ type: "error", error: "You do not have permissions to add to this team's stories."});
+			}
+		}
+		else {
+			return res.json({ type: "error", error: "This team does not exist."});
+		}
+	});
+});
+
+app.get('/getStories', requiresLogin, function(req, res, next) {
+	var teamId = req.body.teamId;
+	assert(teamId);
+
+	teamsCollection.find({'_id': teamId}, function(err, results) {
+		assert.equal(err, null);
+		if(results.length > 0) {
+			var team = results[0];
+			if(team.companyId == req.session.companyId) {
+				storiesCollection.find({"teamId": teamId, "companyId": team.companyId}, function(err, results) {
 					assert.equal(err, null);
 					return res.json({ type: "success", stories: results});
 				});
@@ -151,6 +203,43 @@ app.get('/getStories', requiresLogin, function(req, res, next) {
 		}
 	});
 
+});
+
+//to create: moveTask, updateStory, updateTask
+
+app.post('/addTask', requiresLogin, function(req, res, next) {
+	var teamId = req.body.teamId;
+	var storyId = req.body.storyId;
+	var name = req.body.name;
+	var people = req.body.people;
+
+	teamsCollection.find({'_id': teamId}, function(err, results) {
+		assert.equal(err, null);
+		if(results.length > 0) {
+			var team = results[0];
+			if(team.companyId == req.session.companyId) {
+				var newTaskId = uuidV4();
+				storiesCollection.updateOne(
+					{'_id': storyId, 'teamId': teamId},
+					{$push: { 
+						"tasks": {"_id": newTaskId, "name": name} 
+						}
+					},
+					function(err, result) {
+						assert.equal(err, null);
+						return res.json({type: "success", task: {_id: newTaskId, name: name} });
+					}
+				);
+				
+			}
+			else {
+				return res.json({ type: "error", error: "You do not have permissions to edit this story."});
+			}
+		}
+		else {
+			return res.json({ type: "error", error: "This team does not exist."});
+		}
+	});
 });
 
 function requiresLoginRedirect(req, res, next) {
