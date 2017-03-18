@@ -166,7 +166,7 @@ app.post('/addStory', requiresLogin, function(req, res) {
 		if(results.length > 0) {
 			var team = results[0];
 			if(team.companyId == req.session.companyId) {
-				storiesCollection.insert({"_id": uuidV4(), "name": name, "teamId": teamId, "companyId": team.companyId}, function(err, results, story) {
+				storiesCollection.insert({"_id": uuidV4(), "name": name, "teamId": teamId, "companyId": team.companyId, "tasks": []}, function(err, results, story) {
 					assert.equal(err, null);
 					return res.json({type: "success", story: story});
 				});

@@ -12,7 +12,7 @@ var story = function() {
         $('<div>').addClass('progress-2 col-xs-2 progresscol').attr('data-column', 2).appendTo(_storyRow);
         $('<div>').addClass('progress-3 col-xs-2 progresscol done-col').attr('data-column', 3).appendTo(_storyRow);
 
-        var allTasks = getTasks();
+        var allTasks = _storyJson.tasks;
         for(var i = 0; i < allTasks.length; i++) {
             var task = task();
             task.initialize(allTasks[i], _storyRow);
@@ -21,12 +21,6 @@ var story = function() {
         _storyRow.appendTo('#board');
 
 
-
-    }
-
-    function getTasks() {
-        //TODO
-        return [];
 
     }
 
