@@ -6,8 +6,22 @@ var task = function() {
 	function render() {
 		_taskDiv = $('<div>').addClass('task');
 
+		//set size
+		if(_taskJson.width){
+			_taskDiv.width(_taskJson.width);
+		}
+		if(_taskJson.height){
+			_taskDiv.height(_taskJson.height);
+		}
+
+		//add panels
 		var leftPanel = $('<div>').addClass('col-xs-2 taskpanel').appendTo(_taskDiv);
-		var middlePanel = $('<div>').addClass('col-xs-8 taskpanel taskcenter').text('Task Name').appendTo(_taskDiv);
+		var middlePanel = $('<div>').addClass('col-xs-8 taskpanel taskcenter').appendTo(_taskDiv);
+		if(_taskJson.name) {
+			middlePanel.text(_taskJson.name);
+		} else {
+			middlePanel.text('New Task');
+		}
 		var rightPanel = $('<div>').addClass('col-xs-2 taskpanel').appendTo(_taskDiv);
 		var people = getPeople();
 		leftPanelInit(leftPanel, people);
@@ -20,23 +34,29 @@ var task = function() {
 
 
 		_taskDiv.resizable({
-			handles: 'se'
+			handles: 'se',
+			stop: function(e, ui) {
+				_taskJson.width = ui.size.width;
+				_taskJson.height = ui.size.height;
+				//TODO: send request to save size
+			}
 		});
 
 		_taskDiv.hover(
-		//Hover in
-		function() {
-			$(this).children('.taskpanel').children('.arrow-row').fadeIn( "slow", function() {
-				$(this).show();
-			});
+			//Hover in
+			function() {
+				$(this).children('.taskpanel').children('.arrow-row').fadeIn( "slow", function() {
+					$(this).show();
+				});
 
-		},
-		//Hover out
-		function() {
-			$(this).children('.taskpanel').children('.arrow-row').fadeOut( "slow", function() {
-				$(this).hide();
-			});
-		});
+			},
+			//Hover out
+			function() {
+				$(this).children('.taskpanel').children('.arrow-row').fadeOut( "slow", function() {
+					$(this).hide();
+				});
+			}
+		);
 	}
 
 	function getPeople() {
@@ -60,7 +80,7 @@ var task = function() {
 
 	}
 
-	function rightPanelInit($rightPanel, people) {
+	function rightPanelInit($rightPanel, people, isLastColumn) {
 
 		var topArrow = $('<div>').addClass('arrow-row').css('display', 'none').appendTo($rightPanel);
 		var middleArrow = $('<div>').addClass('arrow-row').css('display', 'none').appendTo($rightPanel);
