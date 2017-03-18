@@ -136,8 +136,8 @@ app.get('/getTeams', requiresLogin, function(req, res) {
 });
 
 app.get('/getTeamDetails', requiresLogin, function(req, res) {
-	var teamId = req.body.teamId;
-	assert(teamId);
+	var teamId = req.query.teamId;
+	// assert(teamId);
 
 	teamsCollection.find({'_id': teamId}, function(err, results) {
 		assert.equal(err, null);
@@ -159,7 +159,7 @@ app.get('/getTeamDetails', requiresLogin, function(req, res) {
 app.post('/addStory', requiresLogin, function(req, res) {
 	var name = req.body.name;
 	var teamId = req.body.teamId;
-	assert(teamId);
+	// assert(teamId);
 
 	teamsCollection.find({'_id': teamId}, function(err, results) {
 		assert.equal(err, null);
@@ -182,8 +182,8 @@ app.post('/addStory', requiresLogin, function(req, res) {
 });
 
 app.get('/getStories', requiresLogin, function(req, res, next) {
-	var teamId = req.body.teamId;
-	assert(teamId);
+	var teamId = req.query.teamId;
+	// assert(teamId);
 
 	teamsCollection.find({'_id': teamId}, function(err, results) {
 		assert.equal(err, null);

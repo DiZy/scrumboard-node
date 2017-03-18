@@ -52,15 +52,40 @@ board = (function(){
     }
 
     function renderStories() {
-    	var storyList = getListOfStoryJson();
-    	for(var i = 0; i < storyList.length; i++) {
-    		var story = story().initialize(storyList[i]);
-    	}
+    	getListOfStoryJson(function(storyList) {
+            console.log(storyList);
+        	for(var i = 0; i < storyList.length; i++) {
+        		story().initialize(storyList[i]);
+        	}
+        });
 
     }
 
-    function getListOfStoryJson() {
-    	return [];
+    function getListOfStoryJson(callback) {
+    	$.ajax({
+            type: 'GET',
+            url: '/getStories',
+            data: {
+                teamId: _teamJson._id
+            },
+            dataType: "json",
+            contentType: "application/x-www-form-urlencoded"
+
+        })
+        .done(function(data) {
+            console.log(data);
+            if(data.type == 'success'){
+                callback(data.stories);
+            }
+            else {
+                alert(data.error);
+            }
+
+        })
+        .fail(function(data) {
+            alert("Internal Server Error");
+            console.log(data);
+        });
     }
 
     function removeBoard() {

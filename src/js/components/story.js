@@ -4,7 +4,7 @@ var story = function() {
 
     function render() {
         _storyRow = $('<div>').addClass('row story');
-        var leftcol = $('<div>').addClass('col-xs-2 progresscol').attr('data-column', -1).appendTo(_storyRow);
+        var leftcol = $('<div>').addClass('col-xs-2 progresscol').attr('data-column', -1).text(_storyJson.name).appendTo(_storyRow);
 
         var maxColumn = 4;
         $('<div>').addClass('progress-0 col-xs-4 progresscol').attr('data-column', 0).appendTo(_storyRow);
