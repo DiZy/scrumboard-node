@@ -222,18 +222,18 @@ app.post('/addTask', requiresLogin, function(req, res, next) {
 				storiesCollection.updateOne(
 					{'_id': storyId, 'teamId': teamId},
 					{$push: { 
-						"tasks": {"_id": newTaskId, "name": name} 
+						"tasks": {"_id": newTaskId, "name": name, "people": people} 
 						}
 					},
 					function(err, result) {
 						assert.equal(err, null);
-						return res.json({type: "success", task: {_id: newTaskId, name: name} });
+						return res.json({type: "success", task: {_id: newTaskId, name: name, people: people} });
 					}
 				);
 				
 			}
 			else {
-				return res.json({ type: "error", error: "You do not have permissions to edit this story."});
+				return res.json({ type: "error", error: "You do not have permissions to edit this team's stories."});
 			}
 		}
 		else {
