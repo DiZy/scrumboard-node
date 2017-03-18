@@ -15,12 +15,46 @@ board = (function(){
         board.makeResizableCol($($('#boardHeader>div')[1]));
         board.makeResizableCol($($('#boardHeader>div')[2]));
         board.makeResizableCol($($('#boardHeader>div')[3]));
+
+        var addStoryButton = $('<button>').addClass('btn btn-lg btn-default').text('Add a story').appendTo("body");
+        addStoryButton.click(function() {
+            editStoryModal.open(undefined, createStory)
+        });
+    }
+
+    function createStory(storyJson) {
+        console.log(storyJson);
+        $.ajax({
+                type: 'POST',
+                url: '/addStory',
+                data: {
+                    teamId: _teamJson._id,
+                    name: storyJson.name
+                },
+                dataType: "json",
+                contentType: "application/x-www-form-urlencoded"
+
+            })
+            .done(function(data) {
+                console.log(data);
+                if(data.type == 'success'){
+                    story().initialize(data.story);
+                }
+                else {
+                    alert(data.error);
+                }
+
+            })
+            .fail(function(data) {
+                alert("Internal Server Error");
+                console.log(data);
+            });
     }
 
     function renderStories() {
     	var storyList = getListOfStoryJson();
     	for(var i = 0; i < storyList.length; i++) {
-    		var story = story.initialize(storyList[i]);
+    		var story = story().initialize(storyList[i]);
     	}
 
     }
@@ -29,9 +63,14 @@ board = (function(){
     	return [];
     }
 
+    function removeBoard() {
+        $('#board').remove();
+    }
+
     return {
         render: function(teamjson) {
         	_teamJson = teamjson;
+            removeBoard();
             renderHeader();
         	renderStories();
         },

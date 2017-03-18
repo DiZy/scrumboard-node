@@ -125,7 +125,7 @@ app.post('/addTeam', requiresLogin, function(req, res) {
 
 });
 
-//update to only return names and id's
+//TODO: update to only return names and id's
 app.get('/getTeams', requiresLogin, function(req, res) {
 	teamsCollection.find({'companyId': req.session.companyId}, function(err, results) {
 		assert.equal(err, null);
