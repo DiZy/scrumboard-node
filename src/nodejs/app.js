@@ -13,7 +13,7 @@ const MongoCollection = require('./modules/MongoCollection');
 const usersCollection = new MongoCollection('users');
 const companiesCollection = new MongoCollection('companies');
 const teamsCollection = new MongoCollection('teams');
-const storiesCollection = new StoriesCollection('stories');
+const storiesCollection = new MongoCollection('stories');
 
 //App Settings
 app.set('view engine', 'ejs');
