@@ -1,17 +1,19 @@
 //Requirements
-var express = require('express');
-var app = express();
-var path = require('path');
-var assert = require('assert');
-var bodyParser = require('body-parser');
-var bcrypt = require('bcryptjs');
-var uuidV4 = require('uuid/v4');
-var session = require('express-session');
+const express = require('express');
+const app = express();
+const path = require('path');
+const assert = require('assert');
+const bodyParser = require('body-parser');
+const bcrypt = require('bcryptjs');
+const uuidV4 = require('uuid/v4');
+const session = require('express-session');
 
 //Mongo
-var MongoCollection = require('./modules/MongoCollection');
-var usersCollection = new MongoCollection('users');
-var companiesCollection = new MongoCollection('companies');
+const MongoCollection = require('./modules/MongoCollection');
+const usersCollection = new MongoCollection('users');
+const companiesCollection = new MongoCollection('companies');
+const teamsCollection = new MongoCollection('teams');
+const storiesCollection = new StoriesCollection('stories');
 
 //App Settings
 app.set('view engine', 'ejs');
@@ -51,7 +53,7 @@ app.post('/signIn', function(req, res) {
 			var foundUser = results[0];
 			if(bcrypt.compareSync(password, foundUser.password)){
 				console.log("Succesful login");
-				logIn(req, foundUser._id);
+				logIn(req, foundUser._id, foundUser.companyId);
 				return res.json({type: "success"});
 			}
 			else {
@@ -114,6 +116,42 @@ app.post('/signUp', function(req, res) {
 	});
 });
 
+app.get('/addTeam', requiresLogin, function(req, res) {
+	var name = req.body.name;
+
+});
+
+app.get('/getTeams', requiresLogin, function(req, res) {
+	teamsCollection.find({'companyId': req.session.companyId}, function(err, results) {
+		assert.equal(err, null);
+		res.json({type: "success", teams: results});
+	});
+
+});
+
+app.get('/getStories', requiresLogin, function(req, res, next) {
+	var teamId = req.body.teamId;
+
+	teamsCollection.find({'_id': teamId}, function(err, results) {
+		assert.equal(err, null);
+		if(results.length > 0) {
+			var team = results[0];
+			if(team.companyId == req.session.companyId) {
+				storiesCollection.find({teamId: teamId}, function(err, results) {
+					assert.equal(err, null);
+					return res.json({ type: "success", stories: results});
+				});
+			}
+			else {
+				return res.json({ type: "error", error: "You do not have permissions to load this team's stories."});
+			}
+		}
+		else {
+			return res.json({ type: "error", error: "This team does not exist."});
+		}
+	});
+
+});
 
 function requiresLoginRedirect(req, res, next) {
   if (isLoggedIn(req)) {
@@ -143,15 +181,16 @@ function loggedInRedirect(req, res, next) {
 
 function isLoggedIn(req) {
 	//TODO: add actual check against db
-	if(req.session.userId) {
+	if(req.session.userId && req.session.companyId) {
 		return true;
 	}
 	return false;
 
 }
 
-function logIn(req, userId) {
+function logIn(req, userId, companyId) {
 	req.session.userId = userId;
+	req.session.companyId = companyId;
 }
 
 function logOut(req) {

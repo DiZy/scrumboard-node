@@ -35,24 +35,34 @@ var task = function() {
 
 		_taskDiv.resizable({
 			handles: 'se',
+			classes: {
+				"ui-resizable-se": "ui-icon ui-icon-gripsmall-diagonal-se show-on-hover"
+			},
 			stop: function(e, ui) {
 				_taskJson.width = ui.size.width;
 				_taskJson.height = ui.size.height;
 				//TODO: send request to save size
 			}
 		});
+		_taskDiv.children('.ui-resizable-handle').css('display', 'none');
 
 		_taskDiv.hover(
 			//Hover in
 			function() {
-				$(this).children('.taskpanel').children('.arrow-row').fadeIn( "slow", function() {
+				$(this).children('.taskpanel').children('.show-on-hover').fadeIn( "slow", function() {
+					$(this).show();
+				});
+				$(this).children('.show-on-hover').fadeIn( "slow", function() {
 					$(this).show();
 				});
 
 			},
 			//Hover out
 			function() {
-				$(this).children('.taskpanel').children('.arrow-row').fadeOut( "slow", function() {
+				$(this).children('.taskpanel').children('.show-on-hover').fadeOut( "slow", function() {
+					$(this).hide();
+				});
+				$(this).children('.show-on-hover').fadeOut( "slow", function() {
 					$(this).hide();
 				});
 			}
@@ -64,9 +74,9 @@ var task = function() {
 	}
 
 	function leftPanelInit($leftPanel, people) {
-		var topArrow = $('<div>').addClass('arrow-row').css('display', 'none').appendTo($leftPanel);
-		var middleArrow = $('<div>').addClass('arrow-row').css('display', 'none').appendTo($leftPanel);
-		var bottomArrow = $('<div>').addClass('arrow-row').css('display', 'none').appendTo($leftPanel);
+		var topArrow = $('<div>').addClass('arrow-row show-on-hover').css('display', 'none').appendTo($leftPanel);
+		var middleArrow = $('<div>').addClass('arrow-row show-on-hover').css('display', 'none').appendTo($leftPanel);
+		var bottomArrow = $('<div>').addClass('arrow-row show-on-hover').css('display', 'none').appendTo($leftPanel);
 
 		middleArrow[0].innerHTML = '<span class="glyphicon glyphicon-menu-left"></span>';
 
@@ -82,9 +92,9 @@ var task = function() {
 
 	function rightPanelInit($rightPanel, people, isLastColumn) {
 
-		var topArrow = $('<div>').addClass('arrow-row').css('display', 'none').appendTo($rightPanel);
-		var middleArrow = $('<div>').addClass('arrow-row').css('display', 'none').appendTo($rightPanel);
-		var bottomArrow = $('<div>').addClass('arrow-row').css('display', 'none').appendTo($rightPanel);
+		var topArrow = $('<div>').addClass('arrow-row show-on-hover').css('display', 'none').appendTo($rightPanel);
+		var middleArrow = $('<div>').addClass('arrow-row show-on-hover').css('display', 'none').appendTo($rightPanel);
+		var bottomArrow = $('<div>').addClass('arrow-row show-on-hover').css('display', 'none').appendTo($rightPanel);
 
 		middleArrow[0].innerHTML = '<span class="glyphicon glyphicon-menu-right"></span>';
 
