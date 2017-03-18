@@ -64,7 +64,7 @@ board = (function(){
                     ui.size.width = tooBig ? (headerWidth - otherColWidths - 5) : ui.size.width;
                     board.resizeColumn($(this).attr('data-column'), ui.size.width);
                     var doneColWidth = headerWidth - $(this).width() - otherColWidths + 100 - 5;
-                    $($('#boardHeader>div')[4]).width(doneColWidth);
+                    board.resizeColumn(3, doneColWidth);
                 },
                 stop: function(e, ui) {
                     board.resizeColumn($(this).attr('data-column'), $(this).width());
