@@ -116,6 +116,7 @@ app.post('/signUp', function(req, res) {
 	});
 });
 
+//TODO: update to not allow duplicate names within same company probably
 app.post('/addTeam', requiresLogin, function(req, res) {
 	var name = req.body.name;
 	teamsCollection.insert({"_id": uuidV4(), "name": name, "companyId": req.session.companyId}, function(err, results, team) {

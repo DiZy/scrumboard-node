@@ -16,7 +16,7 @@ board = (function(){
         board.makeResizableCol($($('#boardHeader>div')[2]));
         board.makeResizableCol($($('#boardHeader>div')[3]));
 
-        var addStoryButton = $('<button>').addClass('btn btn-lg btn-default').text('Add a story').appendTo("body");
+        var addStoryButton = $('<button>').addClass('btn btn-lg btn-default').attr('id', 'addStoryButton').text('Add a story').appendTo("body");
         addStoryButton.click(function() {
             editStoryModal.open(undefined, createStory)
         });
@@ -65,6 +65,7 @@ board = (function(){
 
     function removeBoard() {
         $('#board').remove();
+        $('#addStoryButton').remove();
     }
 
     return {
