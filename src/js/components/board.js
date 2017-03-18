@@ -56,13 +56,15 @@ board = (function(){
                                      $($('#boardHeader>div')[1]).width() +
                                      $($('#boardHeader>div')[2]).width() +
                                      $($('#boardHeader>div')[3]).width() +
-                                     $($('#boardHeader>div')[4]).width() - $(this).width();
+                                     100 - $(this).width();
                 },
                 resize: function(e, ui) {
                     var headerWidth = $('#boardHeader').width();
                     var tooBig = (ui.size.width + otherColWidths) >= headerWidth;
                     ui.size.width = tooBig ? (headerWidth - otherColWidths - 5) : ui.size.width;
                     board.resizeColumn($(this).attr('data-column'), ui.size.width);
+                    var doneColWidth = headerWidth - $(this).width() - otherColWidths + 100 - 5;
+                    $($('#boardHeader>div')[4]).width(doneColWidth);
                 },
                 stop: function(e, ui) {
                     board.resizeColumn($(this).attr('data-column'), $(this).width());

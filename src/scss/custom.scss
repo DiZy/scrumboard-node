@@ -39,6 +39,7 @@
 			padding:0;
 			border-right:1px solid black;
 			min-height:50px;
+			min-width: 100px;
 		}
 
 		.done-col {
@@ -81,5 +82,7 @@
 
 
 .ui-icon-gripsmall-diagonal-se {
-	background-color: black;
+	// background-color: black;
+	border-bottom: 1px solid black;
+	border-right: 1px solid black;
 }
