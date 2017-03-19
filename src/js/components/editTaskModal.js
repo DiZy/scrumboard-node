@@ -51,6 +51,7 @@ editTaskModal = (function() {
 		var saveButton = $('<button type="button" class="btn btn-primary modal-save">Save</button>').appendTo(modalFooter);
 
 		saveButton.click(function() {
+			_taskJsonEdited.name = $('#taskName').val();
 			_taskJsonEdited.people = $("#peopleForm input[name='people\\[\\]']").map(function(){return $(this).val();}).get();
 			$('#editModal').modal('hide');
 			callback(_taskJsonEdited);
