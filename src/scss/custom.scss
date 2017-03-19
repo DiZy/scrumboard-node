@@ -55,6 +55,11 @@
 	.story {
 		padding: 15px 0;
 	   	border-bottom: 1px solid #eee;
+
+	   	.addTaskButton {
+	   		margin: 0;
+	   		margin-top: 5px;
+	   	}
 	}
 
 	.story-descr {

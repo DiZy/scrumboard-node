@@ -7,7 +7,7 @@ var story = function() {
         _storyRow = $('<div>').addClass('row story').attr('data-story', _index);
         var leftcol = $('<div>').addClass('col-xs-2 progresscol').attr('data-column', -1).appendTo(_storyRow);
         var storyDescr = $('<div>').text(_storyJson.name).addClass('story-descr').appendTo(leftcol);
-        var addTaskButton = $('<button>').text('Add task').addClass('btn btn-default').appendTo(leftcol);
+        var addTaskButton = $('<button>').text('Add task').addClass('btn btn-default addTaskButton').appendTo(leftcol);
 
         addTaskButton.click(addTask);
 
