@@ -7,6 +7,7 @@ var task = function() {
 	function render() {
 		_taskDiv = $('<div>').addClass('task');
 
+		console.log(_taskJson);
 		//set size
 		if(_taskJson.width){
 			_taskDiv.width(_taskJson.width);
@@ -24,9 +25,8 @@ var task = function() {
 			middlePanel.text('New Task');
 		}
 		var rightPanel = $('<div>').addClass('col-xs-2 taskpanel').appendTo(_taskDiv);
-		var people = getPeople();
-		leftPanelInit(leftPanel, people);
-		rightPanelInit(rightPanel, people);
+		leftPanelInit(leftPanel, _taskJson.people);
+		rightPanelInit(rightPanel, _taskJson.people);
 
 		//if board.maxColumn == _taskJson.statusCode: dont display right arrow
 
@@ -61,34 +61,36 @@ var task = function() {
 		_taskDiv.hover(
 			//Hover in
 			function() {
-				$(this).children('.taskpanel').children('.show-on-hover').fadeIn( "slow", function() {
-					$(this).show();
+				$(_taskDiv).find('.hide-on-hover').fadeOut( "fast", function() {
+					$(this).hide();
+					$(_taskDiv).find('.show-on-hover').fadeIn( "fast", function() {
+						$(this).show();
+					});
 				});
-				$(this).children('.show-on-hover').fadeIn( "slow", function() {
-					$(this).show();
-				});
-
 			},
 			//Hover out
 			function() {
-				$(this).children('.taskpanel').children('.show-on-hover').fadeOut( "slow", function() {
+				$(_taskDiv).find('.show-on-hover').fadeOut( "fast", function() {
 					$(this).hide();
-				});
-				$(this).children('.show-on-hover').fadeOut( "slow", function() {
-					$(this).hide();
+					$(_taskDiv).find('.hide-on-hover').fadeIn( "fast", function() {
+						$(this).show();
+					});
 				});
 			}
 		);
-	}
-
-	function getPeople() {
-
 	}
 
 	function leftPanelInit($leftPanel, people) {
 		var topArrow = $('<div>').addClass('arrow-row show-on-hover').css('display', 'none').appendTo($leftPanel);
 		var middleArrow = $('<div>').addClass('arrow-row show-on-hover').css('display', 'none').appendTo($leftPanel);
 		var bottomArrow = $('<div>').addClass('arrow-row show-on-hover').css('display', 'none').appendTo($leftPanel);
+
+		if(people && people.length > 0) {
+			var topPerson = $('<div>').addClass('people-row hide-on-hover').text(people[0]).appendTo($leftPanel);
+		}
+		if(people && people.length > 1) {
+			var bottomPerson = $('<div>').addClass('people-row hide-on-hover').text(people[1]).appendTo($leftPanel);
+		}
 
 		middleArrow[0].innerHTML = '<span class="glyphicon glyphicon-menu-left"></span>';
 
@@ -107,6 +109,13 @@ var task = function() {
 		var topArrow = $('<div>').addClass('arrow-row show-on-hover').css('display', 'none').appendTo($rightPanel);
 		var middleArrow = $('<div>').addClass('arrow-row show-on-hover').css('display', 'none').appendTo($rightPanel);
 		var bottomArrow = $('<div>').addClass('arrow-row show-on-hover').css('display', 'none').appendTo($rightPanel);
+
+		if(people && people.length > 0) {
+			var topPerson = $('<div>').addClass('people-row hide-on-hover').text(people[2]).appendTo($rightPanel);
+		}
+		if(people && people.length > 1) {
+			var bottomPerson = $('<div>').addClass('people-row hide-on-hover').text(people[3]).appendTo($rightPanel);
+		}
 
 		middleArrow[0].innerHTML = '<span class="glyphicon glyphicon-menu-right"></span>';
 
