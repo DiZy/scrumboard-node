@@ -61,37 +61,42 @@ var task = function() {
 		_taskDiv.hover(
 			//Hover in
 			function() {
-				$('.task').stop();
-				if($(_taskDiv).find('.hide-on-hover').length > 0) {
-					$(_taskDiv).find('.hide-on-hover').fadeOut( "fast", function() {
-						$(this).hide();
-						$(_taskDiv).find('.show-on-hover').fadeIn( "fast", function() {
-							$(this).show();
-						});
-					});
-				}
-				else {
-					$(_taskDiv).find('.show-on-hover').fadeIn( "fast", function() {
-						$(this).show();
-					});
-				}
+				// $(this).stop(false, true);
+				// if($(_taskDiv).find('.hide-on-hover').length > 0) {
+				// 	$(_taskDiv).find('.hide-on-hover').fadeOut( "fast", function() {
+				// 		$(this).hide();
+				// 		$(_taskDiv).find('.show-on-hover').fadeIn( "fast", function() {
+				// 			$(this).show();
+				// 		});
+				// 	});
+				// }
+				// else {
+				// 	$(_taskDiv).find('.show-on-hover').fadeIn( "fast", function() {
+				// 		$(this).show();
+				// 	});
+				// }
+				$(_taskDiv).find('.hide-on-hover').hide();
+				$(_taskDiv).find('.show-on-hover').show();
 			},
 			//Hover out
 			function() {
-				$('.task').stop();
-				if($(_taskDiv).find('.show-on-hover').length > 0) {
-					$(_taskDiv).find('.show-on-hover').fadeOut( "fast", function() {
-						$(this).hide();
-						$(_taskDiv).find('.hide-on-hover').fadeIn( "fast", function() {
-							$(this).show();
-						});
-					});
-				}
-				else {
-					$(_taskDiv).find('.hide-on-hover').fadeIn( "fast", function() {
-						$(this).show();
-					});
-				}
+				// $(this).stop(false, true);
+				// if($(_taskDiv).find('.show-on-hover').length > 0) {
+				// 	$(_taskDiv).find('.show-on-hover').fadeOut( "fast", function() {
+				// 		$(this).hide();
+				// 		$(_taskDiv).find('.hide-on-hover').fadeIn( "fast", function() {
+				// 			$(this).show();
+				// 		});
+				// 	});
+				// }
+				// else {
+				// 	$(_taskDiv).find('.hide-on-hover').fadeIn( "fast", function() {
+				// 		$(this).show();
+				// 	});
+				// }
+
+				$(_taskDiv).find('.show-on-hover').hide();
+				$(_taskDiv).find('.hide-on-hover').show();
 			}
 		);
 	}
