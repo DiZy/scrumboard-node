@@ -27,6 +27,11 @@
 	margin-bottom: 15px;
 	max-width:100%;
 }
+
+#addStoryButton {
+	margin-top: 15px;
+}
+
 #board {
 	margin: 0;
 	width:100%;
@@ -49,7 +54,7 @@
 
 	.story {
 		padding: 15px 0;
-	   	border-bottom: 1px solid black;
+	   	border-bottom: 1px solid #eee;
 	}
 
 	.story-descr {
