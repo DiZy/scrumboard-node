@@ -7,11 +7,18 @@ editStoryModal = (function() {
 	}
 
 	function renderDetails(storyJson) {
+		if(storyJson) {
+			$('#editModal .modal-title').text('Edit story');
+		}
+		else {
+			$('#editModal .modal-title').text('Add story');
+		}
+
 		_storyJsonEdited = storyJson ? storyJson : {name: "New Story"};
 		var modalBody = $('#editModal .modal-body');
 		var editDetails = $('<div>').attr('id', 'editDetails').appendTo(modalBody);
 
-		var nameInput = $('<input>').addClass('input form-control').appendTo(editDetails);
+		var nameInput = $('<input>').addClass('input form-control').attr('placeholder', 'Story Name').appendTo(editDetails);
 		nameInput.val(_storyJsonEdited.name);
 
 		nameInput.on('input', function() {
