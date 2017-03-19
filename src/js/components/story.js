@@ -28,7 +28,7 @@ var story = function() {
 
         var allTasks = _storyJson.tasks;
         for(var i = 0; i < allTasks.length; i++) {
-            task().initialize(allTasks[i], _storyRow, _index);
+            task().initialize(allTasks[i], _storyRow, _index, _storyJson._id, _storyJson.teamId);
         }
 
         _storyRow.appendTo('#board');
@@ -55,7 +55,7 @@ var story = function() {
             .done(function(data) {
                 console.log(data);
                 if(data.type == 'success'){
-                    task().initialize(data.task, _storyRow, _index);
+                    task().initialize(data.task, _storyRow, _index, _storyJson._id, _storyJson.teamId);
                 }
                 else {
                     alert(data.error);

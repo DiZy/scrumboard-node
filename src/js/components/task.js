@@ -3,6 +3,8 @@ var task = function() {
 	var _$storyRow;
 	var _taskDiv;
 	var _storyIndex;
+	var _storyId;
+	var _teamId;
 
 	function render() {
 		_taskDiv = $('<div>').addClass('task');
@@ -116,11 +118,7 @@ var task = function() {
 		middleArrow[0].innerHTML = '<span class="glyphicon glyphicon-menu-left"></span>';
 
 		middleArrow.click(function() {
-			_taskJson.statusCode -= 1;
-			_taskDiv.remove();
-			render();
-			//TODO: send request
-
+			updateStatusCode(parseInt(_taskJson.statusCode) - 1);
 		});
 
 	}
@@ -141,23 +139,54 @@ var task = function() {
 		middleArrow[0].innerHTML = '<span class="glyphicon glyphicon-menu-right"></span>';
 
 		middleArrow.click(function() {
-			_taskJson.statusCode += 1;
-			_taskDiv.remove();
-			render();
-			//TODO: send request
-
+			updateStatusCode(parseInt(_taskJson.statusCode) + 1);
 		});
 
+	}
+
+	function updateStatusCode(newStatusCode) {
+		$.ajax({
+		    type: 'PUT',
+		    url: '/moveTask',
+		    data: {
+		    	teamId: _teamId,
+		        storyId: _storyId,
+		        taskId: _taskJson._id,
+		        newStatusCode: newStatusCode
+		    },
+		    dataType: "json",
+		    contentType: "application/x-www-form-urlencoded"
+
+		})
+		.done(function(data) {
+		    console.log(data);
+		    if(data.type == 'success'){
+		    	console.log(data.result);
+		       _taskJson.statusCode = data.newStatusCode;
+		       _taskDiv.remove();
+		       render();
+		    }
+		    else {
+		        alert(data.error);
+		    }
+
+		})
+		.fail(function(data) {
+		    alert("Internal Server Error");
+		    console.log(data);
+		});
 	}
 
 
 
     return {
 
-    	initialize: function(taskJson, $storyRow, storyIndex) {
+    	initialize: function(taskJson, $storyRow, storyIndex, storyId, teamId) {
     		_taskJson = taskJson;
     		_$storyRow = $storyRow;
     		_storyIndex = storyIndex;
+    		_storyId = storyId;
+    		_teamId = teamId;
     		render();
     	}
 

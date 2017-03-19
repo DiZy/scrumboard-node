@@ -203,7 +203,7 @@ app.get('/getStories', requiresLogin, function(req, res, next) {
 
 });
 
-//to create: moveTask, updateStory, updateTask
+//to create: moveTask, updateStory, updateTaskInfo, updateTaskStyling, deleteStory, deleteTeam, deleteTask
 
 app.post('/addTask', requiresLogin, function(req, res, next) {
 	var teamId = req.body.teamId;
@@ -238,6 +238,43 @@ app.post('/addTask', requiresLogin, function(req, res, next) {
 			return res.json({ type: "error", error: "This team does not exist."});
 		}
 	});
+});
+
+app.put('/moveTask', requiresLogin, function(req, res) {
+	var teamId = req.body.teamId;
+	var storyId = req.body.storyId;
+	var taskId = req.body.taskId;
+	var newStatusCode = req.body.newStatusCode;
+
+	teamsCollection.find({'_id': teamId}, function(err, results) {
+		assert.equal(err, null);
+		if(results.length > 0) {
+			var team = results[0];
+			if(team.companyId == req.session.companyId) {
+				var newTaskId = uuidV4();
+				storiesCollection.updateOne(
+					{'_id': storyId, 'teamId': teamId, 'tasks._id': taskId},
+					{
+						$set : {
+							'tasks.$.statusCode': newStatusCode
+						}
+					},
+					function(err, result) {
+						assert.equal(err, null);
+						return res.json({type: "success", newStatusCode: newStatusCode, result: result });
+					}
+				);
+				
+			}
+			else {
+				return res.json({ type: "error", error: "You do not have permissions to edit this story's tasks."});
+			}
+		}
+		else {
+			return res.json({ type: "error", error: "This team does not exist."});
+		}
+	});
+
 });
 
 function requiresLoginRedirect(req, res, next) {
