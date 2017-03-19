@@ -223,12 +223,12 @@ app.post('/addTask', requiresLogin, function(req, res, next) {
 				storiesCollection.updateOne(
 					{'_id': storyId, 'teamId': teamId},
 					{$push: { 
-						"tasks": {"_id": newTaskId, "name": name, "people": people} 
+						"tasks": {"_id": newTaskId, "name": name, "people": people, "statusCode": 0} 
 						}
 					},
 					function(err, result) {
 						assert.equal(err, null);
-						return res.json({type: "success", task: {_id: newTaskId, name: name, people: people} });
+						return res.json({type: "success", task: {_id: newTaskId, name: name, people: people, statusCode: 0} });
 					}
 				);
 				

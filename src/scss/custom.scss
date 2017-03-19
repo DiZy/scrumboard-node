@@ -37,7 +37,7 @@
 		.progresscol {
 			margin:0;
 			padding:0;
-			border-right:1px solid black;
+			// border-right:1px solid black;
 			min-height:50px;
 			min-width: 100px;
 		}
@@ -47,6 +47,19 @@
 		}
 	}
 
+	.story {
+		padding: 15px 0;
+	   	border-bottom: 1px solid black;
+	}
+
+	.story-descr {
+		background-color: #B3E8FF;
+		box-shadow: 0px 3px 5px #888888;
+		width:200px;
+		max-width:100%;
+		padding: 5px 0;
+		height:75px;
+	}
 
 	.task {
 		float: left;
@@ -72,7 +85,7 @@
 
 		.taskcenter {
 			box-shadow: 0px 3px 5px #888888;
-			background-color:FFFBD0;
+			background-color: #FFFBD0;
 		}
 
 		.glyphicon {
