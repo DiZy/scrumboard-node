@@ -1,24 +1,34 @@
 var story = function() {
 	var _storyJson;
     var _storyRow;
+    var _index;
 
     function render() {
-        _storyRow = $('<div>').addClass('row story');
+        _storyRow = $('<div>').addClass('row story').attr('data-story', _index);
         var leftcol = $('<div>').addClass('col-xs-2 progresscol').attr('data-column', -1).appendTo(_storyRow);
         var storyDescr = $('<div>').text(_storyJson.name).addClass('story-descr').appendTo(leftcol);
         var addTaskButton = $('<button>').text('Add task').addClass('btn btn-default').appendTo(leftcol);
 
         addTaskButton.click(addTask);
 
+        var dropScope = "story_" + _index;
         var maxColumn = 4;
-        $('<div>').addClass('progress-0 col-xs-4 progresscol').attr('data-column', 0).appendTo(_storyRow);
-        $('<div>').addClass('progress-1 col-xs-2 progresscol').attr('data-column', 1).appendTo(_storyRow);
-        $('<div>').addClass('progress-2 col-xs-2 progresscol').attr('data-column', 2).appendTo(_storyRow);
-        $('<div>').addClass('progress-3 col-xs-2 progresscol done-col').attr('data-column', 3).appendTo(_storyRow);
+        var cols = [];
+        cols.push($('<div>').addClass('progress-0 col-xs-4 progresscol').attr('data-column', 0).appendTo(_storyRow));
+        cols.push($('<div>').addClass('progress-1 col-xs-2 progresscol').attr('data-column', 1).appendTo(_storyRow));
+        cols.push($('<div>').addClass('progress-2 col-xs-2 progresscol').attr('data-column', 2).appendTo(_storyRow));
+        cols.push($('<div>').addClass('progress-3 col-xs-2 progresscol done-col').attr('data-column', 3).appendTo(_storyRow));
+        
+        //attempt at droppable
+        // for(var i = 0; i < cols.length;i++) {
+        //     console.log('make droppable' + cols[i]);
+        //     cols[i].droppable({scope: dropScope});
+        // }
+
 
         var allTasks = _storyJson.tasks;
         for(var i = 0; i < allTasks.length; i++) {
-            task().initialize(allTasks[i], _storyRow);
+            task().initialize(allTasks[i], _storyRow, _index);
         }
 
         _storyRow.appendTo('#board');
@@ -45,7 +55,7 @@ var story = function() {
             .done(function(data) {
                 console.log(data);
                 if(data.type == 'success'){
-                    task().initialize(data.task, _storyRow);
+                    task().initialize(data.task, _storyRow, _index);
                 }
                 else {
                     alert(data.error);
@@ -60,8 +70,9 @@ var story = function() {
     }
 
     return {
-    	initialize: function(storyJson) {
+    	initialize: function(storyJson, currentIndex) {
     		_storyJson = storyJson;
+            _index = currentIndex;
     		render();
     	},
     	addTask: function(name) {

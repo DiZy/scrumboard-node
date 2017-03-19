@@ -88,7 +88,7 @@ teampicker = (function() {
                 var dropdownMenu = $('#select-div .dropdown-menu .inner');
                 var addOption = $('<li>').attr('id', 'create').appendTo(dropdownMenu);
                 var addLink = $('<a>').appendTo(addOption);
-                var addSpan = $('<span>').addClass('text').text('CREATE THIS OPTION').css('color', 'red');
+                var addSpan = $('<span>').addClass('text').text('CREATE THIS TEAM').css('color', 'red');
                 addSpan.appendTo(addLink);
 
                 addOption.click(function() {
@@ -115,7 +115,7 @@ teampicker = (function() {
             $('#select-div .selectpicker').change(function() {
                 var id = $(this).children(":selected").attr('id');
                 console.log(_teamsArray[id]);
-                board.render(_teamsArray[id]);
+                team.initialize(_teamsArray[id]);
 
             });
 

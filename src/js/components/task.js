@@ -2,6 +2,7 @@ var task = function() {
 	var _taskJson;
 	var _$storyRow;
 	var _taskDiv;
+	var _storyIndex;
 
 	function render() {
 		_taskDiv = $('<div>').addClass('task');
@@ -45,6 +46,17 @@ var task = function() {
 			}
 		});
 		_taskDiv.children('.ui-resizable-handle').css('display', 'none');
+
+		//attempt at droppable
+		// var dragScope = "story_" + _storyIndex;
+		// _taskDiv.draggable({
+		// 	scope: dragScope,
+		// 	revert: "invalid",
+		// 	stop: function(e, ui) {
+		// 		console.log(e);
+		// 		console.log(ui);
+		// 	}
+		// });
 
 		_taskDiv.hover(
 			//Hover in
@@ -112,9 +124,10 @@ var task = function() {
 
     return {
 
-    	initialize: function(taskJson, $storyRow) {
+    	initialize: function(taskJson, $storyRow, storyIndex) {
     		_taskJson = taskJson;
     		_$storyRow = $storyRow;
+    		_storyIndex = storyIndex;
     		render();
     	}
 

@@ -1,6 +1,7 @@
 board = (function(){
 
     var _teamJson;
+    var _currentStoryIndex = 0;
 
     function renderHeader() {
         var boardDiv = $('<div>').attr('id', 'board').addClass('container').appendTo('body');
@@ -38,7 +39,8 @@ board = (function(){
             .done(function(data) {
                 console.log(data);
                 if(data.type == 'success'){
-                    story().initialize(data.story);
+                    story().initialize(data.story, _currentStoryIndex);
+                    _currentStoryIndex++;
                 }
                 else {
                     alert(data.error);
@@ -55,7 +57,8 @@ board = (function(){
     	getListOfStoryJson(function(storyList) {
             console.log(storyList);
         	for(var i = 0; i < storyList.length; i++) {
-        		story().initialize(storyList[i]);
+        		story().initialize(storyList[i], _currentStoryIndex);
+                _currentStoryIndex++;
         	}
         });
 
@@ -96,6 +99,7 @@ board = (function(){
     return {
         render: function(teamjson) {
         	_teamJson = teamjson;
+            _currentStoryIndex = 0;
             removeBoard();
             renderHeader();
         	renderStories();
