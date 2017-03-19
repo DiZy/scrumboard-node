@@ -61,21 +61,37 @@ var task = function() {
 		_taskDiv.hover(
 			//Hover in
 			function() {
-				$(_taskDiv).find('.hide-on-hover').fadeOut( "fast", function() {
-					$(this).hide();
+				$('.task').stop();
+				if($(_taskDiv).find('.hide-on-hover').length > 0) {
+					$(_taskDiv).find('.hide-on-hover').fadeOut( "fast", function() {
+						$(this).hide();
+						$(_taskDiv).find('.show-on-hover').fadeIn( "fast", function() {
+							$(this).show();
+						});
+					});
+				}
+				else {
 					$(_taskDiv).find('.show-on-hover').fadeIn( "fast", function() {
 						$(this).show();
 					});
-				});
+				}
 			},
 			//Hover out
 			function() {
-				$(_taskDiv).find('.show-on-hover').fadeOut( "fast", function() {
-					$(this).hide();
+				$('.task').stop();
+				if($(_taskDiv).find('.show-on-hover').length > 0) {
+					$(_taskDiv).find('.show-on-hover').fadeOut( "fast", function() {
+						$(this).hide();
+						$(_taskDiv).find('.hide-on-hover').fadeIn( "fast", function() {
+							$(this).show();
+						});
+					});
+				}
+				else {
 					$(_taskDiv).find('.hide-on-hover').fadeIn( "fast", function() {
 						$(this).show();
 					});
-				});
+				}
 			}
 		);
 	}
