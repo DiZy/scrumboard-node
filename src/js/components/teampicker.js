@@ -119,8 +119,6 @@ teampicker = (function() {
 
             });
 
-            $('#select-div .selectpicker').change();
-
             $('#select-div').click(function(){
                 $('.bs-searchbox>input').off('input', handleSearch).on('input', handleSearch);
             });
