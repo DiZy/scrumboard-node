@@ -66,7 +66,7 @@ teampicker = (function() {
                 }
                 $('.selectpicker').selectpicker('val', teams[teams.length - 1].name);
                 $('.selectpicker').selectpicker('refresh');
-                $('#select-div .selectpicker').change();
+                team.initialize(_teamsArray[teams.length - 1]);
                 if(callback) {
                     callback();
                 }
