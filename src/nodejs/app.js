@@ -202,7 +202,7 @@ app.get('/getStories', requiresLogin, function(req, res, next) {
 
 });
 
-//to create: updateStory, updateTaskInfo, updateTaskStyling, deleteStory, deleteTeam, deleteTask
+//to create: updateStory, deleteStory, deleteTeam
 
 app.post('/addTask', requiresLogin, function(req, res, next) {
 	var teamId = req.body.teamId;
@@ -332,6 +332,43 @@ app.put('/editTask', requiresLogin, function(req, res) {
 					function(err, result) {
 						assert.equal(err, null);
 						return res.json({type: "success", task: newTaskJson });
+					}
+				);
+				
+			}
+			else {
+				return res.json({ type: "error", error: "You do not have permissions to edit this story's tasks."});
+			}
+		}
+		else {
+			return res.json({ type: "error", error: "This team does not exist."});
+		}
+	});
+});
+
+app.put('/updateTaskStyling', requiresLogin, function(req, res) {
+	var teamId = req.body.teamId;
+	var storyId = req.body.storyId;
+	var taskId = req.body.taskId;
+	var width = req.body.width;
+	var height = req.body.height;
+
+	teamsCollection.find({'_id': teamId}, function(err, results) {
+		assert.equal(err, null);
+		if(results.length > 0) {
+			var team = results[0];
+			if(team.companyId == req.session.companyId) {
+				storiesCollection.updateOne(
+					{'_id': storyId, 'teamId': teamId, 'tasks._id': taskId},
+					{
+						$set : {
+							'tasks.$.width': width,
+							'tasks.$.height': height
+						}
+					},
+					function(err, result) {
+						assert.equal(err, null);
+						return res.json({type: "success"});
 					}
 				);
 				

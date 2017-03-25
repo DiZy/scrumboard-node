@@ -36,19 +36,7 @@ var task = function() {
 		var colSelector = "." + 'progress-' + _taskJson.statusCode;
 		_$storyRow.children(colSelector).append(_taskDiv);
 
-
-		_taskDiv.resizable({
-			handles: 'se',
-			classes: {
-				"ui-resizable-se": "ui-icon ui-icon-gripsmall-diagonal-se show-on-hover"
-			},
-			stop: function(e, ui) {
-				_taskJson.width = ui.size.width;
-				_taskJson.height = ui.size.height;
-				//TODO: send request to save size
-			}
-		});
-		_taskDiv.children('.ui-resizable-handle').css('display', 'none');
+		makeResizable();
 		//attempt at droppable
 		// var dragScope = "story_" + _storyIndex;
 		// _taskDiv.draggable({
@@ -119,6 +107,13 @@ var task = function() {
 
 	}
 
+	function middlePanelInit($middlePanel) {
+		var editCover = $("<div>").addClass('editCover show-on-hover').css('display', 'none').appendTo($middlePanel);
+		var editIcon = $("<span>").addClass('glyphicon glyphicon-pencil').appendTo(editCover);
+
+		editCover.click(editTask);
+	}
+
 	function rightPanelInit($rightPanel, people, isLastColumn) {
 		var middleArrow = $('<span>').addClass('arrow glyphicon glyphicon-menu-right show-on-hover').css('display', 'none').appendTo($rightPanel);
 		var deleteButton = $('<span>').addClass('delete glyphicon glyphicon-remove show-on-hover').css('display', 'none').appendTo($rightPanel);
@@ -136,6 +131,47 @@ var task = function() {
 
 		deleteButton.click(removeTask);
 
+	}
+
+	function makeResizable() {
+		_taskDiv.resizable({
+			handles: 'se',
+			classes: {
+				"ui-resizable-se": "ui-icon ui-icon-gripsmall-diagonal-se show-on-hover"
+			},
+			stop: function(e, ui) {
+				$.ajax({
+				    type: 'PUT',
+				    url: '/updateTaskStyling',
+				    data: {
+				    	teamId: _teamId,
+				        storyId: _storyId,
+				        taskId: _taskJson._id,
+				        width: ui.size.width,
+				        height: ui.size.height
+				    },
+				    dataType: "json",
+				    contentType: "application/x-www-form-urlencoded"
+
+				})
+				.done(function(data) {
+				    if(data.type == 'success'){
+				    	_taskJson.width = ui.size.width;
+						_taskJson.height = ui.size.height;
+				    }
+				    else {
+				        alert(data.error);
+				    }
+
+				})
+				.fail(function(data) {
+				    alert("Internal Server Error");
+				    console.log(data);
+				});
+			}
+		});
+
+		_taskDiv.children('.ui-resizable-handle').css('display', 'none');
 	}
 
 	function updateStatusCode(newStatusCode) {
@@ -240,13 +276,6 @@ var task = function() {
                 console.log(data);
             });
 		});
-	}
-
-	function middlePanelInit($middlePanel) {
-		var editCover = $("<div>").addClass('editCover show-on-hover').css('display', 'none').appendTo($middlePanel);
-		var editIcon = $("<span>").addClass('glyphicon glyphicon-pencil').appendTo(editCover);
-
-		editCover.click(editTask);
 	}
 
 
