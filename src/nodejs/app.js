@@ -49,7 +49,6 @@ app.post('/signIn', function(req, res) {
 		if(results.length > 0) {
 			var foundUser = results[0];
 			if(bcrypt.compareSync(password, foundUser.password)){
-				console.log("Succesful login");
 				logIn(req, foundUser._id, foundUser.companyId);
 				return res.json({type: "success"});
 			}
@@ -203,7 +202,7 @@ app.get('/getStories', requiresLogin, function(req, res, next) {
 
 });
 
-//to create: moveTask, updateStory, updateTaskInfo, updateTaskStyling, deleteStory, deleteTeam, deleteTask
+//to create: updateStory, updateTaskInfo, updateTaskStyling, deleteStory, deleteTeam, deleteTask
 
 app.post('/addTask', requiresLogin, function(req, res, next) {
 	var teamId = req.body.teamId;
@@ -240,6 +239,39 @@ app.post('/addTask', requiresLogin, function(req, res, next) {
 	});
 });
 
+app.delete('/deleteTask', requiresLogin, function(req, res, next) {
+	var teamId = req.body.teamId;
+	var storyId = req.body.storyId;
+	var taskId = req.body.taskId;
+
+	teamsCollection.find({'_id': teamId}, function(err, results) {
+		assert.equal(err, null);
+		if(results.length > 0) {
+			var team = results[0];
+			if(team.companyId == req.session.companyId) {
+				storiesCollection.updateOne(
+					{'_id': storyId, 'teamId': teamId},
+					{$pull: { 
+						"tasks": {"_id": taskId} 
+						}
+					},
+					function(err, result) {
+						assert.equal(err, null);
+						return res.json({type: "success"});
+					}
+				);
+				
+			}
+			else {
+				return res.json({ type: "error", error: "You do not have permissions to edit this team's stories."});
+			}
+		}
+		else {
+			return res.json({ type: "error", error: "This team does not exist."});
+		}
+	});
+});
+
 app.put('/moveTask', requiresLogin, function(req, res) {
 	var teamId = req.body.teamId;
 	var storyId = req.body.storyId;
@@ -251,7 +283,6 @@ app.put('/moveTask', requiresLogin, function(req, res) {
 		if(results.length > 0) {
 			var team = results[0];
 			if(team.companyId == req.session.companyId) {
-				var newTaskId = uuidV4();
 				storiesCollection.updateOne(
 					{'_id': storyId, 'teamId': teamId, 'tasks._id': taskId},
 					{
@@ -275,6 +306,44 @@ app.put('/moveTask', requiresLogin, function(req, res) {
 		}
 	});
 
+});
+
+app.put('/editTask', requiresLogin, function(req, res) {
+
+	var teamId = req.body.teamId;
+	var storyId = req.body.storyId;
+	var taskId = req.body.taskId;
+	var newTaskJson = req.body.newTaskJson;
+
+	teamsCollection.find({'_id': teamId}, function(err, results) {
+		assert.equal(err, null);
+		if(results.length > 0) {
+			var team = results[0];
+			if(team.companyId == req.session.companyId) {
+				storiesCollection.updateOne(
+					{'_id': storyId, 'teamId': teamId, 'tasks._id': taskId},
+					{
+						$set : {
+							'tasks.$.statusCode': newTaskJson.statusCode,
+							'tasks.$.people': newTaskJson.people,
+							'tasks.$.name': newTaskJson.name
+						}
+					},
+					function(err, result) {
+						assert.equal(err, null);
+						return res.json({type: "success", task: newTaskJson });
+					}
+				);
+				
+			}
+			else {
+				return res.json({ type: "error", error: "You do not have permissions to edit this story's tasks."});
+			}
+		}
+		else {
+			return res.json({ type: "error", error: "This team does not exist."});
+		}
+	});
 });
 
 function requiresLoginRedirect(req, res, next) {
@@ -319,7 +388,6 @@ function logIn(req, userId, companyId) {
 
 function logOut(req) {
 	req.session.destroy(function(){
-    	console.log("logged out");
   	});
 }
 

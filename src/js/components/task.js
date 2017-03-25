@@ -29,6 +29,7 @@ var task = function() {
 		var rightPanel = $('<div>').addClass('col-xs-2 taskpanel').appendTo(_taskDiv);
 		leftPanelInit(leftPanel, _taskJson.people);
 		rightPanelInit(rightPanel, _taskJson.people);
+		middlePanelInit(middlePanel);
 
 		//if board.maxColumn == _taskJson.statusCode: dont display right arrow
 
@@ -48,7 +49,6 @@ var task = function() {
 			}
 		});
 		_taskDiv.children('.ui-resizable-handle').css('display', 'none');
-
 		//attempt at droppable
 		// var dragScope = "story_" + _storyIndex;
 		// _taskDiv.draggable({
@@ -104,9 +104,7 @@ var task = function() {
 	}
 
 	function leftPanelInit($leftPanel, people) {
-		var topArrow = $('<div>').addClass('arrow-row show-on-hover').css('display', 'none').appendTo($leftPanel);
-		var middleArrow = $('<div>').addClass('arrow-row show-on-hover').css('display', 'none').appendTo($leftPanel);
-		var bottomArrow = $('<div>').addClass('arrow-row show-on-hover').css('display', 'none').appendTo($leftPanel);
+		var middleArrow = $('<span>').addClass('arrow glyphicon glyphicon-menu-left show-on-hover').css('display', 'none').appendTo($leftPanel);
 
 		if(people && people.length > 0) {
 			var topPerson = $('<div>').addClass('people-row hide-on-hover').text(people[0]).appendTo($leftPanel);
@@ -115,8 +113,6 @@ var task = function() {
 			var bottomPerson = $('<div>').addClass('people-row hide-on-hover').text(people[1]).appendTo($leftPanel);
 		}
 
-		middleArrow[0].innerHTML = '<span class="glyphicon glyphicon-menu-left"></span>';
-
 		middleArrow.click(function() {
 			updateStatusCode(parseInt(_taskJson.statusCode) - 1);
 		});
@@ -124,10 +120,8 @@ var task = function() {
 	}
 
 	function rightPanelInit($rightPanel, people, isLastColumn) {
-
-		var topArrow = $('<div>').addClass('arrow-row show-on-hover').css('display', 'none').appendTo($rightPanel);
-		var middleArrow = $('<div>').addClass('arrow-row show-on-hover').css('display', 'none').appendTo($rightPanel);
-		var bottomArrow = $('<div>').addClass('arrow-row show-on-hover').css('display', 'none').appendTo($rightPanel);
+		var middleArrow = $('<span>').addClass('arrow glyphicon glyphicon-menu-right show-on-hover').css('display', 'none').appendTo($rightPanel);
+		var deleteButton = $('<span>').addClass('delete glyphicon glyphicon-remove show-on-hover').css('display', 'none').appendTo($rightPanel);
 
 		if(people && people.length > 0) {
 			var topPerson = $('<div>').addClass('people-row hide-on-hover').text(people[2]).appendTo($rightPanel);
@@ -136,11 +130,11 @@ var task = function() {
 			var bottomPerson = $('<div>').addClass('people-row hide-on-hover').text(people[3]).appendTo($rightPanel);
 		}
 
-		middleArrow[0].innerHTML = '<span class="glyphicon glyphicon-menu-right"></span>';
-
 		middleArrow.click(function() {
 			updateStatusCode(parseInt(_taskJson.statusCode) + 1);
 		});
+
+		deleteButton.click(removeTask);
 
 	}
 
@@ -177,6 +171,75 @@ var task = function() {
 		});
 	}
 
+	function removeTask() {
+		$.ajax({
+		    type: 'DELETE',
+		    url: '/deleteTask',
+		    data: {
+		    	teamId: _teamId,
+		        storyId: _storyId,
+		        taskId: _taskJson._id
+		    },
+		    dataType: "json",
+		    contentType: "application/x-www-form-urlencoded"
+
+		})
+		.done(function(data) {
+		    console.log(data);
+		    if(data.type == 'success'){
+		       _taskDiv.remove();
+		    }
+		    else {
+		        alert(data.error);
+		    }
+
+		})
+		.fail(function(data) {
+		    alert("Internal Server Error");
+		    console.log(data);
+		});
+	}
+
+	function editTask() {
+		editTaskModal.open(_taskJson, function(newTaskJson) {
+			$.ajax({
+                type: 'PUT',
+                url: '/editTask',
+                data: {
+                	teamId: _teamId,
+                    storyId: _storyId,
+                    taskId: _taskJson._id,
+                    newTaskJson: newTaskJson
+                },
+                dataType: "json",
+                contentType: "application/x-www-form-urlencoded"
+
+            })
+            .done(function(data) {
+                console.log(data);
+                if(data.type == 'success'){
+                    _taskJson = data.task;
+                    _taskDiv.remove();
+                    render();
+                }
+                else {
+                    alert(data.error);
+                }
+
+            })
+            .fail(function(data) {
+                alert("Internal Server Error");
+                console.log(data);
+            });
+		});
+	}
+
+	function middlePanelInit($middlePanel) {
+		var editCover = $("<div>").addClass('editCover show-on-hover').css('display', 'none').appendTo($middlePanel);
+		var editIcon = $("<span>").addClass('glyphicon glyphicon-pencil').appendTo(editCover);
+
+		editCover.click(editTask);
+	}
 
 
     return {

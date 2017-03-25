@@ -23,7 +23,7 @@ editTaskModal = (function() {
 			'<input type="text" class="input form-control" placeholder="Task Name" name="taskName" id="taskName">' +
 			'</form').appendTo(editDetails);
 
-		var personCount = _taskJsonEdited.people.length;
+		var personCount = _taskJsonEdited.people ? _taskJsonEdited.people.length : 0;
 
 		for(var i = 0; i < personCount; i++) {
 			var personInput = $('<input type="text" class="input form-control" placeholder="Person Name" name="people[]">').appendTo(_taskForm);
