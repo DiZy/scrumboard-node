@@ -219,8 +219,15 @@ var task = function() {
                 console.log(data);
                 if(data.type == 'success'){
                     _taskJson = data.task;
-                    _taskDiv.remove();
-                    render();
+                    _taskDiv.children('.taskcenter').text(_taskJson.name);
+
+                    var leftPanelDO = _taskDiv.children('.taskpanel')[0];
+                    var rightPanelDO = _taskDiv.children('.taskpanel')[2];
+                    leftPanelDO.innerHTML = "";
+                    rightPanelDO.innerHTML = "";
+
+                    leftPanelInit($(leftPanelDO), _taskJson.people);
+                    rightPanelInit($(rightPanelDO), _taskJson.people);
                 }
                 else {
                     alert(data.error);
