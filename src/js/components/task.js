@@ -228,6 +228,7 @@ var task = function() {
 
                     leftPanelInit($(leftPanelDO), _taskJson.people);
                     rightPanelInit($(rightPanelDO), _taskJson.people);
+                    middlePanelInit(_taskDiv.children('.taskcenter'));
                 }
                 else {
                     alert(data.error);
