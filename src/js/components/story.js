@@ -6,12 +6,40 @@ var story = function() {
     function render() {
         _storyRow = $('<div>').addClass('row story').attr('data-story', _index);
         var leftcol = $('<div>').addClass('col-xs-2 progresscol').attr('data-column', -1).appendTo(_storyRow);
-        var storyDescr = $('<div>').text(_storyJson.name).addClass('story-descr').appendTo(leftcol);
+
+        //add panels
+        var storySticky = $("<div>").addClass('task story-descr').appendTo(leftcol);
+        var leftPanel = $('<div>').addClass('col-xs-2 taskpanel').appendTo(storySticky);
+        var middlePanel = $('<div>').addClass('col-xs-8 taskpanel taskcenter story-sticky').appendTo(storySticky);
+        middlePanel.text(_storyJson.name);
+        var rightPanel = $('<div>').addClass('col-xs-2 taskpanel').appendTo(storySticky);
+        leftPanelInit(leftPanel);
+        rightPanelInit(rightPanel);
+        middlePanelInit(middlePanel);
+
+        storySticky.hover(
+            //Hover in
+            function() {
+                $(this).find('.hide-on-hover').hide();
+                $(this).find('.show-on-hover').show();
+            },
+            //Hover out
+            function() {
+                $(this).find('.show-on-hover').hide();
+                $(this).find('.hide-on-hover').show();
+            }
+        );
+
+
         var addTaskButton = $('<button>').text('Add task').addClass('btn btn-default addTaskButton').appendTo(leftcol);
+        addTaskButton.addClass('show-on-hover');
+        addTaskButton.css('display', 'none');
+        addTaskButton.appendTo(storySticky);
 
-        addTaskButton.click(addTask);
 
-        var dropScope = "story_" + _index;
+        addTaskButton.click(addTaskToStory);
+
+        // var dropScope = "story_" + _index;
         var maxColumn = 4;
         var cols = [];
         cols.push($('<div>').addClass('progress-0 col-xs-4 progresscol').attr('data-column', 0).appendTo(_storyRow));
@@ -37,7 +65,64 @@ var story = function() {
 
     }
 
-    function addTask() {
+    function leftPanelInit($leftPanel, people) {
+        // var middleArrow = $('<span>').addClass('arrow glyphicon glyphicon-menu-left show-on-hover').css('display', 'none').appendTo($leftPanel);
+
+        // middleArrow.click(function() {
+        //     updateStatusCode(parseInt(_storyJson.statusCode) - 1);
+        // });
+
+    }
+
+    function middlePanelInit($middlePanel) {
+        // var editCover = $("<div>").addClass('editCover show-on-hover').css('display', 'none').appendTo($middlePanel);
+        // var editIcon = $("<span>").addClass('glyphicon glyphicon-pencil').appendTo(editCover);
+
+        // editCover.click(editTask);
+    }
+
+    function rightPanelInit($rightPanel, people, isLastColumn) {
+        // var middleArrow = $('<span>').addClass('arrow glyphicon glyphicon-menu-right show-on-hover').css('display', 'none').appendTo($rightPanel);
+        var deleteButton = $('<span>').addClass('delete glyphicon glyphicon-remove show-on-hover').css('display', 'none').appendTo($rightPanel);
+
+
+        // middleArrow.click(function() {
+        //     updateStatusCode(parseInt(_taskJson.statusCode) + 1);
+        // });
+
+        deleteButton.click(removeStory);
+
+    }
+
+    function removeStory() {
+        $.ajax({
+            type: 'DELETE',
+            url: '/deleteStory',
+            data: {
+                teamId: _storyJson.teamId,
+                storyId: _storyJson._id
+            },
+            dataType: "json",
+            contentType: "application/x-www-form-urlencoded"
+
+        })
+        .done(function(data) {
+            console.log(data);
+            if(data.type == 'success'){
+                _storyRow.remove();
+            }
+            else {
+                alert(data.error);
+            }
+
+        })
+        .fail(function(data) {
+            alert("Internal Server Error");
+            console.log(data);
+        });
+    }
+
+    function addTaskToStory() {
         editTaskModal.open(undefined, function(taskJson) {
             $.ajax({
                 type: 'POST',
@@ -74,14 +159,6 @@ var story = function() {
     		_storyJson = storyJson;
             _index = currentIndex;
     		render();
-    	},
-    	addTask: function(name) {
-            var newTask = {};
-            //send request to get back id to assign
-            //newTask.id = 
-            //_storyJson.task.push(newTask);
-            //task.initialize(newTask, _storyRow);
-    		
     	}
 
     }

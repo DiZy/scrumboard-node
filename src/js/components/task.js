@@ -92,7 +92,10 @@ var task = function() {
 	}
 
 	function leftPanelInit($leftPanel, people) {
-		var middleArrow = $('<span>').addClass('arrow glyphicon glyphicon-menu-left show-on-hover').css('display', 'none').appendTo($leftPanel);
+		var middleArrow = $('<span>').addClass('arrow glyphicon glyphicon-menu-left show-on-hover').css('display', 'none');
+		if(_taskJson.statusCode != 0) {
+			middleArrow.appendTo($leftPanel);
+		}
 
 		if(people && people.length > 0) {
 			var topPerson = $('<div>').addClass('people-row hide-on-hover').text(people[0]).appendTo($leftPanel);
@@ -115,8 +118,12 @@ var task = function() {
 	}
 
 	function rightPanelInit($rightPanel, people, isLastColumn) {
-		var middleArrow = $('<span>').addClass('arrow glyphicon glyphicon-menu-right show-on-hover').css('display', 'none').appendTo($rightPanel);
+		var middleArrow = $('<span>').addClass('arrow glyphicon glyphicon-menu-right show-on-hover').css('display', 'none');
 		var deleteButton = $('<span>').addClass('delete glyphicon glyphicon-remove show-on-hover').css('display', 'none').appendTo($rightPanel);
+
+		if(_taskJson.statusCode != 3) {
+			middleArrow.appendTo($rightPanel)
+		}
 
 		if(people && people.length > 0) {
 			var topPerson = $('<div>').addClass('people-row hide-on-hover').text(people[2]).appendTo($rightPanel);

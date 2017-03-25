@@ -54,19 +54,18 @@ MongoCollection.prototype.insert = function(user, callback) {
 	});	
 };
 
-MongoCollection.prototype.insert = function(user, callback) {
+MongoCollection.prototype.removeOne = function(user, callback) {
 	this.getCollection(function(error, thisCollection) {
 		if(error){
 			callback(error);
 		}
 		else {
-
-			thisCollection.insert(user, function(error, results) {
-				callback(error, results, user);
+			thisCollection.deleteOne(user, {}, function(error, results) {
+				callback(error, results);
 			});
 		}
 	});	
-};
+}
 
 MongoCollection.prototype.updateOne = function(user, updatedData, callback) {
 	this.getCollection(function(error, thisCollection) {
