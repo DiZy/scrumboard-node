@@ -2,8 +2,64 @@
 	text-align: center;
 }
 
+#left-menu {
+	float: left;
+	width: 50px;
+	height: 76px;
+	border: none;
+    -webkit-box-shadow: 1px 1px 4px rgba(0,0,0,0.4);
+    box-shadow: 1px 1px 4px rgba(0,0,0,0.4);
+    cursor: pointer;
+    z-index: 10;
+	.left-menu-button {
+		margin: auto;
+		vertical-align: middle;
+		text-align: center;
+		width: 50px;
+		margin-top: 30px;
+	}
+}
+
+#sidebar {
+	position: absolute;
+	width: 100vw;
+	height: 100vh;
+	background-color: rgba(0, 0, 0, 0.9);
+	top: 0;
+	left: 0;
+	z-index: 9;
+	padding-top: 50px;
+
+	#sidebar-close {
+		position: absolute;
+		top: 25;
+		left: 15;
+		cursor: pointer;
+		color: white;
+		font-size: 24px;
+	}
+
+	.sidebar-item {
+		margin: auto;
+		text-align: center;
+		font-size: 24px;
+		display: block;
+		max-width: 200px;
+
+	}
+}
+
+#select-div {
+	float: left;
+	width: calc(100% - 50px);
+}
+
 .bootstrap-select{
 	width:100% !important;
+
+	.dropdown-toggle {
+		border-radius: 0;
+	}
 	/*height:75px;*/
 }
 

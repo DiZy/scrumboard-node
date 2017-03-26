@@ -125,6 +125,14 @@ teampicker = (function() {
 
         });
 
+        $('#left-menu').click(function() {
+            $('#sidebar').fadeIn("fast");
+        });
+        $('#sidebar-close').click(function() {
+            $('#sidebar').fadeOut("fast");
+        });
+
+
     });
 
 })();
