@@ -120,6 +120,7 @@ teampicker = (function() {
             });
 
             $('#select-div').click(function(){
+                $('.bs-searchbox>input').attr('placeholder', 'Search through your existing teams or type a new team name')
                 $('.bs-searchbox>input').off('input', handleSearch).on('input', handleSearch);
             });
 
