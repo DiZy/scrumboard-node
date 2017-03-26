@@ -90,7 +90,12 @@ var story = function() {
         //     updateStatusCode(parseInt(_taskJson.statusCode) + 1);
         // });
 
-        deleteButton.click(removeStory);
+        deleteButton.click(function() {
+            var confirmation = confirm('Are you sure you want to delete this story and all its tasks?');
+            if(confirmation) {
+                removeStory();
+            }
+        });
 
     }
 
