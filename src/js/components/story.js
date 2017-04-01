@@ -75,10 +75,10 @@ var story = function() {
     }
 
     function middlePanelInit($middlePanel) {
-        // var editCover = $("<div>").addClass('editCover show-on-hover').css('display', 'none').appendTo($middlePanel);
-        // var editIcon = $("<span>").addClass('glyphicon glyphicon-pencil').appendTo(editCover);
+        var editCover = $("<div>").addClass('editCover show-on-hover').css('display', 'none').appendTo($middlePanel);
+        var editIcon = $("<span>").addClass('glyphicon glyphicon-pencil').appendTo(editCover);
 
-        // editCover.click(editTask);
+        editCover.click(editStory);
     }
 
     function rightPanelInit($rightPanel, people, isLastColumn) {
@@ -97,6 +97,38 @@ var story = function() {
             }
         });
 
+    }
+
+    function editStory() {
+        editStoryModal.open(_storyJson, function(newStoryJson) {
+            $.ajax({
+                type: 'PUT',
+                url: '/editStory',
+                data: {
+                    teamId: _storyJson.teamId,
+                    newStoryJson: newStoryJson
+                },
+                dataType: "json",
+                contentType: "application/x-www-form-urlencoded"
+
+            })
+            .done(function(data) {
+                console.log(data);
+                if(data.type == 'success'){
+                    _storyJson = data.story;
+                    _storyRow.find('.story-sticky').text(_storyJson.name);
+                    middlePanelInit(_storyRow.find('.story-sticky'));
+                }
+                else {
+                    alert(data.error);
+                }
+
+            })
+            .fail(function(data) {
+                alert("Internal Server Error");
+                console.log(data);
+            });
+        });
     }
 
     function removeStory() {

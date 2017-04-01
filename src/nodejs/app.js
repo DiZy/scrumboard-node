@@ -177,6 +177,42 @@ app.post('/addStory', requiresLogin, function(req, res) {
 	});
 });
 
+app.put('/editStory', requiresLogin, function(req, res) {
+
+	console.log(teamId);
+
+	var teamId = req.body.teamId;
+	var newStoryJson = req.body.newStoryJson;
+
+	teamsCollection.find({'_id': teamId}, function(err, results) {
+		assert.equal(err, null);
+		if(results.length > 0) {
+			var team = results[0];
+			if(team.companyId == req.session.companyId) {
+				storiesCollection.updateOne(
+					{'_id': newStoryJson._id, 'teamId': teamId},
+					{
+						$set : {
+							'name': newStoryJson.name
+						}
+					},
+					function(err, result) {
+						assert.equal(err, null);
+						return res.json({type: "success", story: newStoryJson });
+					}
+				);
+				
+			}
+			else {
+				return res.json({ type: "error", error: "You do not have permissions to edit this story."});
+			}
+		}
+		else {
+			return res.json({ type: "error", error: "This team does not exist."});
+		}
+	});
+});
+
 app.delete('/deleteStory', requiresLogin, function(req, res) {
 	var teamId = req.body.teamId;
 	var storyId = req.body.storyId;
