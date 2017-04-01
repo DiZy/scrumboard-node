@@ -206,7 +206,6 @@ var task = function() {
 		    else {
 		        alert(data.error);
 		    }
-
 		})
 		.fail(function(data) {
 		    alert("Internal Server Error");

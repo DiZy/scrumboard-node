@@ -162,7 +162,7 @@ app.post('/addStory', requiresLogin, function(req, res) {
 		if(results.length > 0) {
 			var team = results[0];
 			if(team.companyId == req.session.companyId) {
-				storiesCollection.insert({"_id": uuidV4(), "name": name, "teamId": teamId, "companyId": team.companyId, "tasks": []}, function(err, results, story) {
+				storiesCollection.insert({"_id": uuidV4(), "name": name, "teamId": teamId, "companyId": team.companyId, "tasks": [], "statusCode": -1}, function(err, results, story) {
 					assert.equal(err, null);
 					return res.json({type: "success", story: story});
 				});
@@ -175,6 +175,41 @@ app.post('/addStory', requiresLogin, function(req, res) {
 			return res.json({ type: "error", error: "This team does not exist."});
 		}
 	});
+});
+
+app.put('/moveStory', requiresLogin, function(req, res) {
+	var teamId = req.body.teamId;
+	var storyId = req.body.storyId;
+	var newStatusCode = req.body.newStatusCode;
+
+	teamsCollection.find({'_id': teamId}, function(err, results) {
+		assert.equal(err, null);
+		if(results.length > 0) {
+			var team = results[0];
+			if(team.companyId == req.session.companyId) {
+				storiesCollection.updateOne(
+					{'_id': storyId, 'teamId': teamId},
+					{
+						$set : {
+							'statusCode': newStatusCode
+						}
+					},
+					function(err, result) {
+						assert.equal(err, null);
+						return res.json({type: "success", newStatusCode: newStatusCode, result: result });
+					}
+				);
+				
+			}
+			else {
+				return res.json({ type: "error", error: "You do not have permissions to edit this story."});
+			}
+		}
+		else {
+			return res.json({ type: "error", error: "This team does not exist."});
+		}
+	});
+
 });
 
 app.put('/editStory', requiresLogin, function(req, res) {
@@ -266,7 +301,7 @@ app.get('/getStories', requiresLogin, function(req, res, next) {
 
 });
 
-//to create: updateStory, deleteTeam
+//to create: deleteTeam, everything with story points
 
 app.post('/addTask', requiresLogin, function(req, res, next) {
 	var teamId = req.body.teamId;

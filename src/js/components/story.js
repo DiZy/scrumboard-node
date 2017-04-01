@@ -2,22 +2,23 @@ var story = function() {
 	var _storyJson;
     var _storyRow;
     var _index;
+    var _storySticky;
 
     function render() {
         _storyRow = $('<div>').addClass('row story').attr('data-story', _index);
         var leftcol = $('<div>').addClass('col-xs-2 progresscol').attr('data-column', -1).appendTo(_storyRow);
 
         //add panels
-        var storySticky = $("<div>").addClass('task story-descr').appendTo(leftcol);
-        var leftPanel = $('<div>').addClass('col-xs-2 taskpanel').appendTo(storySticky);
-        var middlePanel = $('<div>').addClass('col-xs-8 taskpanel taskcenter story-sticky').appendTo(storySticky);
+        _storySticky = $("<div>").addClass('task story-descr');
+        var leftPanel = $('<div>').addClass('col-xs-2 taskpanel').appendTo(_storySticky);
+        var middlePanel = $('<div>').addClass('col-xs-8 taskpanel taskcenter story-sticky').appendTo(_storySticky);
         middlePanel.text(_storyJson.name);
-        var rightPanel = $('<div>').addClass('col-xs-2 taskpanel').appendTo(storySticky);
+        var rightPanel = $('<div>').addClass('col-xs-2 taskpanel').appendTo(_storySticky);
         leftPanelInit(leftPanel);
         rightPanelInit(rightPanel);
         middlePanelInit(middlePanel);
 
-        storySticky.hover(
+        _storySticky.hover(
             //Hover in
             function() {
                 $(this).find('.hide-on-hover').hide();
@@ -34,7 +35,7 @@ var story = function() {
         var addTaskButton = $('<button>').text('Add task').addClass('btn btn-default addTaskButton').appendTo(leftcol);
         addTaskButton.addClass('show-on-hover');
         addTaskButton.css('display', 'none');
-        addTaskButton.appendTo(storySticky);
+        addTaskButton.appendTo(_storySticky);
 
 
         addTaskButton.click(addTaskToStory);
@@ -60,17 +61,21 @@ var story = function() {
         }
 
         _storyRow.appendTo('#board');
+        var colSelector = "." + 'progresscol[data-column=' + _storyJson.statusCode + ']';
+        _storyRow.children(colSelector).append(_storySticky);
 
 
 
     }
 
     function leftPanelInit($leftPanel, people) {
-        // var middleArrow = $('<span>').addClass('arrow glyphicon glyphicon-menu-left show-on-hover').css('display', 'none').appendTo($leftPanel);
-
-        // middleArrow.click(function() {
-        //     updateStatusCode(parseInt(_storyJson.statusCode) - 1);
-        // });
+        var middleArrow = $('<span>').addClass('arrow glyphicon glyphicon-menu-left show-on-hover').css('display', 'none');
+        if(_storyJson.statusCode != -1) {
+            middleArrow.appendTo($leftPanel);
+        }
+        middleArrow.click(function() {
+            updateStatusCode(parseInt(_storyJson.statusCode) - 1);
+        });
 
     }
 
@@ -82,13 +87,16 @@ var story = function() {
     }
 
     function rightPanelInit($rightPanel, people, isLastColumn) {
-        // var middleArrow = $('<span>').addClass('arrow glyphicon glyphicon-menu-right show-on-hover').css('display', 'none').appendTo($rightPanel);
+        var middleArrow = $('<span>').addClass('arrow glyphicon glyphicon-menu-right show-on-hover').css('display', 'none');
         var deleteButton = $('<span>').addClass('delete glyphicon glyphicon-remove show-on-hover').css('display', 'none').appendTo($rightPanel);
 
+        if(_storyJson.statusCode != 3) {
+            middleArrow.appendTo($rightPanel)
+        }
 
-        // middleArrow.click(function() {
-        //     updateStatusCode(parseInt(_taskJson.statusCode) + 1);
-        // });
+        middleArrow.click(function() {
+            updateStatusCode(parseInt(_storyJson.statusCode) + 1);
+        });
 
         deleteButton.click(function() {
             var confirmation = confirm('Are you sure you want to delete this story and all its tasks?');
@@ -97,6 +105,49 @@ var story = function() {
             }
         });
 
+    }
+
+    function updateStatusCode(newStatusCode) {
+        $.ajax({
+            type: 'PUT',
+            url: '/moveStory',
+            data: {
+                teamId: _storyJson.teamId,
+                storyId: _storyJson._id,
+                newStatusCode: newStatusCode
+            },
+            dataType: "json",
+            contentType: "application/x-www-form-urlencoded"
+
+        })
+        .done(function(data) {
+            console.log(data);
+            if(data.type == 'success'){
+                _storyJson.statusCode = data.newStatusCode;
+
+                var leftPanelDO = _storySticky.children('.taskpanel')[0];
+                var rightPanelDO = _storySticky.children('.taskpanel')[2];
+
+                _storyRow.remove('.story-descr');
+
+                leftPanelDO.innerHTML = "";
+                rightPanelDO.innerHTML = "";
+
+                leftPanelInit($(leftPanelDO));
+                rightPanelInit($(rightPanelDO));
+
+                var colSelector = "." + 'progresscol[data-column=' + _storyJson.statusCode + ']';
+                _storyRow.children(colSelector).append(_storySticky);
+            }
+            else {
+                alert(data.error);
+            }
+
+        })
+        .fail(function(data) {
+            alert("Internal Server Error");
+            console.log(data);
+        });
     }
 
     function editStory() {
