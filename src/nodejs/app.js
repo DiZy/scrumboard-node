@@ -154,6 +154,7 @@ app.get('/getTeamDetails', requiresLogin, function(req, res) {
 
 app.post('/addStory', requiresLogin, function(req, res) {
 	var name = req.body.name;
+	var points = req.body.points;
 	var teamId = req.body.teamId;
 	// assert(teamId);
 
@@ -162,10 +163,13 @@ app.post('/addStory', requiresLogin, function(req, res) {
 		if(results.length > 0) {
 			var team = results[0];
 			if(team.companyId == req.session.companyId) {
-				storiesCollection.insert({"_id": uuidV4(), "name": name, "teamId": teamId, "companyId": team.companyId, "tasks": [], "statusCode": -1}, function(err, results, story) {
-					assert.equal(err, null);
-					return res.json({type: "success", story: story});
-				});
+				storiesCollection.insert(
+					{"_id": uuidV4(), "name": name, "teamId": teamId, "companyId": team.companyId, "tasks": [], "statusCode": -1, "points": points}, 
+					function(err, results, story) {
+						assert.equal(err, null);
+						return res.json({type: "success", story: story});
+					}
+				);
 			}
 			else {
 				return res.json({ type: "error", error: "You do not have permissions to add to this team's stories."});
@@ -228,7 +232,8 @@ app.put('/editStory', requiresLogin, function(req, res) {
 					{'_id': newStoryJson._id, 'teamId': teamId},
 					{
 						$set : {
-							'name': newStoryJson.name
+							'name': newStoryJson.name,
+							'points': newStoryJson.points
 						}
 					},
 					function(err, result) {
@@ -308,6 +313,7 @@ app.post('/addTask', requiresLogin, function(req, res, next) {
 	var storyId = req.body.storyId;
 	var name = req.body.name;
 	var people = req.body.people;
+	var points = req.body.points;
 
 	teamsCollection.find({'_id': teamId}, function(err, results) {
 		assert.equal(err, null);
@@ -318,12 +324,12 @@ app.post('/addTask', requiresLogin, function(req, res, next) {
 				storiesCollection.updateOne(
 					{'_id': storyId, 'teamId': teamId},
 					{$push: { 
-						"tasks": {"_id": newTaskId, "name": name, "people": people, "statusCode": 0} 
+						"tasks": {"_id": newTaskId, "name": name, "people": people, "statusCode": 0, "points": points} 
 						}
 					},
 					function(err, result) {
 						assert.equal(err, null);
-						return res.json({type: "success", task: {_id: newTaskId, name: name, people: people, statusCode: 0} });
+						return res.json({type: "success", task: {_id: newTaskId, name: name, people: people, statusCode: 0, points: points} });
 					}
 				);
 				
@@ -425,7 +431,8 @@ app.put('/editTask', requiresLogin, function(req, res) {
 						$set : {
 							'tasks.$.statusCode': newTaskJson.statusCode,
 							'tasks.$.people': newTaskJson.people,
-							'tasks.$.name': newTaskJson.name
+							'tasks.$.name': newTaskJson.name,
+							'tasks.$.points': newTaskJson.points
 						}
 					},
 					function(err, result) {

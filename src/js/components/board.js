@@ -30,7 +30,8 @@ board = (function(){
                 url: '/addStory',
                 data: {
                     teamId: _teamJson._id,
-                    name: storyJson.name
+                    name: storyJson.name,
+                    points: storyJson.points
                 },
                 dataType: "json",
                 contentType: "application/x-www-form-urlencoded"

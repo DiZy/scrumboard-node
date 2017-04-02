@@ -23,6 +23,9 @@ editTaskModal = (function() {
 			'<input type="text" class="input form-control" placeholder="Task Name" name="taskName" id="taskName">' +
 			'</form').appendTo(editDetails);
 
+		var pointsInput = $('<input>').addClass('input form-control').attr('placeholder', 'Task Hours').attr('id', 'taskHours').appendTo(_taskForm);
+		pointsInput.val(_taskJsonEdited.points);
+
 		var personCount = _taskJsonEdited.people ? _taskJsonEdited.people.length : 0;
 
 		for(var i = 0; i < personCount; i++) {
@@ -53,6 +56,7 @@ editTaskModal = (function() {
 		saveButton.click(function() {
 			_taskJsonEdited.name = $('#taskName').val();
 			_taskJsonEdited.people = $("#peopleForm input[name='people\\[\\]']").map(function(){return $(this).val();}).get();
+			_taskJsonEdited.points = parseInt($('#taskHours').val());
 			$('#editModal').modal('hide');
 			callback(_taskJsonEdited);
 		});

@@ -84,6 +84,10 @@ var story = function() {
         var editIcon = $("<span>").addClass('glyphicon glyphicon-pencil').appendTo(editCover);
 
         editCover.click(editStory);
+
+        var points = $('<div>').addClass('points').text(_storyJson.points).appendTo($middlePanel);
+
+
     }
 
     function rightPanelInit($rightPanel, people, isLastColumn) {
@@ -219,7 +223,8 @@ var story = function() {
                     teamId: _storyJson.teamId,
                     storyId: _storyJson._id,
                     name: taskJson.name,
-                    people: taskJson.people
+                    people: taskJson.people,
+                    points: taskJson.points
                 },
                 dataType: "json",
                 contentType: "application/x-www-form-urlencoded"

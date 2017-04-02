@@ -14,7 +14,7 @@ editStoryModal = (function() {
 			$('#editModal .modal-title').text('Add story');
 		}
 
-		_storyJsonEdited = storyJson ? storyJson : {name: "New Story"};
+		_storyJsonEdited = storyJson ? storyJson : {name: "New Story", points: ""};
 		var modalBody = $('#editModal .modal-body');
 		var editDetails = $('<div>').attr('id', 'editDetails').appendTo(modalBody);
 
@@ -23,6 +23,13 @@ editStoryModal = (function() {
 
 		nameInput.on('input', function() {
 			_storyJsonEdited.name = nameInput.val();
+		});
+
+		var pointsInput = $('<input>').addClass('input form-control').attr('placeholder', 'Story Points').appendTo(editDetails);
+		pointsInput.val(_storyJsonEdited.points);
+
+		pointsInput.on('input', function() {
+			_storyJsonEdited.points = parseInt(pointsInput.val());
 		});
 
 	}

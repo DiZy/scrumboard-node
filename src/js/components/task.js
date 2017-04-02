@@ -115,6 +115,8 @@ var task = function() {
 		var editIcon = $("<span>").addClass('glyphicon glyphicon-pencil').appendTo(editCover);
 
 		editCover.click(editTask);
+
+		var points = $('<div>').addClass('points').text(_taskJson.points).appendTo($middlePanel);
 	}
 
 	function rightPanelInit($rightPanel, people, isLastColumn) {
