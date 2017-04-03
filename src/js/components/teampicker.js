@@ -67,6 +67,15 @@ teampicker = (function() {
                 $('.selectpicker').selectpicker('val', teams[teams.length - 1].name);
                 $('.selectpicker').selectpicker('refresh');
                 team.initialize(_teamsArray[teams.length - 1]);
+                $('.bootstrap-select .dropdown-menu li').each(function(index, value) {
+                    var removeTeamButton = $('<spann>').addClass('glyphicon glyphicon-remove-circle remove-team');
+                    removeTeamButton.click(function(e) {
+                        e.stopPropagation();
+                        deleteTeam(_teamsArray[index]._id, _teamsArray[index].name);
+                    });
+
+                    removeTeamButton.appendTo(value);
+                });
                 if(callback) {
                     callback();
                 }
@@ -79,6 +88,37 @@ teampicker = (function() {
             }
         });
 
+    }
+
+    function deleteTeam(teamId, teamName) {
+        var confirmation = confirm('Are you sure you want to remove the team "' + teamName + '"?');
+        if(confirmation) {
+            $.ajax({
+                type: 'DELETE',
+                url: '/deleteTeam',
+                data: {
+                    teamId: teamId
+                },
+                dataType: "json",
+                contentType: "application/x-www-form-urlencoded"
+
+            })
+            .done(function(data) {
+                console.log(data);
+                if(data.type == 'success'){
+                   loadSelectOptions();
+                   $('.selectpicker').selectpicker('toggle');
+                }
+                else {
+                    alert(data.error);
+                }
+
+            })
+            .fail(function(data) {
+                alert("Internal Server Error");
+                console.log(data);
+            });
+        }
     }
 
     var handleSearch = function() {

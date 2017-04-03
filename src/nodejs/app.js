@@ -152,6 +152,32 @@ app.get('/getTeamDetails', requiresLogin, function(req, res) {
 	});
 });
 
+app.delete('/deleteTeam', requiresLogin, function(req, res, next) {
+	var teamId = req.body.teamId;
+
+	teamsCollection.find({'_id': teamId}, function(err, results) {
+		assert.equal(err, null);
+		if(results.length > 0) {
+			var team = results[0];
+			if(team.companyId == req.session.companyId) {
+				teamsCollection.removeOne(
+					{'_id': teamId},
+					function(err, result) {
+						assert.equal(err, null);
+						return res.json({type: "success"});
+					}
+				);
+			}
+			else {
+				return res.json({ type: "error", error: "You do not have permissions to edit this team."});
+			}
+		}
+		else {
+			return res.json({ type: "error", error: "This team does not exist."});
+		}
+	});
+});
+
 app.post('/addStory', requiresLogin, function(req, res) {
 	var name = req.body.name;
 	var points = req.body.points;
@@ -305,8 +331,6 @@ app.get('/getStories', requiresLogin, function(req, res, next) {
 	});
 
 });
-
-//to create: deleteTeam, everything with story points
 
 app.post('/addTask', requiresLogin, function(req, res, next) {
 	var teamId = req.body.teamId;

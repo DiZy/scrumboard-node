@@ -70,7 +70,7 @@
 			})
 			.fail(function(data) {
 				$('#signIn').attr('disabled', false);
-				console.log(data);
+				alert('Internal server error');
 			});
 		});
 
@@ -95,7 +95,7 @@
 				}
 			})
 			.fail(function(data) {
-				alert(data.error);
+				alert('Internal server error');
 				$('#signUpFormButton').attr('disabled', false);
 			});
 		});
