@@ -130,6 +130,7 @@ board = (function(){
     }
 
     function removeBoard() {
+        $('#unassignedPeople').remove();
         $('#board').remove();
         $('#addStoryButton').remove();
     }
