@@ -81,6 +81,7 @@ teampicker = (function() {
                 }
             }
             else {
+                $('.selectpicker').selectpicker('refresh');
                 $('#select-div .bs-placeholder .filter-option').text('Please add or select a team here.');
                 if(callback) {
                     callback();

@@ -27,26 +27,23 @@ var task = function() {
 			middlePanel.text('New Task');
 		}
 		var rightPanel = $('<div>').addClass('col-xs-2 taskpanel').appendTo(_taskDiv);
-		leftPanelInit(leftPanel, _taskJson.people);
-		rightPanelInit(rightPanel, _taskJson.people);
-		middlePanelInit(middlePanel);
+		var peopleRow = $('<div>').addClass('people-row').appendTo(_taskDiv);
 
-		//if board.maxColumn == _taskJson.statusCode: dont display right arrow
+		leftPanelInit(leftPanel);
+		rightPanelInit(rightPanel);
+		middlePanelInit(middlePanel);
+		peopleRowInit(peopleRow);
 
 		var colSelector = "." + 'progress-' + _taskJson.statusCode;
 		_$storyRow.children(colSelector).append(_taskDiv);
 
 		makeResizable();
-		//attempt at droppable
-		// var dragScope = "story_" + _storyIndex;
-		// _taskDiv.draggable({
-		// 	scope: dragScope,
-		// 	revert: "invalid",
-		// 	stop: function(e, ui) {
-		// 		console.log(e);
-		// 		console.log(ui);
-		// 	}
-		// });
+
+
+		_taskDiv.droppable({
+			accept: '.person',
+			drop: handlePersonDrop
+		});
 
 		_taskDiv.hover(
 			//Hover in
@@ -96,13 +93,8 @@ var task = function() {
 		if(_taskJson.statusCode != 0) {
 			middleArrow.appendTo($leftPanel);
 		}
-
-		if(people && people.length > 0) {
-			var topPerson = $('<div>').addClass('people-row hide-on-hover').text(people[0]).appendTo($leftPanel);
-		}
-		if(people && people.length > 1) {
-			var bottomPerson = $('<div>').addClass('people-row hide-on-hover').text(people[1]).appendTo($leftPanel);
-		}
+		var topPerson = $('<div>').addClass('people-row hide-on-hover').appendTo($leftPanel);
+		var bottomPerson = $('<div>').addClass('people-row hide-on-hover').appendTo($leftPanel);
 
 		middleArrow.click(function() {
 			updateStatusCode(parseInt(_taskJson.statusCode) - 1);
@@ -119,7 +111,7 @@ var task = function() {
 		var points = $('<div>').addClass('points').text(_taskJson.points).appendTo($middlePanel);
 	}
 
-	function rightPanelInit($rightPanel, people, isLastColumn) {
+	function rightPanelInit($rightPanel) {
 		var middleArrow = $('<span>').addClass('arrow glyphicon glyphicon-menu-right show-on-hover').css('display', 'none');
 		var deleteButton = $('<span>').addClass('delete glyphicon glyphicon-remove show-on-hover').css('display', 'none').appendTo($rightPanel);
 
@@ -127,12 +119,8 @@ var task = function() {
 			middleArrow.appendTo($rightPanel)
 		}
 
-		if(people && people.length > 0) {
-			var topPerson = $('<div>').addClass('people-row hide-on-hover').text(people[2]).appendTo($rightPanel);
-		}
-		if(people && people.length > 1) {
-			var bottomPerson = $('<div>').addClass('people-row hide-on-hover').text(people[3]).appendTo($rightPanel);
-		}
+		var topPerson = $('<div>').addClass('people-row hide-on-hover').appendTo($rightPanel);
+		var bottomPerson = $('<div>').addClass('people-row hide-on-hover').appendTo($rightPanel);
 
 		middleArrow.click(function() {
 			updateStatusCode(parseInt(_taskJson.statusCode) + 1);
@@ -140,6 +128,14 @@ var task = function() {
 
 		deleteButton.click(removeTask);
 
+	}
+
+	function peopleRowInit($peopleRow) {
+		$('<div>').addClass('col-xs-2').appendTo($peopleRow);
+		var peopleDiv = $('<div>').addClass('col-xs-8 peopleDiv').appendTo($peopleRow);
+		$('<div>').addClass('col-xs-2').appendTo($peopleRow);
+
+		//TODO: loop through people
 	}
 
 	function makeResizable() {
@@ -181,6 +177,28 @@ var task = function() {
 		});
 
 		_taskDiv.children('.ui-resizable-handle').css('display', 'none');
+	}
+
+	function handlePersonDrop(event, ui) {
+		var personDiv = ui.draggable;
+		var divToRenderTo = _taskDiv.children('.people-row').children('.peopleDiv');
+		if(divToRenderTo.children('.person').length == 4) {
+			return false;
+		}
+		team.assignPerson(personDiv, _taskJson.id, divToRenderTo);
+		return true;
+	}
+
+	function getPersonRenderDiv() {
+		var toReturn;
+		_taskDiv.find('.people-row').each(function(index, pplRow) {
+			console.log($(pplRow).html());
+			if(!$(pplRow).html()) {
+				toReturn = $(pplRow);
+				return;
+			}
+		});
+		return toReturn;
 	}
 
 	function updateStatusCode(newStatusCode) {
@@ -270,8 +288,8 @@ var task = function() {
                     leftPanelDO.innerHTML = "";
                     rightPanelDO.innerHTML = "";
 
-                    leftPanelInit($(leftPanelDO), _taskJson.people);
-                    rightPanelInit($(rightPanelDO), _taskJson.people);
+                    leftPanelInit($(leftPanelDO));
+                    rightPanelInit($(rightPanelDO));
                     middlePanelInit(_taskDiv.children('.taskcenter'));
                 }
                 else {

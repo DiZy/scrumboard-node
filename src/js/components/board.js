@@ -3,6 +3,41 @@ board = (function(){
     var _teamJson;
     var _currentStoryIndex = 0;
 
+    function renderPeople() {
+        var peopleDiv = $('<div>').attr('id', 'unassignedPeople').appendTo('body');
+        var peopleText = $('<div>').text('People:').appendTo(peopleDiv);
+        var people = team.getPeopleForTask(null);
+        people.forEach(function(p) {
+            person().render(p, peopleDiv);
+        });
+
+
+        var addPersonButton = $('<div>').attr('id', 'addPersonButton').addClass('person').text('+').appendTo(peopleDiv);
+        //TODO
+        addPersonButton.click(function() {
+            team.addPerson();
+        });
+
+        peopleDiv.droppable({
+            accept: '.person',
+            drop: function(event, ui) {
+                var personDiv = ui.draggable;
+                team.assignPerson(personDiv, null, peopleDiv);
+            }
+        });
+
+        //deletesPerson
+        addPersonButton.droppable({
+            accept: '.person',
+            drop: function(event, ui) {
+                var personDiv = ui.draggable;
+                team.removePerson(personDiv);
+            },
+            greedy: true
+        });
+
+    }
+
     function renderHeader() {
         var boardDiv = $('<div>').attr('id', 'board').addClass('container').appendTo('body');
         boardDiv[0].innerHTML = '<div class="row" id="boardHeader">' +
@@ -102,6 +137,7 @@ board = (function(){
         	_teamJson = teamjson;
             _currentStoryIndex = 0;
             removeBoard();
+            renderPeople();
             renderHeader();
         	renderStories();
         },

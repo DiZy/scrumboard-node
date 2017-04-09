@@ -102,7 +102,7 @@ app.post('/signUp', function(req, res) {
 				{"_id": uuidV4(), "username": username,"password": password,"name":fullName,'email':email, 'companyId': companyId},
 				function(err, result) {
 					assert.equal(err, null);
-					return res.json({type: "success"});
+				return res.json({type: "success"});
 				});
 				
 			});
@@ -115,7 +115,7 @@ app.post('/signUp', function(req, res) {
 //TODO: update to not allow duplicate names within same company probably
 app.post('/addTeam', requiresLogin, function(req, res) {
 	var name = req.body.name;
-	teamsCollection.insert({"_id": uuidV4(), "name": name, "companyId": req.session.companyId}, function(err, results, team) {
+	teamsCollection.insert({"_id": uuidV4(), "name": name, "companyId": req.session.companyId, "people": []}, function(err, results, team) {
 		assert.equal(err, null);
 		return res.json({type: "success", team: team});
 	});
@@ -336,7 +336,6 @@ app.post('/addTask', requiresLogin, function(req, res, next) {
 	var teamId = req.body.teamId;
 	var storyId = req.body.storyId;
 	var name = req.body.name;
-	var people = req.body.people;
 	var points = req.body.points;
 
 	teamsCollection.find({'_id': teamId}, function(err, results) {
@@ -348,12 +347,12 @@ app.post('/addTask', requiresLogin, function(req, res, next) {
 				storiesCollection.updateOne(
 					{'_id': storyId, 'teamId': teamId},
 					{$push: { 
-						"tasks": {"_id": newTaskId, "name": name, "people": people, "statusCode": 0, "points": points} 
+						"tasks": {"_id": newTaskId, "name": name, "statusCode": 0, "points": points} 
 						}
 					},
 					function(err, result) {
 						assert.equal(err, null);
-						return res.json({type: "success", task: {_id: newTaskId, name: name, people: people, statusCode: 0, points: points} });
+						return res.json({type: "success", task: {_id: newTaskId, name: name, statusCode: 0, points: points} });
 					}
 				);
 				
@@ -454,7 +453,6 @@ app.put('/editTask', requiresLogin, function(req, res) {
 					{
 						$set : {
 							'tasks.$.statusCode': newTaskJson.statusCode,
-							'tasks.$.people': newTaskJson.people,
 							'tasks.$.name': newTaskJson.name,
 							'tasks.$.points': newTaskJson.points
 						}

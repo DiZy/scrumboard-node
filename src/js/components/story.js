@@ -223,7 +223,6 @@ var story = function() {
                     teamId: _storyJson.teamId,
                     storyId: _storyJson._id,
                     name: taskJson.name,
-                    people: taskJson.people,
                     points: taskJson.points
                 },
                 dataType: "json",

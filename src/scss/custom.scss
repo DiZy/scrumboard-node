@@ -122,9 +122,39 @@
 	margin-top: 15px;
 }
 
+#unassignedPeople {
+	min-height: 76px;
+	width: 100%;
+	border-bottom: 1px solid #F1F1F1;
+	float: left;
+	position: relative;
+	padding-left: 10px;
+    font-size: 35px;
+
+    div {
+    	float: left;
+    	position: relative;
+    }
+
+    div:first-child {
+    	padding-right: 10px;
+    }
+}
+
+.person {
+	border-radius: 50%;
+	border: 1px solid #2ecc71;
+	width: 64px;
+	height: 64px;
+	max-width: 100%;
+	max-height: 100%;
+	text-align: center;
+	float: left;
+}
+
 #board {
 	margin: 0;
-	width:100%;
+	width: 100%;
 
 	.row {
 		clear:both;
@@ -172,22 +202,34 @@
 		width:200px;
 		max-width:100%;
 		padding: 5px 1px;
-		height:75px;
 		min-height: 50px;
 		min-width: 100px;
+		height: 100px;
+		margin-bottom: 10px;
+
+		.people-row {
+			margin: auto;
+			text-align: center;
+			margin-top: 5px;
+			width: 100%;
+			float: left;
+			height: 25px;
+
+			.person {
+				width: 25%;
+				height: 25px;
+
+			}
+		}
 
 		.taskpanel {
 			height:100%;
 			padding:1px;
 			text-align: center;
+			height: calc(100% - 25px);
 
 			.arrow-row {
 				height:33%;
-			}
-
-			.people-row {
-				height:50%;
-				font-size: 10px;
 			}
 
 			.arrow {
@@ -242,7 +284,7 @@
 
 	.story-descr {
 		width: 300px;
-		height: 100px;
+		height: 125px;
 	}
 }
 
