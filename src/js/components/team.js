@@ -14,14 +14,37 @@ team = (function() {
     		var toReturn = [];
     		_teamJson.people.forEach(function(p) {
     			if(p.taskId == taskId) {
-    				toReturn += p;
+    				toReturn.push(p);
     			}
     		});
     		return JSON.parse(JSON.stringify(toReturn));
     	},
-    	addPerson: function() {
-    		//TODO
-    		person().render({taskId: null, name: 'dz'}, $('#unassignedPeople'));
+    	addPerson: function(personName) {
+			$.ajax({
+	            type: 'POST',
+	            url: '/addPersonToTeam',
+	            data: {
+	                teamId: _teamJson._id,
+	                personName: personName
+	            },
+	            dataType: "json",
+	            contentType: "application/x-www-form-urlencoded"
+
+	        })
+	        .done(function(data) {
+	            console.log(data);
+	            if(data.type == 'success'){
+	                person().render(data.person, $('#unassignedPeople'));
+	            }
+	            else {
+	                alert(data.error);
+	            }
+
+	        })
+	        .fail(function(data) {
+	            alert("Internal Server Error");
+	            console.log(data);
+	        });
     	},
 
     	getNextPersonAttr: function() {
@@ -37,49 +60,73 @@ team = (function() {
     		var num = personDiv.attr('data-person');
 
     		var p = _peopleMap[num];
+
     		if(p) {
-				// $.ajax({
-		  //           type: 'PUT',
-		  //           url: '/assignPerson',
-		  //           data: {
-		  //               teamId: _teamJson.id,
-		  //               personId: p.id,
-		  //               newTaskId: taskId
-		  //           },
-		  //           dataType: "json",
-		  //           contentType: "application/x-www-form-urlencoded"
+				$.ajax({
+		            type: 'PUT',
+		            url: '/assignPerson',
+		            data: {
+		                teamId: _teamJson._id,
+		                personId: p._id,
+		                newTaskId: taskId
+		            },
+		            dataType: "json",
+		            contentType: "application/x-www-form-urlencoded"
 
-		  //       })
-		  //       .done(function(data) {
-		  //           console.log(data);
-		  //           if(data.type == 'success'){
-		  //               $('.person[data-person=' + num + ']').remove();
-		  //               p.taskId = taskId;
-		  //               person().render(p, divToRenderTo);
-		  //               delete _peopleMap[num];
-		  //           }
-		  //           else {
-		  //               alert(data.error);
-		  //           }
+		        })
+		        .done(function(data) {
+		            console.log(data);
+		            if(data.type == 'success'){
+		                $('.person[data-person=' + num + ']').remove();
+		                p.taskId = taskId;
+		                person().render(p, divToRenderTo);
+		                delete _peopleMap[num];
+		            }
+		            else {
+		                alert(data.error);
+		            }
 
-		  //       })
-		  //       .fail(function(data) {
-		  //           alert("Internal Server Error");
-		  //           console.log(data);
-		  //       });
-				$('.person[data-person=' + num + ']').remove();
-				p.taskId = taskId;
-				person().render(p, divToRenderTo);
-				delete _peopleMap[num];
+		        })
+		        .fail(function(data) {
+		            alert("Internal Server Error");
+		            console.log(data);
+		        });
     		}
-
     	},
 
     	removePerson: function(personDiv) {
     		var num = personDiv.attr('data-person');
-    		$('.person[data-person=' + num + ']').remove();
-    		delete _peopleMap[num];
-    		//TODO: ajax
+
+    		var p = _peopleMap[num];
+
+    		if(p) {
+				$.ajax({
+		            type: 'DELETE',
+		            url: '/removePersonFromTeam',
+		            data: {
+		                teamId: _teamJson._id,
+		                personId: p._id
+		            },
+		            dataType: "json",
+		            contentType: "application/x-www-form-urlencoded"
+
+		        })
+		        .done(function(data) {
+		            console.log(data);
+		            if(data.type == 'success'){
+		                $('.person[data-person=' + num + ']').remove();
+		                delete _peopleMap[num];
+		            }
+		            else {
+		                alert(data.error);
+		            }
+
+		        })
+		        .fail(function(data) {
+		            alert("Internal Server Error");
+		            console.log(data);
+		        });
+    		}
     	}
     }
 

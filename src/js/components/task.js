@@ -135,7 +135,10 @@ var task = function() {
 		var peopleDiv = $('<div>').addClass('col-xs-8 peopleDiv').appendTo($peopleRow);
 		$('<div>').addClass('col-xs-2').appendTo($peopleRow);
 
-		//TODO: loop through people
+		var people = team.getPeopleForTask(_taskJson._id);
+		people.forEach(function(p) {
+			person().render(p, peopleDiv);
+		});
 	}
 
 	function makeResizable() {
@@ -185,7 +188,7 @@ var task = function() {
 		if(divToRenderTo.children('.person').length == 4) {
 			return false;
 		}
-		team.assignPerson(personDiv, _taskJson.id, divToRenderTo);
+		team.assignPerson(personDiv, _taskJson._id, divToRenderTo);
 		return true;
 	}
 
@@ -249,7 +252,13 @@ var task = function() {
 		.done(function(data) {
 		    console.log(data);
 		    if(data.type == 'success'){
+		    	var peopleDiv = $('#unassignedPeople');
+		    	_taskDiv.find('.person').each(function(index, personDiv) {
+		    		console.log(personDiv);
+		    		team.assignPerson($(personDiv), "", peopleDiv);
+		    	});
 		       _taskDiv.remove();
+
 		    }
 		    else {
 		        alert(data.error);

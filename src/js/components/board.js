@@ -6,27 +6,29 @@ board = (function(){
     function renderPeople() {
         var peopleDiv = $('<div>').attr('id', 'unassignedPeople').appendTo('body');
         var peopleText = $('<div>').text('People:').appendTo(peopleDiv);
-        var people = team.getPeopleForTask(null);
+        var people = team.getPeopleForTask("");
+
+        var addPersonButton = $('<div>').attr('id', 'addPersonButton').addClass('person').text('+').appendTo(peopleDiv);
+
         people.forEach(function(p) {
             person().render(p, peopleDiv);
         });
 
-
-        var addPersonButton = $('<div>').attr('id', 'addPersonButton').addClass('person').text('+').appendTo(peopleDiv);
-        //TODO
         addPersonButton.click(function() {
-            team.addPerson();
+            addPersonModal.open(function(personName) {
+                team.addPerson(personName);
+            });;
         });
 
         peopleDiv.droppable({
             accept: '.person',
             drop: function(event, ui) {
                 var personDiv = ui.draggable;
-                team.assignPerson(personDiv, null, peopleDiv);
+                team.assignPerson(personDiv, "", peopleDiv);
             }
         });
 
-        //deletesPerson
+        //deletes Person
         addPersonButton.droppable({
             accept: '.person',
             drop: function(event, ui) {

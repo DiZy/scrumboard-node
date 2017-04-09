@@ -511,6 +511,104 @@ app.put('/updateTaskStyling', requiresLogin, function(req, res) {
 	});
 });
 
+app.post('/addPersonToTeam', requiresLogin, function(req, res) {
+    var teamId = req.body.teamId;
+    var personName = req.body.personName;
+
+    teamsCollection.find({'_id': teamId}, function(err, results) {
+    	assert.equal(err, null);
+    	if(results.length > 0) {
+    		var team = results[0];
+    		if(team.companyId == req.session.companyId) {
+    			var newPersonId = uuidV4();
+    			teamsCollection.updateOne(
+    				{'_id': teamId},
+    				{$push: { 
+    					"people": {"_id": newPersonId, "name": personName, "taskId": ""} 
+    					}
+    				},
+    				function(err, result) {
+    					assert.equal(err, null);
+    					return res.json({type: "success", person: {_id: newPersonId, name: personName, taskId: null}  });
+    				}
+    			);
+    		}
+    		else {
+    			return res.json({ type: "error", error: "You do not have permissions to edit this teams's people."});
+    		}
+    	}
+    	else {
+    		return res.json({ type: "error", error: "This team does not exist."});
+    	}
+    });
+});
+
+app.put('/assignPerson', requiresLogin, function(req, res) {
+	var teamId = req.body.teamId;
+	var personId = req.body.personId;
+	var newTaskId = req.body.newTaskId;
+
+	teamsCollection.find({'_id': teamId}, function(err, results) {
+		assert.equal(err, null);
+		if(results.length > 0) {
+			var team = results[0];
+			if(team.companyId == req.session.companyId) {
+				teamsCollection.updateOne(
+					{'_id': teamId, 'people._id': personId},
+					{
+						$set : {
+							'people.$.taskId': newTaskId
+						}
+					},
+					function(err, result) {
+						assert.equal(err, null);
+						return res.json({type: "success", newTaskId: newTaskId, result: result });
+					}
+				);
+				
+			}
+			else {
+				return res.json({ type: "error", error: "You do not have permissions to assign this team's people."});
+			}
+		}
+		else {
+			return res.json({ type: "error", error: "This team does not exist."});
+		}
+	});
+});
+
+app.delete('/removePersonFromTeam', requiresLogin, function(req, res) {
+	var teamId = req.body.teamId;
+	var personId = req.body.personId;
+
+	teamsCollection.find({'_id': teamId}, function(err, results) {
+		assert.equal(err, null);
+		if(results.length > 0) {
+			var team = results[0];
+			if(team.companyId == req.session.companyId) {
+				teamsCollection.updateOne(
+					{'_id': teamId},
+					{$pull: { 
+						"people": {"_id": personId} 
+						}
+					},
+					function(err, result) {
+						assert.equal(err, null);
+						return res.json({type: "success"});
+					}
+				);
+				
+			}
+			else {
+				return res.json({ type: "error", error: "You do not have permissions to edit this team's stories."});
+			}
+		}
+		else {
+			return res.json({ type: "error", error: "This team does not exist."});
+		}
+	});
+});
+
 function requiresLoginRedirect(req, res, next) {
   if (isLoggedIn(req)) {
     next();
