@@ -5,8 +5,8 @@
 
 		<h1>ScrumBoard v0.1</h1>
 		<h2>Sign Up</h2>
-		<input class="input form-control" placeholder="Username" id="username">
-		<input class="input form-control" placeholder="Password" id="password" type="password">
+		<input class="input form-control" placeholder="Username" id="signInUsername">
+		<input class="input form-control" placeholder="Password" id="signInPassword" type="password">
 		<button class="btn btn-default" id="signIn">Sign In</button>
 		<button class="btn btn-default" id="signUp">Sign Up</button>
 
@@ -38,10 +38,24 @@
 
 	<script>
 
+	$(document).ready(function() {
+
+		//Enter key press
+		$('#signInUsername').keypress(function(event){
+		  if(event.keyCode == 13){
+		    $('#signIn').click();
+		  }
+		});
+
+		$('#signInPassword').keypress(function(event){
+		  if(event.keyCode == 13){
+		    $('#signIn').click();
+		  }
+		});
+
 		$('#signUp').click(function() {
 			$('#signUpModal').modal('show');
 		});
-
 
 		$('#signIn').click(function() {
 			console.log("test");
@@ -50,8 +64,8 @@
 				type: 'POST',
 				url: '/signIn',
 				data: {
-					username: $('#username').val(),
-					password: $('#password').val()
+					username: $('#signInUsername').val(),
+					password: $('#signInPassword').val()
 				},
 				dataType: "json",
 				contentType: "application/x-www-form-urlencoded"
@@ -99,6 +113,7 @@
 				$('#signUpFormButton').attr('disabled', false);
 			});
 		});
+	});
 	</script>
 </body>
 </html>
