@@ -1,3 +1,7 @@
+$post-green: #BBF5CC;
+$post-blue: #B3E8FF;
+$post-yellow: #FFFBD0;
+
 .center {
 	text-align: center;
 }
@@ -141,13 +145,13 @@
     }
 
     #addPersonButton {
-    	color: #2ecc71;
+    	color: white;
     }
 }
 
 .person {
 	border-radius: 50%;
-	border: 1px solid #2ecc71;
+	background-color: $post-green;
 	width: 64px;
 	height: 64px;
 	max-width: 100%;
@@ -194,7 +198,7 @@
 	}
 
 	.story-sticky {
-		background-color: #B3E8FF !important;
+		background-color: $post-blue !important;
 	}
 
 	.add-task-sticky {
@@ -220,10 +224,22 @@
 			float: left;
 			height: 25px;
 
-			.person {
-				width: 25%;
-				height: 25px;
+			.peopleDiv {
+				padding: 0;
+			}
 
+			.person {
+				width: calc(25% - 4px);
+				height: 25px;
+				margin-right: 4px;
+			}
+
+			.person:first-child {
+				margin-left: 2px;
+			}
+
+			.person:last-child {
+				margin-right: 2px;
 			}
 		}
 
@@ -253,7 +269,7 @@
 
 		.taskcenter {
 			box-shadow: 0px 3px 5px #888888;
-			background-color: #FFFBD0;
+			background-color: $post-yellow;
 			overflow-y: auto;
 
 			.editCover {
