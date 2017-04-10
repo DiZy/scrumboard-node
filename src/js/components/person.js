@@ -12,7 +12,7 @@ var person = (function() {
 			personDiv.draggable({
 				revert: true,
 				start: function() {
-					$('#addPersonButton').text('X');
+					$('#addPersonButton')[0].innerHTML = "<span class='glyphicon glyphicon-trash'></span>";
 				},
 				stop: function() {
 					$('#addPersonButton').text('+');

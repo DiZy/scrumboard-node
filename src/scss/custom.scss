@@ -146,6 +146,14 @@ $post-yellow: #FFFBD0;
 
     #addPersonButton {
     	color: white;
+    	margin: auto;
+
+    	.glyphicon-trash {
+    		margin-top: 14px;
+    		color: red;
+    		text-align: center;
+    		margin-left: -4px;
+    	}
     }
 }
 
