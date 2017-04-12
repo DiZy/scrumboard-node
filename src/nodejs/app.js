@@ -621,7 +621,7 @@ app.get('/getBurndown', requiresLogin, checkGetPermissionForTeam, function(req, 
 				var result = results[0];
 				var labels = [];
 				for(var i = 0; i < result.hoursData.length; i++) {
-					labels.push(i);
+					labels.push(i + 1);
 				}
 				return res.json({type: "success", chartLabels: labels, chartData: result.hoursData});
 			}

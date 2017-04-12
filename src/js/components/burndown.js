@@ -34,10 +34,11 @@ burndown = (function() {
 		$('#burndown-chart').text("");
 		burndownChart = new Chart(document.getElementById("burndown-chart"), {
 		    type: 'line',
+		    xAxisID: 'Day',
 		    data: {
 		        labels: labels,
 		        datasets: [{
-		            label: 'Hours',
+		            label: 'Task Hours',
 		            data: data,
 		            backgroundColor: 'rgba(255, 99, 132, 0.2)',
 		            borderColor: 'rgba(255,99,132,1)',
@@ -49,7 +50,17 @@ burndown = (function() {
 		            yAxes: [{
 		                ticks: {
 		                    beginAtZero:true
-		                }
+		                },
+		                scaleLabel: {
+	                        display: true,
+	                        labelString: 'Hours'
+                      	}
+		            }],
+		            xAxes: [{
+		                scaleLabel: {
+	                        display: true,
+	                        labelString: 'Day'
+                      	}
 		            }]
 		        }
 		    }
@@ -130,7 +141,7 @@ burndown = (function() {
 		    console.log(data);
 		    if(data.type == 'success'){
 		    	var currentSet = burndownChart.data.datasets[0].data;
-		        burndownChart.data.labels.push(currentSet.length);
+		        burndownChart.data.labels.push(currentSet.length + 1);
 		        currentSet.push(data.newPoint);
 		        burndownChart.update();
 		    }
