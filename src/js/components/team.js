@@ -35,6 +35,7 @@ team = (function() {
 	        .done(function(data) {
 	            console.log(data);
 	            if(data.type == 'success'){
+	            	_teamJson.people.push(data.person);
 	                person().render(data.person, $('#unassignedPeople'));
 	            }
 	            else {
@@ -78,7 +79,12 @@ team = (function() {
 		        .done(function(data) {
 		            console.log(data);
 		            if(data.type == 'success'){
-		                $('.person[data-person=' + num + ']').remove();
+		                for(var i = 0; i < _teamJson.people.length; i++) {
+		                	if(_teamJson.people[i]._id == p._id) {
+		                		_teamJson.people[i].taskId = taskId;
+		                	}
+		                }
+		                personDiv.remove();
 		                p.taskId = taskId;
 		                person().render(p, divToRenderTo);
 		                delete _peopleMap[num];
@@ -115,7 +121,12 @@ team = (function() {
 		        .done(function(data) {
 		            console.log(data);
 		            if(data.type == 'success'){
-		                $('.person[data-person=' + num + ']').remove();
+		                personDiv.remove();
+		                for(var i = 0; i < _teamJson.people.length; i++) {
+		                	if(_teamJson.people[i]._id == p._id) {
+		                		delete _teamJson.people[i];
+		                	}
+		                }
 		                delete _peopleMap[num];
 		            }
 		            else {
