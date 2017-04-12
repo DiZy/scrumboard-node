@@ -9,6 +9,7 @@ team = (function() {
     		_nextPersonAttr = 1;
     		_peopleMap = {};
     		board.render(teamjson);
+    		burndown.initialize(teamjson._id);
     	},
     	getPeopleForTask: function(taskId) {
     		var toReturn = [];

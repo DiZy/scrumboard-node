@@ -1,0 +1,43 @@
+#burndown-container {
+	position: fixed;
+	bottom: 0;
+	width: 40%;
+	min-width: 400px;
+
+	left: 30%;
+	z-index: 99999;
+	border: 1px solid black;
+	border-top-right-radius: 5px;
+	border-top-left-radius: 5px;
+	text-align: center;
+	background-color: white;
+
+	#burndown-toggle {
+		height: 25px;
+		width: 100%;
+		border-bottom: 1px solid #eee;
+		cursor: pointer;
+
+		.glyphicon {
+			font-size: 15px;
+			margin-top: 3px;
+		}
+
+	}
+
+	#burndown {
+		height: 600px;
+		max-height: 80vh;
+		width: 100%;
+
+		#burndown-buttons {
+			height: 35px;
+			position: absolute;
+			bottom: 0;
+			width: 100%;
+
+			
+		}
+
+	}
+}

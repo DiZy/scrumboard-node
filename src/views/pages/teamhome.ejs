@@ -8,6 +8,7 @@
     <script src='/assets/js/components/task.js'></script>
     <script src='/assets/js/components/story.js'></script>
     <script src='/assets/js/components/board.js'></script>
+    <script src='/assets/js/components/burndown.js'></script>
     <script src='/assets/js/components/team.js'></script>
     <script src='/assets/js/components/teampicker.js'></script>
     
@@ -38,5 +39,20 @@
 	    </div><!-- /.modal-content -->
 	  </div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
+
+	<div id="burndown-container">
+		<div id="burndown-toggle">
+			<span class="glyphicon glyphicon-collapse-up"></span>
+		</div>
+		<div id="burndown" style="display: none;">
+			<canvas id="burndown-chart"></canvas>
+			<div id="burndown-buttons">
+				<button class="btn btn-default btn-lg col-xs-4" id="burndown-start">Mark Start</button>
+				<button class="btn btn-default btn-lg col-xs-4"id="burndown-mark">Mark Point</button>
+				<button class="btn btn-default btn-lg col-xs-4" id="burndown-undo">Undo Point</button>
+			</div>
+
+		</div>
+	</div>
 </body>
 </html>

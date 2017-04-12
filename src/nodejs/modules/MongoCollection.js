@@ -81,4 +81,17 @@ MongoCollection.prototype.updateOne = function(user, updatedData, callback) {
 	});	
 };
 
+MongoCollection.prototype.aggregate = function(options, callback) {
+	this.getCollection(function(error, thisCollection) {
+		if(error){
+			callback(error);
+		}
+		else {
+			thisCollection.aggregate(options, function(error, results) {
+				callback(error, results);
+			});
+		}
+	});
+}
+
 module.exports = MongoCollection;

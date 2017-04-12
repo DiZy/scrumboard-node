@@ -44,5 +44,13 @@
 						'name': 'create google doc'
 					}]
 		}
+	},
+
+	'burndowns': {
+		{
+			'_id' : 20938,
+			'teamId': 6,
+			hoursData: []
+		}
 	}
 }

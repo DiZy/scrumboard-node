@@ -14,6 +14,7 @@ const usersCollection = new MongoCollection('users');
 const companiesCollection = new MongoCollection('companies');
 const teamsCollection = new MongoCollection('teams');
 const storiesCollection = new MongoCollection('stories');
+const burndownsCollection = new MongoCollection('burndowns');
 
 //App Settings
 app.set('view engine', 'ejs');
@@ -243,8 +244,6 @@ app.put('/moveStory', requiresLogin, function(req, res) {
 });
 
 app.put('/editStory', requiresLogin, function(req, res) {
-
-	console.log(teamId);
 
 	var teamId = req.body.teamId;
 	var newStoryJson = req.body.newStoryJson;
@@ -608,6 +607,148 @@ app.delete('/removePersonFromTeam', requiresLogin, function(req, res) {
 		}
 	});
 });
+
+app.get('/getBurndown', requiresLogin, checkGetPermissionForTeam, function(req, res, next) {
+	var teamId = req.query.teamId;
+	burndownsCollection.find(
+		{'teamId': teamId},
+		function(err, results) {
+			assert.equal(err, null);
+			if(results.length == 0) {
+				next();
+			}
+			else {
+				var result = results[0];
+				var labels = [];
+				for(var i = 0; i < result.hoursData.length; i++) {
+					labels.push(i);
+				}
+				return res.json({type: "success", chartLabels: labels, chartData: result.hoursData});
+			}
+		}
+	);
+}, createBurndown);
+
+function createBurndown(req, res) {
+	var teamId = req.query.teamId;
+	burndownsCollection.insert(
+		{"_id": uuidV4(), "teamId": teamId, "hoursData": []}, 
+		function(err, results, burndown) {
+			assert.equal(err, null);
+			return res.json({type: "success", chartLabels: [], chartData: []});
+		}
+	);
+}
+
+app.post('/startBurndown', requiresLogin, checkPostPermissionForTeam, function(req, res) {
+	var teamId = req.body.teamId;
+
+	burndownsCollection.updateOne(
+		{'teamId': teamId},
+		{$set: { 
+			"hoursData": []
+		}},
+		function(err, result) {
+			assert.equal(err, null);
+			return res.json({type: "success"});
+		}
+	);
+});
+
+app.post('/markBurndown', requiresLogin, checkPostPermissionForTeam, function(req, res) {
+	var teamId = req.body.teamId;
+
+	storiesCollection.aggregate([
+		{ '$match': {'teamId' : teamId}},
+		{ '$unwind': '$tasks' },
+		{ '$group': {
+	        '_id': '$_id',
+	        'taskhours': {"$push": "$tasks.points"}
+	    }}
+		], 
+		function(err, results) {
+			var totalHours = 0;
+			for(var i = 0; i < results.length; i++) {
+				var taskhours = results[i].taskhours;
+				for(var j = 0; j < taskhours.length; j++) {
+					totalHours += parseFloat(taskhours[j]);
+				}
+			}
+
+			burndownsCollection.updateOne(
+				{'teamId': teamId},
+				{$push: { 
+					"hoursData": totalHours
+				}},
+				function(err, result) {
+					assert.equal(err, null);
+					return res.json({type: "success", newPoint: totalHours });
+				}
+			);
+
+		}
+	);
+});
+
+app.post('/undoBurndown', requiresLogin, checkPostPermissionForTeam, function(req, res) {
+	var teamId = req.body.teamId;
+
+	burndownsCollection.updateOne(
+		{'teamId': teamId},
+		{$pop: { 
+			"hoursData": 1
+			}
+		},
+		function(err, result) {
+			assert.equal(err, null);
+			return res.json({type: "success"});
+		}
+	);
+});
+
+
+
+//Helpers
+
+function checkPostPermissionForTeam(req, res, next) {
+	var teamId = req.body.teamId;
+
+	teamsCollection.find({'_id': teamId}, function(err, results) {
+		assert.equal(err, null);
+		if(results.length == 1) {
+			var team = results[0];
+			if(team.companyId == req.session.companyId) {
+				next();
+			}
+			else {
+				return res.json({ type: "error", error: "You do not have permissions to do anything for this team."});
+			}
+		}
+		else {
+			return res.json({ type: "error", error: "This team does not exist."});
+		}
+	});
+}
+
+function checkGetPermissionForTeam(req, res, next) {
+	var teamId = req.query.teamId;
+
+	teamsCollection.find({'_id': teamId}, function(err, results) {
+		assert.equal(err, null);
+		if(results.length == 1) {
+			var team = results[0];
+			if(team.companyId == req.session.companyId) {
+				next();
+			}
+			else {
+				return res.json({ type: "error", error: "You do not have permissions to do anything for this team."});
+			}
+		}
+		else {
+			return res.json({ type: "error", error: "This team does not exist."});
+		}
+	});
+}
 
 function requiresLoginRedirect(req, res, next) {
   if (isLoggedIn(req)) {
