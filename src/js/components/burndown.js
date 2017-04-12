@@ -31,6 +31,7 @@ burndown = (function() {
 	}
 
 	function renderChart(labels, data) {
+		$('#burndown-chart').text("");
 		burndownChart = new Chart(document.getElementById("burndown-chart"), {
 		    type: 'line',
 		    data: {
@@ -57,6 +58,7 @@ burndown = (function() {
 
 
 	function addEventHandlers() {
+		$('#burndown-toggle').unbind('click');
 		$('#burndown-toggle').click(function() {
 			$('#burndown').slideToggle({ direction: "up" }, 300);
 			var glyphiconSpan = $('#burndown-toggle>.glyphicon');
@@ -69,14 +71,18 @@ burndown = (function() {
 			}
 		});
 
-
+		$('#burndown-start').unbind('click');
 		$('#burndown-start').click(function() {
 			var confirmation = confirm("Are you sure you want to reset the sprint data?");
 			if (confirmation) {
 				start();
 			}
 		});
+
+		$('#burndown-mark').unbind('click');
 		$('#burndown-mark').click(mark);
+
+		$('#burndown-undo').unbind('click');
 		$('#burndown-undo').click(undo);
 	}
 
