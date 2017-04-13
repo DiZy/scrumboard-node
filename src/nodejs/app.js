@@ -623,7 +623,7 @@ app.get('/getBurndown', requiresLogin, checkGetPermissionForTeam, function(req, 
 				for(var i = 0; i < result.hoursData.length; i++) {
 					labels.push(i + 1);
 				}
-				return res.json({type: "success", chartLabels: labels, chartData: result.hoursData});
+				return res.json({type: "success", chartLabels: labels, hoursData: result.hoursData, pointsData: result.pointsData});
 			}
 		}
 	);
@@ -632,10 +632,10 @@ app.get('/getBurndown', requiresLogin, checkGetPermissionForTeam, function(req, 
 function createBurndown(req, res) {
 	var teamId = req.query.teamId;
 	burndownsCollection.insert(
-		{"_id": uuidV4(), "teamId": teamId, "hoursData": []}, 
+		{"_id": uuidV4(), "teamId": teamId, "hoursData": [], "pointsData": []}, 
 		function(err, results, burndown) {
 			assert.equal(err, null);
-			return res.json({type: "success", chartLabels: [], chartData: []});
+			return res.json({type: "success", chartLabels: [], hoursData: [], pointsData: []});
 		}
 	);
 }
@@ -646,7 +646,8 @@ app.post('/startBurndown', requiresLogin, checkPostPermissionForTeam, function(r
 	burndownsCollection.updateOne(
 		{'teamId': teamId},
 		{$set: { 
-			"hoursData": []
+			"hoursData": [],
+			"pointsData": []
 		}},
 		function(err, result) {
 			assert.equal(err, null);
@@ -663,26 +664,36 @@ app.post('/markBurndown', requiresLogin, checkPostPermissionForTeam, function(re
 		{ '$unwind': '$tasks' },
 		{ '$group': {
 	        '_id': '$_id',
-	        'taskhours': {"$push": "$tasks.points"}
+	        'taskhours': {"$push": "$tasks.points"},
+	        'storyPoints': {"$first": "$points"}
 	    }}
 		], 
 		function(err, results) {
 			var totalHours = 0;
+			var totalStoryPoints = 0;
 			for(var i = 0; i < results.length; i++) {
-				var taskhours = results[i].taskhours;
-				for(var j = 0; j < taskhours.length; j++) {
-					totalHours += parseFloat(taskhours[j]);
+				var taskhoursArray = results[i].taskhours;
+				var storyPoints = results[i].storyPoints;
+				if(!isNaN(storyPoints) && (/\S/.test(storyPoints))){
+					totalStoryPoints += parseFloat(storyPoints);
+				}
+				for(var j = 0; j < taskhoursArray.length; j++) {
+					var hoursToAdd = taskhoursArray[j];
+					if(!isNaN(hoursToAdd) && (/\S/.test(hoursToAdd))){
+						totalHours += parseFloat(hoursToAdd);
+					}
 				}
 			}
 
 			burndownsCollection.updateOne(
 				{'teamId': teamId},
 				{$push: { 
-					"hoursData": totalHours
+					"hoursData": totalHours,
+					"pointsData": totalStoryPoints
 				}},
 				function(err, result) {
 					assert.equal(err, null);
-					return res.json({type: "success", newPoint: totalHours });
+					return res.json({type: "success", newHours: totalHours, newPoints: totalStoryPoints });
 				}
 			);
 
@@ -696,7 +707,8 @@ app.post('/undoBurndown', requiresLogin, checkPostPermissionForTeam, function(re
 	burndownsCollection.updateOne(
 		{'teamId': teamId},
 		{$pop: { 
-			"hoursData": 1
+			"hoursData": 1,
+			"pointsData": 1
 			}
 		},
 		function(err, result) {

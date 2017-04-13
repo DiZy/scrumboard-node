@@ -50,7 +50,8 @@
 		{
 			'_id' : 20938,
 			'teamId': 6,
-			hoursData: []
+			hoursData: [],
+			pointsData: []
 		}
 	}
 }

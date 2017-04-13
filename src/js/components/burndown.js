@@ -17,7 +17,7 @@ burndown = (function() {
 		.done(function(data) {
 		    console.log(data);
 		    if(data.type == 'success'){
-		        renderChart(data.chartLabels, data.chartData);
+		        renderChart(data.chartLabels, data.hoursData, data.pointsData);
 		    }
 		    else {
 		        alert(data.error);
@@ -30,19 +30,25 @@ burndown = (function() {
 		});
 	}
 
-	function renderChart(labels, data) {
+	function renderChart(labels, hoursData, pointsData) {
 		$('#burndown-chart').text("");
 		burndownChart = new Chart(document.getElementById("burndown-chart"), {
 		    type: 'line',
-		    xAxisID: 'Day',
 		    data: {
 		        labels: labels,
 		        datasets: [{
 		            label: 'Task Hours',
-		            data: data,
-		            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+		            data: hoursData,
 		            borderColor: 'rgba(255,99,132,1)',
-		            borderWidth: 1
+		            borderWidth: 1,
+		            fill: false
+		        },
+		        {
+		            label: 'Story Points',
+		            data: pointsData,
+		            borderColor: 'rgba(100, 191, 222, 1)',
+		            borderWidth: 1,
+		            fill: false
 		        }]
 		    },
 		    options: {
@@ -53,7 +59,7 @@ burndown = (function() {
 		                },
 		                scaleLabel: {
 	                        display: true,
-	                        labelString: 'Hours'
+	                        labelString: 'Hours/Points'
                       	}
 		            }],
 		            xAxes: [{
@@ -113,6 +119,7 @@ burndown = (function() {
 		    if(data.type == 'success'){
 		        burndownChart.data.labels = [];
 		        burndownChart.data.datasets[0].data = [];
+		        burndownChart.data.datasets[1].data = [];
 		        burndownChart.update();
 		    }
 		    else {
@@ -140,9 +147,11 @@ burndown = (function() {
 		.done(function(data) {
 		    console.log(data);
 		    if(data.type == 'success'){
-		    	var currentSet = burndownChart.data.datasets[0].data;
-		        burndownChart.data.labels.push(currentSet.length + 1);
-		        currentSet.push(data.newPoint);
+		    	var hoursDataSet = burndownChart.data.datasets[0].data;
+		    	var storyPointsDataSet = burndownChart.data.datasets[1].data;
+		        burndownChart.data.labels.push(hoursDataSet.length + 1);
+		        hoursDataSet.push(data.newHours);
+		        storyPointsDataSet.push(data.newPoints);
 		        burndownChart.update();
 		    }
 		    else {
@@ -172,6 +181,7 @@ burndown = (function() {
 		    if(data.type == 'success'){
 		    	burndownChart.data.labels.pop();
 		    	burndownChart.data.datasets[0].data.pop();
+		    	burndownChart.data.datasets[1].data.pop();
 		        burndownChart.update();
 		    }
 		    else {
