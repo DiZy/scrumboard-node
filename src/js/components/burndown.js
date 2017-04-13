@@ -40,6 +40,7 @@ burndown = (function() {
 		            label: 'Task Hours',
 		            data: hoursData,
 		            borderColor: 'rgba(255,99,132,1)',
+		            backgroundColor: 'rgba(255,99,132,1)',
 		            borderWidth: 1,
 		            fill: false
 		        },
@@ -47,6 +48,7 @@ burndown = (function() {
 		            label: 'Story Points',
 		            data: pointsData,
 		            borderColor: 'rgba(100, 191, 222, 1)',
+		            backgroundColor: 'rgba(100, 191, 222, 1)',
 		            borderWidth: 1,
 		            fill: false
 		        }]
