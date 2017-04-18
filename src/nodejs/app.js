@@ -45,6 +45,8 @@ app.post('/signIn', function(req, res) {
 	var username = req.body.username;
 	var password = req.body.password;
 
+	username = username.toLowerCase();
+
 	usersCollection.find({'username' : username}, function(err, results){
 		assert.equal(null, err);
 		if(results.length > 0) {
@@ -84,6 +86,8 @@ app.post('/signUp', function(req, res) {
 		return res.json({ type: "error", error: "Please enter a valid email address"});
 	}
 
+	username = username.toLowerCase();
+
 	usersCollection.find({'username' : username}, function(err, results){
 		assert.equal(null, err);
 		if(results.length > 0) {
@@ -100,7 +104,7 @@ app.post('/signUp', function(req, res) {
 				assert.equal(err, null);
 
 				usersCollection.insert(
-				{"_id": uuidV4(), "username": username,"password": password,"name":fullName,'email':email, 'companyId': companyId},
+				{"_id": uuidV4(), "username": username, "password": password, "name":fullName,'email':email, 'companyId': companyId},
 				function(err, result) {
 					assert.equal(err, null);
 				return res.json({type: "success"});

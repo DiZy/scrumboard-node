@@ -80,14 +80,6 @@ burndown = (function() {
 		$('#burndown-toggle').unbind('click');
 		$('#burndown-toggle').click(function() {
 			$('#burndown').slideToggle({ direction: "up" }, 300);
-			var glyphiconSpan = $('#burndown-toggle>.glyphicon');
-			if(glyphiconSpan.hasClass('glyphicon-collapse-up')) {
-				glyphiconSpan.removeClass('glyphicon-collapse-up');
-				glyphiconSpan.addClass('glyphicon-collapse-down');
-			} else {
-				glyphiconSpan.removeClass('glyphicon-collapse-down');
-				glyphiconSpan.addClass('glyphicon-collapse-up');
-			}
 		});
 
 		$('#burndown-start').unbind('click');
