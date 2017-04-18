@@ -660,26 +660,30 @@ app.post('/markBurndown', requiresLogin, checkPostPermissionForTeam, function(re
 	var teamId = req.body.teamId;
 
 	storiesCollection.aggregate([
-		{ '$match': {'teamId' : teamId}},
+		{ '$match': {'teamId' : teamId, 'statusCode' : {'$ne': "3"}}},
 		{ '$unwind': '$tasks' },
 		{ '$group': {
 	        '_id': '$_id',
 	        'taskhours': {"$push": "$tasks.points"},
+	        'taskstatuses': {"$push": "$tasks.statusCode"},
 	        'storyPoints': {"$first": "$points"}
 	    }}
 		], 
 		function(err, results) {
+			console.log(results);
 			var totalHours = 0;
 			var totalStoryPoints = 0;
 			for(var i = 0; i < results.length; i++) {
 				var taskhoursArray = results[i].taskhours;
+				var taskstatusesArray = results[i].taskstatuses;
 				var storyPoints = results[i].storyPoints;
-				if(!isNaN(storyPoints) && (/\S/.test(storyPoints))){
+				if(!isNaN(parseFloat(storyPoints))){
 					totalStoryPoints += parseFloat(storyPoints);
 				}
 				for(var j = 0; j < taskhoursArray.length; j++) {
 					var hoursToAdd = taskhoursArray[j];
-					if(!isNaN(hoursToAdd) && (/\S/.test(hoursToAdd))){
+					var isNotDone = taskstatusesArray[j] != 3;
+					if(!isNaN(parseFloat(hoursToAdd)) && isNotDone){
 						totalHours += parseFloat(hoursToAdd);
 					}
 				}
