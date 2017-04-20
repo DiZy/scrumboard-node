@@ -64,6 +64,7 @@ var task = function() {
 				// }
 				$(_taskDiv).find('.hide-on-hover').hide();
 				$(_taskDiv).find('.show-on-hover').show();
+				$(_taskDiv).attr('title', "Notes:\n" + _taskJson.notes);
 			},
 			//Hover out
 			function() {
@@ -86,6 +87,8 @@ var task = function() {
 				$(_taskDiv).find('.hide-on-hover').show();
 			}
 		);
+
+
 	}
 
 	function leftPanelInit($leftPanel, people) {

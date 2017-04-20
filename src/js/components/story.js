@@ -223,7 +223,8 @@ var story = function() {
                     teamId: _storyJson.teamId,
                     storyId: _storyJson._id,
                     name: taskJson.name,
-                    points: taskJson.points
+                    points: taskJson.points,
+                    notes: taskJson.notes
                 },
                 dataType: "json",
                 contentType: "application/x-www-form-urlencoded"

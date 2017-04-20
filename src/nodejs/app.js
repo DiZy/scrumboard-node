@@ -340,6 +340,7 @@ app.post('/addTask', requiresLogin, function(req, res, next) {
 	var storyId = req.body.storyId;
 	var name = req.body.name;
 	var points = req.body.points;
+	var notes = req.body.notes;
 
 	teamsCollection.find({'_id': teamId}, function(err, results) {
 		assert.equal(err, null);
@@ -350,12 +351,12 @@ app.post('/addTask', requiresLogin, function(req, res, next) {
 				storiesCollection.updateOne(
 					{'_id': storyId, 'teamId': teamId},
 					{$push: { 
-						"tasks": {"_id": newTaskId, "name": name, "statusCode": 0, "points": points} 
+						"tasks": {"_id": newTaskId, "name": name, "statusCode": 0, "points": points, "notes": notes} 
 						}
 					},
 					function(err, result) {
 						assert.equal(err, null);
-						return res.json({type: "success", task: {_id: newTaskId, name: name, statusCode: 0, points: points} });
+						return res.json({type: "success", task: {_id: newTaskId, name: name, statusCode: 0, points: points, notes: notes} });
 					}
 				);
 				
@@ -457,7 +458,8 @@ app.put('/editTask', requiresLogin, function(req, res) {
 						$set : {
 							'tasks.$.statusCode': newTaskJson.statusCode,
 							'tasks.$.name': newTaskJson.name,
-							'tasks.$.points': newTaskJson.points
+							'tasks.$.points': newTaskJson.points,
+							'tasks.$.notes': newTaskJson.notes
 						}
 					},
 					function(err, result) {

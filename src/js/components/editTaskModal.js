@@ -26,6 +26,9 @@ editTaskModal = (function() {
 		var pointsInput = $('<input>').addClass('input form-control').attr('placeholder', 'Task Hours').attr('id', 'taskHours').appendTo(_taskForm);
 		pointsInput.val(_taskJsonEdited.points);
 
+		var notesInput = $('<textarea>').addClass('input form-control').attr('placeholder', 'Notes').attr('id', 'taskNotes').appendTo(_taskForm);
+		notesInput.val(_taskJsonEdited.notes);
+
 		$('#taskName').val(_taskJsonEdited.name);
 
 	}
@@ -37,6 +40,7 @@ editTaskModal = (function() {
 		saveButton.click(function() {
 			_taskJsonEdited.name = $('#taskName').val();
 			_taskJsonEdited.points = parseInt($('#taskHours').val());
+			_taskJsonEdited.notes = $('#taskNotes').val();
 			$('#editModal').modal('hide');
 			callback(_taskJsonEdited);
 		});
