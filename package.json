@@ -20,6 +20,7 @@
         "body-parser": "1.16.1",
         "bcryptjs": "2.4.3",
         "uuid": "3.0.1",
-        "express-session": "1.15.1"
+        "express-session": "1.15.1",
+        "socket.io": "1.7.3"
     }
 }

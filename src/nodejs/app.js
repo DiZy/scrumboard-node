@@ -7,6 +7,9 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcryptjs');
 const uuidV4 = require('uuid/v4');
 const session = require('express-session');
+var http = require('http').Server(app);
+var socketio = require('socket.io')(http);
+var socketInit = require('./socketInit');
 
 //Mongo
 const MongoCollection = require('./modules/MongoCollection');
@@ -22,11 +25,20 @@ app.set('views', path.join(__dirname, '/views'));
 app.use('/assets/', express.static(__dirname + '/assets'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(session({
+
+var sessionMiddleware = session({
   resave: false, // don't save session if unmodified
   saveUninitialized: false, // don't create session until something stored
   secret: 'everything is secret'
-}));
+});
+
+app.use(sessionMiddleware);
+
+socketio.use(function(socket, next) {
+    sessionMiddleware(socket.request, socket.request.res, next);
+});
+
+socketio.on('connection', socketInit);
 
 app.get('/logout', function(req, res) {
 	logOut(req);
@@ -817,5 +829,5 @@ function logOut(req) {
   	});
 }
 
-app.listen(process.env.PORT || 5000)
+http.listen(process.env.PORT || 5000)
 console.log("RUNNING ON PORT 5000");

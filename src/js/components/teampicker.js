@@ -1,6 +1,7 @@
 teampicker = (function() {
 	var _selectpicker;
     var _teamsArray = [];
+    var _socket;
 
 
     function createTeamAddRequest(name, callback) {
@@ -66,7 +67,6 @@ teampicker = (function() {
                 }
                 $('.selectpicker').selectpicker('val', teams[teams.length - 1].name);
                 $('.selectpicker').selectpicker('refresh');
-                team.initialize(_teamsArray[teams.length - 1]);
                 $('.bootstrap-select .dropdown-menu li').each(function(index, value) {
                     var removeTeamButton = $('<spann>').addClass('glyphicon glyphicon-remove-circle remove-team');
                     removeTeamButton.click(function(e) {
@@ -150,6 +150,8 @@ teampicker = (function() {
     	_selectpicker.appendTo('#select-div');
     	_selectpicker.selectpicker('refresh');
 
+        _socket = io();
+
 
         loadSelectOptions(function() {
 
@@ -157,13 +159,15 @@ teampicker = (function() {
                 var id = $(this).children(":selected").attr('id');
                 console.log(_teamsArray[id]);
                 team.initialize(_teamsArray[id]);
-
+                _socket.emit('join room', _teamsArray[id]._id);
             });
 
             $('#select-div').click(function(){
                 $('.bs-searchbox>input').attr('placeholder', 'Search through your existing teams or type a new team name')
                 $('.bs-searchbox>input').off('input', handleSearch).on('input', handleSearch);
             });
+
+            $('#select-div .selectpicker').trigger('change');
 
         });
 
@@ -173,7 +177,6 @@ teampicker = (function() {
         $('#sidebar-close').click(function() {
             $('#sidebar').fadeOut("fast");
         });
-
 
     });
 
