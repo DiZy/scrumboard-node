@@ -210,6 +210,7 @@ app.post('/addStory', requiresLogin, function(req, res) {
 					{"_id": uuidV4(), "name": name, "teamId": teamId, "companyId": team.companyId, "tasks": [], "statusCode": -1, "points": points}, 
 					function(err, results, story) {
 						assert.equal(err, null);
+						socketio.sockets.in(teamId).emit('add story', {story: story});
 						return res.json({type: "success", story: story});
 					}
 				);
@@ -243,6 +244,7 @@ app.put('/moveStory', requiresLogin, function(req, res) {
 					},
 					function(err, result) {
 						assert.equal(err, null);
+						socketio.sockets.in(teamId).emit('move story', {storyId: storyId, newStatusCode: newStatusCode});
 						return res.json({type: "success", newStatusCode: newStatusCode, result: result });
 					}
 				);
@@ -279,6 +281,7 @@ app.put('/editStory', requiresLogin, function(req, res) {
 					},
 					function(err, result) {
 						assert.equal(err, null);
+						socketio.sockets.in(teamId).emit('edit story', {story: newStoryJson});
 						return res.json({type: "success", story: newStoryJson });
 					}
 				);
@@ -307,6 +310,7 @@ app.delete('/deleteStory', requiresLogin, function(req, res) {
 					{'_id': storyId, 'teamId': teamId},
 					function(err, result) {
 						assert.equal(err, null);
+						socketio.sockets.in(teamId).emit('remove story', {storyId: storyId});
 						return res.json({type: "success"});
 					}
 				);
@@ -368,7 +372,9 @@ app.post('/addTask', requiresLogin, function(req, res, next) {
 					},
 					function(err, result) {
 						assert.equal(err, null);
-						return res.json({type: "success", task: {_id: newTaskId, name: name, statusCode: 0, points: points, notes: notes} });
+						var newTaskCreated = {_id: newTaskId, name: name, statusCode: 0, points: points, notes: notes};
+						socketio.sockets.in(teamId).emit('add task', {storyId: storyId, task: newTaskCreated});
+						return res.json({type: "success", storyId: storyId, task: newTaskCreated });
 					}
 				);
 				
@@ -401,6 +407,7 @@ app.delete('/deleteTask', requiresLogin, function(req, res, next) {
 					},
 					function(err, result) {
 						assert.equal(err, null);
+						socketio.sockets.in(teamId).emit('remove task', {storyId: storyId, taskId: taskId});
 						return res.json({type: "success"});
 					}
 				);
@@ -436,6 +443,7 @@ app.put('/moveTask', requiresLogin, function(req, res) {
 					},
 					function(err, result) {
 						assert.equal(err, null);
+						socketio.sockets.in(teamId).emit('move task', {storyId: storyId, taskId: taskId, newStatusCode: newStatusCode});
 						return res.json({type: "success", newStatusCode: newStatusCode, result: result });
 					}
 				);
@@ -476,6 +484,7 @@ app.put('/editTask', requiresLogin, function(req, res) {
 					},
 					function(err, result) {
 						assert.equal(err, null);
+						socketio.sockets.in(teamId).emit('edit task', {storyId: storyId, task: newTaskJson});
 						return res.json({type: "success", task: newTaskJson });
 					}
 				);
@@ -519,6 +528,7 @@ app.put('/updateTaskStyling', requiresLogin, function(req, res) {
 				
 			}
 			else {
+				socketio.sockets.in(teamId).emit('update task styling', {storyId: storyId, taskId: taskId, heihgt: height, width: width});
 				return res.json({ type: "error", error: "You do not have permissions to edit this story's tasks."});
 			}
 		}

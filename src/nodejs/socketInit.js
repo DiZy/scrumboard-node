@@ -27,7 +27,7 @@ function hasSocketPermissionForTeam(socket, teamId, callback) {
 
 module.exports = function(socket) {
 	if(!socket.request.session.userId || !socket.request.session.companyId) {
-		socket.emit('error');
+		//How to throw error?
 	} else {
 		socket.on('join room', function(teamId) {
 	        hasSocketPermissionForTeam(socket, teamId, function() {

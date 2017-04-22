@@ -1,7 +1,8 @@
 board = (function(){
 
     var _teamJson;
-    var _currentStoryIndex = 0;
+    var _currentStoryIndex;
+    var _storyObjMap;
 
     function renderPeople() {
         var peopleDiv = $('<div>').attr('id', 'unassignedPeople').appendTo('body');
@@ -77,8 +78,7 @@ board = (function(){
             .done(function(data) {
                 console.log(data);
                 if(data.type == 'success'){
-                    story().initialize(data.story, _currentStoryIndex);
-                    _currentStoryIndex++;
+                    //Socket has listener
                 }
                 else {
                     alert(data.error);
@@ -93,13 +93,15 @@ board = (function(){
 
     function renderStories() {
     	getListOfStoryJson(function(storyList) {
-            console.log(storyList);
+            _storyObjMap = {};
         	for(var i = 0; i < storyList.length; i++) {
-        		story().initialize(storyList[i], _currentStoryIndex);
+                var storyObj = story();
+                var storyJson = storyList[i];
+                _storyObjMap[storyJson._id] = storyObj;
+        		storyObj.initialize(storyJson, _currentStoryIndex);
                 _currentStoryIndex++;
         	}
         });
-
     }
 
     function getListOfStoryJson(callback) {
@@ -144,15 +146,6 @@ board = (function(){
             renderHeader();
         	renderStories();
         },
-
-        testFunctionality: function() {
-            renderHeader();
-            story().initialize();
-            task().initialize({statusCode: 0}, $('.story'));
-            task().initialize({statusCode: 0}, $('.story'));
-            task().initialize({statusCode: 1}, $('.story'));
-            task().initialize({statusCode: 2}, $('.story'));
-        },
         resizeColumn: function(columnNumber, newWidth) {
             var selector = 'div[data-column=' + columnNumber + ']';
             $(selector).width(newWidth);
@@ -179,6 +172,36 @@ board = (function(){
                     board.resizeColumn($(this).attr('data-column'), $(this).width());
                 }
             });
+        },
+        handleAddStory: function(storyData) {
+            var storyObj = story();
+            _storyObjMap[storyData._id] = storyObj;
+            storyObj.initialize(storyData, _currentStoryIndex);
+            _currentStoryIndex++;
+        },
+        handleRemoveStory: function(storyId) {
+            _storyObjMap[storyId].handleRemove();
+        },
+        handleEditStory: function(storyData) {
+            _storyObjMap[storyData._id].handleEdit(storyData);
+        },
+        handleMoveStory: function(storyId, newStatusCode) {
+            _storyObjMap[storyId].handleMove(newStatusCode);
+        },
+        handleAddTask: function(storyId, taskData) {
+            _storyObjMap[storyId].handleAddTask(taskData);
+        },
+        handleRemoveTask: function(storyId, taskId) {
+            _storyObjMap[storyId].handleRemoveTask(taskId);
+        },
+        handleEditTask: function(storyId, taskData) {
+             _storyObjMap[storyId].handleEditTask(taskData);
+        },
+        handleMoveTask: function(storyId, taskId, newStatusCode) {
+            _storyObjMap[storyId].handleMoveTask(taskId, newStatusCode);
+        },
+        handleRestyleTask: function(storyId, taskId, height, width) {
+            _storyObjMap[storyId].handleRestyleTask(taskId, height, width);
         }
     }
 

@@ -3,6 +3,7 @@ var story = function() {
     var _storyRow;
     var _index;
     var _storySticky;
+    var _taskObjMap;
 
     function render() {
         _storyRow = $('<div>').addClass('row story').attr('data-story', _index);
@@ -56,8 +57,12 @@ var story = function() {
 
 
         var allTasks = _storyJson.tasks;
+        _taskObjMap = {};
         for(var i = 0; i < allTasks.length; i++) {
-            task().initialize(allTasks[i], _storyRow, _index, _storyJson._id, _storyJson.teamId);
+            var taskObj = task();
+            var taskData = allTasks[i];
+            _taskObjMap[taskData._id] = taskObj;
+            taskObj.initialize(taskData, _storyRow, _index, _storyJson._id, _storyJson.teamId);
         }
 
         _storyRow.appendTo('#board');
@@ -127,21 +132,7 @@ var story = function() {
         .done(function(data) {
             console.log(data);
             if(data.type == 'success'){
-                _storyJson.statusCode = data.newStatusCode;
-
-                var leftPanelDO = _storySticky.children('.taskpanel')[0];
-                var rightPanelDO = _storySticky.children('.taskpanel')[2];
-
-                _storyRow.remove('.story-descr');
-
-                leftPanelDO.innerHTML = "";
-                rightPanelDO.innerHTML = "";
-
-                leftPanelInit($(leftPanelDO));
-                rightPanelInit($(rightPanelDO));
-
-                var colSelector = "." + 'progresscol[data-column=' + _storyJson.statusCode + ']';
-                _storyRow.children(colSelector).append(_storySticky);
+                //Socket handles
             }
             else {
                 alert(data.error);
@@ -170,9 +161,7 @@ var story = function() {
             .done(function(data) {
                 console.log(data);
                 if(data.type == 'success'){
-                    _storyJson = data.story;
-                    _storyRow.find('.story-sticky').text(_storyJson.name);
-                    middlePanelInit(_storyRow.find('.story-sticky'));
+                    //Socket handles
                 }
                 else {
                     alert(data.error);
@@ -201,7 +190,7 @@ var story = function() {
         .done(function(data) {
             console.log(data);
             if(data.type == 'success'){
-                _storyRow.remove();
+                //Handled by Socket
             }
             else {
                 alert(data.error);
@@ -233,7 +222,7 @@ var story = function() {
             .done(function(data) {
                 console.log(data);
                 if(data.type == 'success'){
-                    task().initialize(data.task, _storyRow, _index, _storyJson._id, _storyJson.teamId);
+                    //Socket handles
                 }
                 else {
                     alert(data.error);
@@ -252,7 +241,49 @@ var story = function() {
     		_storyJson = storyJson;
             _index = currentIndex;
     		render();
-    	}
+    	},
+        handleRemove: function() {
+            _storyRow.remove();
+        },
+        handleEdit: function(storyData) {
+            _storyJson = storyData;
+            _storyRow.find('.story-sticky').text(_storyJson.name);
+            middlePanelInit(_storyRow.find('.story-sticky'));
+        },
+        handleMove: function(newStatusCode) {
+            _storyJson.statusCode = newStatusCode;
+
+            var leftPanelDO = _storySticky.children('.taskpanel')[0];
+            var rightPanelDO = _storySticky.children('.taskpanel')[2];
+
+            _storyRow.remove('.story-descr');
+
+            leftPanelDO.innerHTML = "";
+            rightPanelDO.innerHTML = "";
+
+            leftPanelInit($(leftPanelDO));
+            rightPanelInit($(rightPanelDO));
+
+            var colSelector = "." + 'progresscol[data-column=' + _storyJson.statusCode + ']';
+            _storyRow.children(colSelector).append(_storySticky);
+        },
+        handleAddTask: function(taskData) {
+            var taskObj = task();
+            _taskObjMap[taskData._id] = taskObj;
+            taskObj.initialize(taskData, _storyRow, _index, _storyJson._id, _storyJson.teamId);
+        },
+        handleRemoveTask: function(taskId) {
+            _taskObjMap[taskId].handleRemove();
+        },
+        handleEditTask: function(taskData) {
+            _taskObjMap[taskData._id].handleEdit(taskData);
+        },
+        handleMoveTask: function(taskId, newStatusCode) {
+            _taskObjMap[taskId].handleMove(newStatusCode);
+        },
+        handleRestyleTask: function(taskId, height, width) {
+            _taskObjMap[taskId].handleRestyle(height, width);
+        }
 
     }
 }

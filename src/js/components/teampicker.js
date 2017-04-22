@@ -160,6 +160,7 @@ teampicker = (function() {
                 console.log(_teamsArray[id]);
                 team.initialize(_teamsArray[id]);
                 _socket.emit('join room', _teamsArray[id]._id);
+                initializeSocket(_socket);
             });
 
             $('#select-div').click(function(){
@@ -180,4 +181,41 @@ teampicker = (function() {
 
     });
 
+    function initializeSocket(socket) {
+        socket.on('add story', function(data) {
+            board.handleAddStory(data.story);
+        });
+
+        socket.on('remove story', function(data) {
+            board.handleRemoveStory(data.storyId);
+        });
+
+        socket.on('edit story', function(data) {
+            board.handleEditStory(data.story);
+        });
+
+        socket.on('move story', function(data) {
+            board.handleMoveStory(data.storyId, data.newStatusCode);
+        });
+
+        socket.on('add task', function(data) {
+            board.handleAddTask(data.storyId, data.task);
+        });
+
+        socket.on('remove task', function(data) {
+            board.handleRemoveTask(data.storyId, data.taskId);
+        });
+
+        socket.on('edit task', function(data) {
+            board.handleEditTask(data.storyId, data.task);
+        });
+
+        socket.on('move task', function(data) {
+            board.handleMoveTask(data.storyId, data.taskId, data.newStatusCode);
+        });
+
+        socket.on('update task style', function(data) {
+            board.handleRestyleTask(data.storyId, data.taskId, data.height, data.width);
+        });
+    }
 })();

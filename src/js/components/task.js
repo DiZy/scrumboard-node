@@ -167,8 +167,7 @@ var task = function() {
 				})
 				.done(function(data) {
 				    if(data.type == 'success'){
-				    	_taskJson.width = ui.size.width;
-						_taskJson.height = ui.size.height;
+				    	//Socket handles
 				    }
 				    else {
 				        alert(data.error);
@@ -225,9 +224,7 @@ var task = function() {
 		    console.log(data);
 		    if(data.type == 'success'){
 		    	console.log(data.result);
-		       _taskJson.statusCode = data.newStatusCode;
-		       _taskDiv.remove();
-		       render();
+		       //Socket handles
 		    }
 		    else {
 		        alert(data.error);
@@ -255,13 +252,7 @@ var task = function() {
 		.done(function(data) {
 		    console.log(data);
 		    if(data.type == 'success'){
-		    	var peopleDiv = $('#unassignedPeople');
-		    	_taskDiv.find('.person').each(function(index, personDiv) {
-		    		console.log(personDiv);
-		    		team.assignPerson($(personDiv), "", peopleDiv);
-		    	});
-		       _taskDiv.remove();
-
+		    	//Socket handles
 		    }
 		    else {
 		        alert(data.error);
@@ -292,17 +283,7 @@ var task = function() {
             .done(function(data) {
                 console.log(data);
                 if(data.type == 'success'){
-                    _taskJson = data.task;
-                    _taskDiv.children('.taskcenter').text(_taskJson.name);
-
-                    var leftPanelDO = _taskDiv.children('.taskpanel')[0];
-                    var rightPanelDO = _taskDiv.children('.taskpanel')[2];
-                    leftPanelDO.innerHTML = "";
-                    rightPanelDO.innerHTML = "";
-
-                    leftPanelInit($(leftPanelDO));
-                    rightPanelInit($(rightPanelDO));
-                    middlePanelInit(_taskDiv.children('.taskcenter'));
+                    //Socket handles
                 }
                 else {
                     alert(data.error);
@@ -326,8 +307,36 @@ var task = function() {
     		_storyId = storyId;
     		_teamId = teamId;
     		render();
-    	}
+    	},
+		handleRemove: function() {
+			var peopleDiv = $('#unassignedPeople');
+			_taskDiv.find('.person').each(function(index, personDiv) {
+				team.assignPerson($(personDiv), "", peopleDiv);
+			});
+			_taskDiv.remove();
+		},
+		handleEdit: function(taskData) {
+			_taskJson = taskData;
+			_taskDiv.children('.taskcenter').text(_taskJson.name);
 
+			var leftPanelDO = _taskDiv.children('.taskpanel')[0];
+			var rightPanelDO = _taskDiv.children('.taskpanel')[2];
+			leftPanelDO.innerHTML = "";
+			rightPanelDO.innerHTML = "";
+
+			leftPanelInit($(leftPanelDO));
+			rightPanelInit($(rightPanelDO));
+			middlePanelInit(_taskDiv.children('.taskcenter'));
+		},
+		handleMove: function(newStatusCode) {
+			_taskJson.statusCode = newStatusCode;
+			_taskDiv.remove();
+			render();
+		},
+		handleRestyle: function(height, width) {
+			_taskJson.width = height;
+			_taskJson.height = width;
+		}
         
     }
 }
