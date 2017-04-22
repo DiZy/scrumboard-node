@@ -227,5 +227,17 @@ teampicker = (function() {
         socket.on('remove person', function(data) {
             team.handleRemovePerson(data.personId)
         });
+
+        socket.on('start burndown', function(data) {
+            burndown.handleStart();
+        });
+
+        socket.on('mark burndown', function(data) {
+            burndown.handleMark(data.newHours, data.newPoints);
+        });
+
+        socket.on('undo burndown', function(data) {
+            burndown.handleUndo();
+        });
     }
 })();

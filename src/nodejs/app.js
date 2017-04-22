@@ -684,6 +684,7 @@ app.post('/startBurndown', requiresLogin, checkPostPermissionForTeam, function(r
 		}},
 		function(err, result) {
 			assert.equal(err, null);
+			socketio.sockets.in(teamId).emit('start burndown', {});
 			return res.json({type: "success"});
 		}
 	);
@@ -703,7 +704,6 @@ app.post('/markBurndown', requiresLogin, checkPostPermissionForTeam, function(re
 	    }}
 		], 
 		function(err, results) {
-			console.log(results);
 			var totalHours = 0;
 			var totalStoryPoints = 0;
 			for(var i = 0; i < results.length; i++) {
@@ -730,6 +730,7 @@ app.post('/markBurndown', requiresLogin, checkPostPermissionForTeam, function(re
 				}},
 				function(err, result) {
 					assert.equal(err, null);
+					socketio.sockets.in(teamId).emit('mark burndown', {newHours: totalHours, newPoints: totalStoryPoints});
 					return res.json({type: "success", newHours: totalHours, newPoints: totalStoryPoints });
 				}
 			);
@@ -750,6 +751,7 @@ app.post('/undoBurndown', requiresLogin, checkPostPermissionForTeam, function(re
 		},
 		function(err, result) {
 			assert.equal(err, null);
+			socketio.sockets.in(teamId).emit('undo burndown', {});
 			return res.json({type: "success"});
 		}
 	);

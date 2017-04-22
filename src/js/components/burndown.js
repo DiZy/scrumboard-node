@@ -1,7 +1,7 @@
 burndown = (function() {
 	var _teamId;
 	var hoursData = [];
-	var burndownChart;
+	var _burndownChart;
 
 	function retrieveDataAndRenderChart() {
 		$.ajax({
@@ -32,7 +32,7 @@ burndown = (function() {
 
 	function renderChart(labels, hoursData, pointsData) {
 		$('#burndown-chart').text("");
-		burndownChart = new Chart(document.getElementById("burndown-chart"), {
+		_burndownChart = new Chart(document.getElementById("burndown-chart"), {
 		    type: 'line',
 		    data: {
 		        labels: labels,
@@ -111,10 +111,7 @@ burndown = (function() {
 		.done(function(data) {
 		    console.log(data);
 		    if(data.type == 'success'){
-		        burndownChart.data.labels = [];
-		        burndownChart.data.datasets[0].data = [];
-		        burndownChart.data.datasets[1].data = [];
-		        burndownChart.update();
+		        //Socket handles
 		    }
 		    else {
 		        alert(data.error);
@@ -141,12 +138,7 @@ burndown = (function() {
 		.done(function(data) {
 		    console.log(data);
 		    if(data.type == 'success'){
-		    	var hoursDataSet = burndownChart.data.datasets[0].data;
-		    	var storyPointsDataSet = burndownChart.data.datasets[1].data;
-		        burndownChart.data.labels.push(hoursDataSet.length + 1);
-		        hoursDataSet.push(data.newHours);
-		        storyPointsDataSet.push(data.newPoints);
-		        burndownChart.update();
+		    	//Socket handles
 		    }
 		    else {
 		        alert(data.error);
@@ -173,10 +165,7 @@ burndown = (function() {
 		.done(function(data) {
 		    console.log(data);
 		    if(data.type == 'success'){
-		    	burndownChart.data.labels.pop();
-		    	burndownChart.data.datasets[0].data.pop();
-		    	burndownChart.data.datasets[1].data.pop();
-		        burndownChart.update();
+		    	//Socket handles
 		    }
 		    else {
 		        alert(data.error);
@@ -194,6 +183,26 @@ burndown = (function() {
 			_teamId = teamId;
 			retrieveDataAndRenderChart();
 			addEventHandlers();
+		},
+		handleStart: function() {
+			_burndownChart.data.labels = [];
+			_burndownChart.data.datasets[0].data = [];
+			_burndownChart.data.datasets[1].data = [];
+			_burndownChart.update();
+		},
+		handleMark: function(newHours, newPoints) {
+			var hoursDataSet = _burndownChart.data.datasets[0].data;
+			var storyPointsDataSet = _burndownChart.data.datasets[1].data;
+			_burndownChart.data.labels.push(hoursDataSet.length + 1);
+			hoursDataSet.push(newHours);
+			storyPointsDataSet.push(newPoints);
+			_burndownChart.update();
+		},
+		handleUndo: function() {
+			_burndownChart.data.labels.pop();
+			_burndownChart.data.datasets[0].data.pop();
+			_burndownChart.data.datasets[1].data.pop();
+			_burndownChart.update();
 		}
 
 	}
