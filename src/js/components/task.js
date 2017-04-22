@@ -190,7 +190,7 @@ var task = function() {
 		if(divToRenderTo.children('.person').length == 4) {
 			return false;
 		}
-		team.assignPerson(personDiv, _taskJson._id, divToRenderTo);
+		team.assignPersonToTask(personDiv.attr('data-person'), _taskJson._id, _storyId);
 		return true;
 	}
 
@@ -309,9 +309,8 @@ var task = function() {
     		render();
     	},
 		handleRemove: function() {
-			var peopleDiv = $('#unassignedPeople');
 			_taskDiv.find('.person').each(function(index, personDiv) {
-				team.assignPerson($(personDiv), "", peopleDiv);
+				team.assignPersonToTask(personDiv.attr('data-person'), "", _storyId);
 			});
 			_taskDiv.remove();
 		},
@@ -336,6 +335,9 @@ var task = function() {
 		handleRestyle: function(height, width) {
 			_taskJson.width = height;
 			_taskJson.height = width;
+		},
+		getPeopleDiv: function() {
+			return _taskDiv.children('.people-row').children('.peopleDiv');
 		}
         
     }

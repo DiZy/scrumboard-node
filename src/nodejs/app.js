@@ -556,7 +556,9 @@ app.post('/addPersonToTeam', requiresLogin, function(req, res) {
     				},
     				function(err, result) {
     					assert.equal(err, null);
-    					return res.json({type: "success", person: {_id: newPersonId, name: personName, taskId: null}  });
+						var newPersonData = {_id: newPersonId, name: personName, taskId: null};
+						socketio.sockets.in(teamId).emit('add person', {person: newPersonData});
+    					return res.json({type: "success", person: newPersonData });
     				}
     			);
     		}
@@ -574,6 +576,7 @@ app.put('/assignPerson', requiresLogin, function(req, res) {
 	var teamId = req.body.teamId;
 	var personId = req.body.personId;
 	var newTaskId = req.body.newTaskId;
+	var storyId = req.body.storyId;
 
 	teamsCollection.find({'_id': teamId}, function(err, results) {
 		assert.equal(err, null);
@@ -589,6 +592,7 @@ app.put('/assignPerson', requiresLogin, function(req, res) {
 					},
 					function(err, result) {
 						assert.equal(err, null);
+						socketio.sockets.in(teamId).emit('assign person', {personId: personId, storyId: storyId, taskId: newTaskId});
 						return res.json({type: "success", newTaskId: newTaskId, result: result });
 					}
 				);
@@ -621,6 +625,7 @@ app.delete('/removePersonFromTeam', requiresLogin, function(req, res) {
 					},
 					function(err, result) {
 						assert.equal(err, null);
+						socketio.sockets.in(teamId).emit('remove person', {personId: personId});
 						return res.json({type: "success"});
 					}
 				);

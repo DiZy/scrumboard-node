@@ -25,7 +25,7 @@ board = (function(){
             accept: '.person',
             drop: function(event, ui) {
                 var personDiv = ui.draggable;
-                team.assignPerson(personDiv, "", peopleDiv);
+                team.assignPersonToTask(personDiv.attr('data-person'), "");
             }
         });
 
@@ -34,7 +34,7 @@ board = (function(){
             accept: '.person',
             drop: function(event, ui) {
                 var personDiv = ui.draggable;
-                team.removePerson(personDiv);
+                team.removePerson(personDiv.attr('data-person'));
             },
             greedy: true
         });
@@ -202,6 +202,9 @@ board = (function(){
         },
         handleRestyleTask: function(storyId, taskId, height, width) {
             _storyObjMap[storyId].handleRestyleTask(taskId, height, width);
+        },
+        getPeopleDivForTask: function(storyId, taskId) {
+            return _storyObjMap[storyId].getPeopleDivForTask(taskId);
         }
     }
 

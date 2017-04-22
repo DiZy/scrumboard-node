@@ -1,13 +1,15 @@
 team = (function() {
 	var _teamJson;
-	var _peopleMap;
+	var _personIdToAttrMap;
+	var _personAttrToDataMap;
 	var _nextPersonAttr;
 
     return {
     	initialize: function(teamjson) {
     		_teamJson = teamjson;
     		_nextPersonAttr = 1;
-    		_peopleMap = {};
+			_personIdToAttrMap = {};
+			_personAttrToDataMap = {};
     		board.render(teamjson);
     		burndown.initialize(teamjson._id);
     	},
@@ -33,10 +35,8 @@ team = (function() {
 
 	        })
 	        .done(function(data) {
-	            console.log(data);
 	            if(data.type == 'success'){
-	            	_teamJson.people.push(data.person);
-	                person().render(data.person, $('#unassignedPeople'));
+	            	//Socket
 	            }
 	            else {
 	                alert(data.error);
@@ -53,16 +53,13 @@ team = (function() {
     		return _nextPersonAttr++;
     	},
 
-    	putPersonInMap: function(attr, personJson) {
-    		_peopleMap[attr] = personJson;
+    	putPersonInMap: function(attr, personData) {
+    		_personIdToAttrMap[personData._id] = attr;
+			_personAttrToDataMap[attr] = personData;
     	},
 
-    	assignPerson: function(personDiv, taskId, divToRenderTo) {
-
-    		var num = personDiv.attr('data-person');
-
-    		var p = _peopleMap[num];
-
+    	assignPersonToTask: function(attr, taskId, storyId) {
+			var p = _personAttrToDataMap[attr];
     		if(p) {
 				$.ajax({
 		            type: 'PUT',
@@ -70,24 +67,16 @@ team = (function() {
 		            data: {
 		                teamId: _teamJson._id,
 		                personId: p._id,
-		                newTaskId: taskId
+		                newTaskId: taskId,
+						storyId: storyId
 		            },
 		            dataType: "json",
 		            contentType: "application/x-www-form-urlencoded"
 
 		        })
 		        .done(function(data) {
-		            console.log(data);
 		            if(data.type == 'success'){
-		                for(var i = 0; i < _teamJson.people.length; i++) {
-		                	if(_teamJson.people[i]._id == p._id) {
-		                		_teamJson.people[i].taskId = taskId;
-		                	}
-		                }
-		                personDiv.remove();
-		                p.taskId = taskId;
-		                person().render(p, divToRenderTo);
-		                delete _peopleMap[num];
+		                //Socket handles
 		            }
 		            else {
 		                alert(data.error);
@@ -101,10 +90,8 @@ team = (function() {
     		}
     	},
 
-    	removePerson: function(personDiv) {
-    		var num = personDiv.attr('data-person');
-
-    		var p = _peopleMap[num];
+    	removePerson: function(attr) {
+    		var p = _personAttrToDataMap[attr];
 
     		if(p) {
 				$.ajax({
@@ -119,15 +106,8 @@ team = (function() {
 
 		        })
 		        .done(function(data) {
-		            console.log(data);
 		            if(data.type == 'success'){
-		                personDiv.remove();
-		                for(var i = 0; i < _teamJson.people.length; i++) {
-		                	if(_teamJson.people[i]._id == p._id) {
-		                		delete _teamJson.people[i];
-		                	}
-		                }
-		                delete _peopleMap[num];
+		                //Socket handles
 		            }
 		            else {
 		                alert(data.error);
@@ -139,7 +119,48 @@ team = (function() {
 		            console.log(data);
 		        });
     		}
-    	}
+    	},
+		handleAddPerson: function(personData) {
+			_teamJson.people.push(personData);
+			person().render(personData, $('#unassignedPeople'));	
+		},
+		handleRemovePerson: function(personId) {
+			var attr = _personIdToAttrMap[personId];
+			var personDiv = $('div[data-person=' + attr + ']');
+			personDiv.remove();
+			for(var i = 0; i < _teamJson.people.length; i++) {
+				if(_teamJson.people[i] && _teamJson.people[i]._id == personId) {
+					delete _teamJson.people[i];
+					break;
+				}
+			}
+			delete _personIdToAttrMap[personId];
+			delete _personAttrToDataMap[attr];
+		},
+		handleAssignPerson: function(personId, storyId, taskId) {
+			for(var i = 0; i < _teamJson.people.length; i++) {
+				if(_teamJson.people[i] && _teamJson.people[i]._id == personId) {
+					_teamJson.people[i].taskId = taskId;
+				}
+			}
+			var attr = _personIdToAttrMap[personId];
+			var p = _personAttrToDataMap[attr];
+
+			var personDiv = $('div[data-person=' + attr + ']');
+
+			var divToRenderTo;
+			if(taskId) {
+				divToRenderTo = board.getPeopleDivForTask(storyId, taskId);
+			} else {
+				 divToRenderTo = $('#unassignedPeople')
+			}
+
+			personDiv.remove();
+			p.taskId = taskId;
+			delete _personIdToAttrMap[p._id];
+			delete _personAttrToDataMap[attr];
+			person().render(p, divToRenderTo);
+		}
     }
 
 })();

@@ -88,7 +88,6 @@ teampicker = (function() {
                 }
             }
         });
-
     }
 
     function deleteTeam(teamId, teamName) {
@@ -151,7 +150,6 @@ teampicker = (function() {
     	_selectpicker.selectpicker('refresh');
 
         _socket = io();
-
 
         loadSelectOptions(function() {
 
@@ -216,6 +214,18 @@ teampicker = (function() {
 
         socket.on('update task style', function(data) {
             board.handleRestyleTask(data.storyId, data.taskId, data.height, data.width);
+        });
+
+        socket.on('assign person', function(data) {
+            team.handleAssignPerson(data.personId, data.storyId, data.taskId)
+        });
+
+        socket.on('add person', function(data) {
+            team.handleAddPerson(data.person)
+        });
+
+        socket.on('remove person', function(data) {
+            team.handleRemovePerson(data.personId)
         });
     }
 })();

@@ -283,6 +283,9 @@ var story = function() {
         },
         handleRestyleTask: function(taskId, height, width) {
             _taskObjMap[taskId].handleRestyle(height, width);
+        },
+        getPeopleDivForTask: function(taskId) {
+            return _taskObjMap[taskId].getPeopleDiv();
         }
 
     }
