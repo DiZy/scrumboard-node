@@ -5,13 +5,35 @@ team = (function() {
 	var _nextPersonAttr;
 
     return {
-    	initialize: function(teamjson) {
-    		_teamJson = teamjson;
-    		_nextPersonAttr = 1;
-			_personIdToAttrMap = {};
-			_personAttrToDataMap = {};
-    		board.render(teamjson);
-    		burndown.initialize(teamjson._id);
+    	initialize: function(teamData) {
+    		$.ajax({
+	            type: 'GET',
+	            url: '/getTeamDetails',
+	            data: {
+	                teamId: teamData._id,
+	            },
+	            dataType: "json",
+	            contentType: "application/x-www-form-urlencoded"
+
+	        })
+	        .done(function(data) {
+	            if(data.type == 'success'){
+	            	_teamJson = data.team;
+	            	_nextPersonAttr = 1;
+					_personIdToAttrMap = {};
+					_personAttrToDataMap = {};
+		    		board.render(_teamJson);
+		    		burndown.initialize(_teamJson._id);
+	            }
+	            else {
+	                alert(data.error);
+	            }
+
+	        })
+	        .fail(function(data) {
+	            alert("Internal Server Error");
+	            console.log(data);
+	        });
     	},
     	getPeopleForTask: function(taskId) {
     		var toReturn = [];

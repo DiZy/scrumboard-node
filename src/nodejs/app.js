@@ -157,7 +157,7 @@ app.get('/getTeamDetails', requiresLogin, function(req, res) {
 		if(results.length > 0) {
 			var team = results[0];
 			if(team.companyId == req.session.companyId) {
-				return res.json({type: "success", teamJson: team});
+				return res.json({type: "success", team: team});
 			}
 			else {
 				return res.json({type: "error", error: "You do not have permissions to load to this team's info."});
