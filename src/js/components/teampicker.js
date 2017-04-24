@@ -183,62 +183,77 @@ teampicker = (function() {
     });
 
     function initializeSocket(socket) {
+        socket.off('add story');
         socket.on('add story', function(data) {
             board.handleAddStory(data.story);
         });
 
+        socket.off('remove story');
         socket.on('remove story', function(data) {
             board.handleRemoveStory(data.storyId);
         });
 
+        socket.off('edit story');
         socket.on('edit story', function(data) {
             board.handleEditStory(data.story);
         });
 
+        socket.off('move story');
         socket.on('move story', function(data) {
             board.handleMoveStory(data.storyId, data.newStatusCode);
         });
 
+        socket.off('add task');
         socket.on('add task', function(data) {
             board.handleAddTask(data.storyId, data.task);
         });
 
+        socket.off('remove task');
         socket.on('remove task', function(data) {
             board.handleRemoveTask(data.storyId, data.taskId);
         });
 
+        socket.off('edit task');
         socket.on('edit task', function(data) {
             board.handleEditTask(data.storyId, data.task);
         });
 
+        socket.off('move task');
         socket.on('move task', function(data) {
             board.handleMoveTask(data.storyId, data.taskId, data.newStatusCode);
         });
 
+        socket.off('update task style');
         socket.on('update task style', function(data) {
             board.handleRestyleTask(data.storyId, data.taskId, data.height, data.width);
         });
 
+        socket.off('assign person');
         socket.on('assign person', function(data) {
             team.handleAssignPerson(data.personId, data.storyId, data.taskId)
         });
 
+        socket.off('add person');
         socket.on('add person', function(data) {
             team.handleAddPerson(data.person)
         });
 
+        socket.off('remove person');
         socket.on('remove person', function(data) {
             team.handleRemovePerson(data.personId)
         });
 
+        socket.off('start burndown');
         socket.on('start burndown', function(data) {
             burndown.handleStart();
         });
 
+        socket.off('mark burndown');
         socket.on('mark burndown', function(data) {
             burndown.handleMark(data.newHours, data.newPoints);
         });
 
+        socket.off('undo burndown');
         socket.on('undo burndown', function(data) {
             burndown.handleUndo();
         });
