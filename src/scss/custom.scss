@@ -2,6 +2,10 @@ $post-green: #BBF5CC;
 $post-blue: #B3E8FF;
 $post-yellow: #FFFBD0;
 
+body {
+	min-height: 100vh;
+}
+
 .center {
 	text-align: center;
 }
