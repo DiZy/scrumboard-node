@@ -6,6 +6,7 @@ team = (function() {
 
     return {
     	initialize: function(teamData) {
+    		$('body').ploading({action: 'show'});
     		$.ajax({
 	            type: 'GET',
 	            url: '/getTeamDetails',

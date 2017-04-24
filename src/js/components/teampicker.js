@@ -145,6 +145,8 @@ teampicker = (function() {
     };
 
     $(document).ready(function() {
+        $('body').ploading({action: 'show'});
+
     	_selectpicker = $('<select>').addClass('selectpicker').attr('data-live-search', 'true');
     	_selectpicker.appendTo('#select-div');
     	_selectpicker.selectpicker('refresh');
@@ -152,6 +154,7 @@ teampicker = (function() {
         _socket = io();
 
         loadSelectOptions(function() {
+            $('body').ploading({action: 'destroy'});
 
             $('#select-div .selectpicker').change(function() {
                 var id = $(this).children(":selected").attr('id');

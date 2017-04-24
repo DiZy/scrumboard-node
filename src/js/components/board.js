@@ -101,6 +101,7 @@ board = (function(){
         		storyObj.initialize(storyJson, _currentStoryIndex);
                 _currentStoryIndex++;
         	}
+            $('body').ploading({action: 'destroy'});
         });
     }
 
