@@ -310,7 +310,7 @@ var task = function() {
     	},
 		handleRemove: function() {
 			_taskDiv.find('.person').each(function(index, personDiv) {
-				team.assignPersonToTask(personDiv.attr('data-person'), "", _storyId);
+				team.assignPersonToTask($(personDiv).attr('data-person'), "", _storyId);
 			});
 			_taskDiv.remove();
 		},
