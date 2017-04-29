@@ -94,7 +94,12 @@ burndown = (function() {
 		$('#burndown-mark').click(mark);
 
 		$('#burndown-undo').unbind('click');
-		$('#burndown-undo').click(undo);
+		$('#burndown-undo').click(function() {
+			var confirmation = confirm("Are you sure you want to undo the last point?");
+			if (confirmation) {
+				undo();
+			}
+		});
 	}
 
 	function start() {
