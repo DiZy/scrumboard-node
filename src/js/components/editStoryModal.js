@@ -18,7 +18,7 @@ editStoryModal = (function() {
 		var modalBody = $('#editModal .modal-body');
 		var editDetails = $('<div>').attr('id', 'editDetails').appendTo(modalBody);
 
-		var nameInput = $('<input>').addClass('input form-control').attr('placeholder', 'Story Name').appendTo(editDetails);
+		var nameInput = $('<textarea>').addClass('input form-control').attr('placeholder', 'Story Name').appendTo(editDetails);
 		nameInput.val(_storyJsonEdited.name);
 
 		nameInput.on('input', function() {

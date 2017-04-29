@@ -20,7 +20,7 @@ editTaskModal = (function() {
 		var editDetails = $('<div>').attr('id', 'editDetails').appendTo(modalBody);
 
 		_taskForm = $('<form id="peopleForm">' +
-			'<input type="text" class="input form-control" placeholder="Task Name" name="taskName" id="taskName">' +
+			'<textarea type="text" class="input form-control" placeholder="Task Name" name="taskName" id="taskName"></textarea>' +
 			'</form').appendTo(editDetails);
 
 		var pointsInput = $('<input>').addClass('input form-control').attr('placeholder', 'Task Hours').attr('id', 'taskHours').appendTo(_taskForm);
