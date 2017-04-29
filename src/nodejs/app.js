@@ -693,29 +693,20 @@ app.post('/startBurndown', requiresLogin, checkPostPermissionForTeam, function(r
 app.post('/markBurndown', requiresLogin, checkPostPermissionForTeam, function(req, res) {
 	var teamId = req.body.teamId;
 
-	storiesCollection.aggregate([
-		{ '$match': {'teamId' : teamId, 'statusCode' : {'$ne': "3"}}},
-		{ '$unwind': '$tasks' },
-		{ '$group': {
-	        '_id': '$_id',
-	        'taskhours': {"$push": "$tasks.points"},
-	        'taskstatuses': {"$push": "$tasks.statusCode"},
-	        'storyPoints': {"$first": "$points"}
-	    }}
-		], 
+	storiesCollection.find(
+		{'teamId' : teamId, 'statusCode' : {'$ne': "3"}}, 
 		function(err, results) {
 			var totalHours = 0;
 			var totalStoryPoints = 0;
 			for(var i = 0; i < results.length; i++) {
-				var taskhoursArray = results[i].taskhours;
-				var taskstatusesArray = results[i].taskstatuses;
-				var storyPoints = results[i].storyPoints;
-				if(!isNaN(parseFloat(storyPoints))){
-					totalStoryPoints += parseFloat(storyPoints);
+				var curStory = results[i];
+				if(!isNaN(parseFloat(curStory.points))){
+					totalStoryPoints += parseFloat(curStory.points);
 				}
-				for(var j = 0; j < taskhoursArray.length; j++) {
-					var hoursToAdd = taskhoursArray[j];
-					var isNotDone = taskstatusesArray[j] != 3;
+				var curTasks = curStory.tasks;
+				for(var j = 0; j < curTasks.length; j++) {
+					var hoursToAdd = curTasks[j].points;
+					var isNotDone = curTasks[j].statusCode != 3;
 					if(!isNaN(parseFloat(hoursToAdd)) && isNotDone){
 						totalHours += parseFloat(hoursToAdd);
 					}
