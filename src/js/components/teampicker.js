@@ -158,10 +158,11 @@ teampicker = (function() {
 
             $('#select-div .selectpicker').change(function() {
                 var id = $(this).children(":selected").attr('id');
-                console.log(_teamsArray[id]);
-                team.initialize(_teamsArray[id]);
-                _socket.emit('join room', _teamsArray[id]._id);
-                initializeSocket(_socket);
+                if(id) {
+                    team.initialize(_teamsArray[id]);
+                    _socket.emit('join room', _teamsArray[id]._id);
+                    initializeSocket(_socket);
+                }
             });
 
             $('#select-div').click(function(){
