@@ -46,6 +46,7 @@ burndown = (function() {
 		        },
 		        {
 		            label: 'Story Points',
+		            steppedLine: true,
 		            data: pointsData,
 		            borderColor: 'rgba(100, 191, 222, 1)',
 		            backgroundColor: 'rgba(100, 191, 222, 1)',
