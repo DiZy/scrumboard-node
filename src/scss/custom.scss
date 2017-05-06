@@ -234,30 +234,41 @@ body {
 		content: '+';
 	}
 
+
 	.task {
 		float: left;
-		width:200px;
 		max-width:100%;
 		padding: 5px 1px;
-		min-height: 75px;
-		min-width: 100px;
-		height: 100px;
 		margin-bottom: 10px;
+
+		.task-panels {
+			padding: 0;
+		}
 
 		.people-row {
 			margin: auto;
 			text-align: center;
 			margin-top: 5px;
-			width: 100%;
 			float: left;
 			min-height: 25px;
+			max-width: 100%;
+
+			.peopleMargin {
+				width: 25px;
+				float: left;
+				min-height: 1px;
+			}
 
 			.peopleDiv {
 				padding: 0;
+				float: left;
+				min-height: 1px;
+				min-width: 100px;
+				max-width: calc(100% - 50px);
 			}
 
 			.person {
-				width: calc(25% - 4px);
+				width: 25px;
 				height: 25px;
 				margin-right: 4px;
 			}
@@ -272,10 +283,13 @@ body {
 		}
 
 		.taskpanel {
-			height:100%;
 			padding:1px;
 			text-align: center;
-			height: calc(100% - 25px);
+			width: 25px;
+			height: 100px;
+			min-height: 75px;
+			float: left;
+			position: relative;
 
 			.arrow-row {
 				height:33%;
@@ -299,6 +313,9 @@ body {
 			box-shadow: 0px 3px 5px #888888;
 			background-color: $post-yellow;
 			overflow-y: auto;
+			width: 200px;
+			max-width: calc(100% - 50px);
+			min-width: 100px;
 
 			.editCover {
 				position: absolute;
@@ -335,12 +352,4 @@ body {
 		width: 300px;
 		height: 125px;
 	}
-}
-
-
-.ui-resizable-se.ui-icon-gripsmall-diagonal-se {
-	// background-color: black;
-	border-bottom: 1px solid black;
-	border-right: 1px solid black;
-	bottom: 25px;
 }

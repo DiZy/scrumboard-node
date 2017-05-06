@@ -10,23 +10,18 @@ var task = function() {
 		_taskDiv = $('<div>').addClass('task');
 
 		console.log(_taskJson);
-		//set size
-		if(_taskJson.width){
-			_taskDiv.width(_taskJson.width);
-		}
-		if(_taskJson.height){
-			_taskDiv.height(_taskJson.height);
-		}
 
 		//add panels
-		var leftPanel = $('<div>').addClass('col-xs-2 taskpanel').appendTo(_taskDiv);
-		var middlePanel = $('<div>').addClass('col-xs-8 taskpanel taskcenter').appendTo(_taskDiv);
+		var taskPanels = $('<div>').addClass('col-xs-12 task-panels').appendTo(_taskDiv);
+		var leftPanel = $('<div>').addClass('taskpanel').appendTo(taskPanels);
+		var middlePanel = $('<div>').addClass('taskpanel taskcenter').appendTo(taskPanels);
 		if(_taskJson.name) {
 			middlePanel.text(_taskJson.name);
 		} else {
 			middlePanel.text('New Task');
 		}
-		var rightPanel = $('<div>').addClass('col-xs-2 taskpanel').appendTo(_taskDiv);
+		var rightPanel = $('<div>').addClass('taskpanel').appendTo(taskPanels);
+		$('<br>').appendTo(_taskDiv);
 		var peopleRow = $('<div>').addClass('people-row').appendTo(_taskDiv);
 
 		leftPanelInit(leftPanel);
@@ -37,7 +32,8 @@ var task = function() {
 		var colSelector = "." + 'progress-' + _taskJson.statusCode;
 		_$storyRow.children(colSelector).append(_taskDiv);
 
-		makeResizable();
+		setDefaultSize(leftPanel, middlePanel, rightPanel, peopleRow);
+		makeResizable(leftPanel, middlePanel, rightPanel, peopleRow);
 
 
 		_taskDiv.droppable({
@@ -48,41 +44,12 @@ var task = function() {
 		_taskDiv.hover(
 			//Hover in
 			function() {
-				// $(this).stop(false, true);
-				// if($(_taskDiv).find('.hide-on-hover').length > 0) {
-				// 	$(_taskDiv).find('.hide-on-hover').fadeOut( "fast", function() {
-				// 		$(this).hide();
-				// 		$(_taskDiv).find('.show-on-hover').fadeIn( "fast", function() {
-				// 			$(this).show();
-				// 		});
-				// 	});
-				// }
-				// else {
-				// 	$(_taskDiv).find('.show-on-hover').fadeIn( "fast", function() {
-				// 		$(this).show();
-				// 	});
-				// }
 				$(_taskDiv).find('.hide-on-hover').hide();
 				$(_taskDiv).find('.show-on-hover').show();
 				$(_taskDiv).attr('title', "Notes:\n" + _taskJson.notes);
 			},
 			//Hover out
 			function() {
-				// $(this).stop(false, true);
-				// if($(_taskDiv).find('.show-on-hover').length > 0) {
-				// 	$(_taskDiv).find('.show-on-hover').fadeOut( "fast", function() {
-				// 		$(this).hide();
-				// 		$(_taskDiv).find('.hide-on-hover').fadeIn( "fast", function() {
-				// 			$(this).show();
-				// 		});
-				// 	});
-				// }
-				// else {
-				// 	$(_taskDiv).find('.hide-on-hover').fadeIn( "fast", function() {
-				// 		$(this).show();
-				// 	});
-				// }
-
 				$(_taskDiv).find('.show-on-hover').hide();
 				$(_taskDiv).find('.hide-on-hover').show();
 			}
@@ -134,9 +101,9 @@ var task = function() {
 	}
 
 	function peopleRowInit($peopleRow) {
-		$('<div>').addClass('col-xs-2').appendTo($peopleRow);
-		var peopleDiv = $('<div>').addClass('col-xs-8 peopleDiv').appendTo($peopleRow);
-		$('<div>').addClass('col-xs-2').appendTo($peopleRow);
+		$('<div>').addClass('peopleMargin').appendTo($peopleRow);
+		var peopleDiv = $('<div>').addClass('peopleDiv').appendTo($peopleRow);
+		$('<div>').addClass('peopleMargin').appendTo($peopleRow);
 
 		var people = team.getPeopleForTask(_taskJson._id);
 		people.forEach(function(p) {
@@ -144,11 +111,29 @@ var task = function() {
 		});
 	}
 
-	function makeResizable() {
-		_taskDiv.resizable({
+	function setDefaultSize(leftPanel, middlePanel, rightPanel, peopleRow) {
+		if(_taskJson.width){
+			middlePanel.width(_taskJson.width);
+			peopleRow.children('.peopleDiv').width(_taskJson.width);
+		}
+		if(_taskJson.height){
+			leftPanel.height(_taskJson.height);
+			middlePanel.height(_taskJson.height);
+			rightPanel.height(_taskJson.height);
+		}
+	}
+
+	function makeResizable(leftPanel, middlePanel, rightPanel, peopleRow) {
+		middlePanel.resizable({
 			handles: 'se',
 			classes: {
 				"ui-resizable-se": "ui-icon ui-icon-gripsmall-diagonal-se show-on-hover"
+			},
+			resize: function(e, ui) {
+				_taskJson.width = ui.size.width;
+				_taskJson.height = ui.size.height;
+
+				setDefaultSize(leftPanel, middlePanel, rightPanel, peopleRow);
 			},
 			stop: function(e, ui) {
 				$.ajax({
@@ -187,9 +172,6 @@ var task = function() {
 	function handlePersonDrop(event, ui) {
 		var personDiv = ui.draggable;
 		var divToRenderTo = _taskDiv.children('.people-row').children('.peopleDiv');
-		if(divToRenderTo.children('.person').length == 4) {
-			return false;
-		}
 		team.assignPersonToTask(personDiv.attr('data-person'), _taskJson._id, _storyId);
 		return true;
 	}
@@ -333,8 +315,15 @@ var task = function() {
 			render();
 		},
 		handleRestyle: function(height, width) {
-			_taskJson.width = height;
-			_taskJson.height = width;
+			_taskJson.width = width;
+			_taskJson.height = height;
+
+			var leftPanel = $(_taskDiv.children('.task-panels').children()[0]);
+			var middlePanel = $(_taskDiv.children('.task-panels').children()[1]);
+			var rightPanel = $(_taskDiv.children('.task-panels').children()[2]);
+			var peopleRow = $(_taskDiv.children('.people-row'));
+
+			setDefaultSize(leftPanel, middlePanel, rightPanel, peopleRow);
 		},
 		getPeopleDiv: function() {
 			return _taskDiv.children('.people-row').children('.peopleDiv');

@@ -522,13 +522,13 @@ app.put('/updateTaskStyling', requiresLogin, function(req, res) {
 					},
 					function(err, result) {
 						assert.equal(err, null);
+						socketio.sockets.in(teamId).emit('update task style', {storyId: storyId, taskId: taskId, height: height, width: width});
 						return res.json({type: "success"});
 					}
 				);
 				
 			}
 			else {
-				socketio.sockets.in(teamId).emit('update task styling', {storyId: storyId, taskId: taskId, heihgt: height, width: width});
 				return res.json({ type: "error", error: "You do not have permissions to edit this story's tasks."});
 			}
 		}
