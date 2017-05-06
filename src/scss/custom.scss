@@ -11,6 +11,9 @@ body {
 }
 
 #left-menu {
+	position: fixed;
+	top: 0;
+	left:0;
 	float: left;
 	width: 50px;
 	height: 76px;
@@ -18,7 +21,8 @@ body {
     -webkit-box-shadow: 1px 1px 4px rgba(0,0,0,0.4);
     box-shadow: 1px 1px 4px rgba(0,0,0,0.4);
     cursor: pointer;
-    z-index: 10;
+    z-index: 51;
+    background-color: white;
 	.left-menu-button {
 		margin: auto;
 		vertical-align: middle;
@@ -60,7 +64,11 @@ body {
 
 #select-div {
 	float: left;
+	position: fixed;
+	top: 0;
+	left: 50px;
 	width: calc(100% - 50px);
+	z-index: 51;
 }
 
 .bootstrap-select{
@@ -132,13 +140,18 @@ body {
 }
 
 #unassignedPeople {
-	min-height: 76px;
+	position: fixed;
+	top: 76px;
+	height: 80px;
 	width: 100%;
-	border-bottom: 1px solid #F1F1F1;
+	-webkit-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
 	float: left;
-	position: relative;
 	padding-left: 10px;
     font-size: 35px;
+    z-index: 50;
+    background-color: white;
+    padding-top: 4px;
 
     div {
     	float: left;
@@ -175,6 +188,8 @@ body {
 }
 
 #board {
+	position: absolute;
+	top: 156px;
 	margin: 0;
 	width: 100%;
 
@@ -235,7 +250,7 @@ body {
 			margin-top: 5px;
 			width: 100%;
 			float: left;
-			height: 25px;
+			min-height: 25px;
 
 			.peopleDiv {
 				padding: 0;
