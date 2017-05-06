@@ -63,8 +63,6 @@ var task = function() {
 		if(_taskJson.statusCode != 0) {
 			middleArrow.appendTo($leftPanel);
 		}
-		var topPerson = $('<div>').addClass('people-row hide-on-hover').appendTo($leftPanel);
-		var bottomPerson = $('<div>').addClass('people-row hide-on-hover').appendTo($leftPanel);
 
 		middleArrow.click(function() {
 			updateStatusCode(parseInt(_taskJson.statusCode) - 1);
@@ -88,9 +86,6 @@ var task = function() {
 		if(_taskJson.statusCode != 3) {
 			middleArrow.appendTo($rightPanel)
 		}
-
-		var topPerson = $('<div>').addClass('people-row hide-on-hover').appendTo($rightPanel);
-		var bottomPerson = $('<div>').addClass('people-row hide-on-hover').appendTo($rightPanel);
 
 		middleArrow.click(function() {
 			updateStatusCode(parseInt(_taskJson.statusCode) + 1);
