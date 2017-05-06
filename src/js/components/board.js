@@ -3,6 +3,7 @@ board = (function(){
     var _teamJson;
     var _currentStoryIndex;
     var _storyObjMap;
+    var _storiesSection;
 
     function renderPeople() {
         var peopleDiv = $('<div>').attr('id', 'unassignedPeople').appendTo('body');
@@ -55,7 +56,9 @@ board = (function(){
         board.makeResizableCol($($('#boardHeader>div')[2]));
         board.makeResizableCol($($('#boardHeader>div')[3]));
 
-        var addStoryButton = $('<button>').addClass('btn btn-lg btn-default').attr('id', 'addStoryButton').text('Add a story').appendTo("body");
+        _storiesSection = $('<div>').addClass('row').attr('id', 'storiesSection').appendTo('#board');
+
+        var addStoryButton = $('<button>').addClass('btn btn-lg btn-default').attr('id', 'addStoryButton').text('Add a story').appendTo("#board");
         addStoryButton.click(function() {
             editStoryModal.open(undefined, createStory)
         });
@@ -98,7 +101,7 @@ board = (function(){
                 var storyObj = story();
                 var storyJson = storyList[i];
                 _storyObjMap[storyJson._id] = storyObj;
-        		storyObj.initialize(storyJson, _currentStoryIndex);
+        		storyObj.initialize(storyJson, _currentStoryIndex, _storiesSection);
                 _currentStoryIndex++;
         	}
             $('body').ploading({action: 'destroy'});
@@ -177,7 +180,7 @@ board = (function(){
         handleAddStory: function(storyData) {
             var storyObj = story();
             _storyObjMap[storyData._id] = storyObj;
-            storyObj.initialize(storyData, _currentStoryIndex);
+            storyObj.initialize(storyData, _currentStoryIndex, _storiesSection);
             _currentStoryIndex++;
         },
         handleRemoveStory: function(storyId) {

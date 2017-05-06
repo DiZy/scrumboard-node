@@ -4,6 +4,7 @@ var story = function() {
     var _index;
     var _storySticky;
     var _taskObjMap;
+    var _storiesSection;
 
     function render() {
         _storyRow = $('<div>').addClass('row story').attr('data-story', _index);
@@ -65,7 +66,7 @@ var story = function() {
             taskObj.initialize(taskData, _storyRow, _index, _storyJson._id, _storyJson.teamId);
         }
 
-        _storyRow.appendTo('#board');
+        _storyRow.appendTo(_storiesSection);
         var colSelector = "." + 'progresscol[data-column=' + _storyJson.statusCode + ']';
         _storyRow.children(colSelector).append(_storySticky);
 
@@ -237,9 +238,10 @@ var story = function() {
     }
 
     return {
-    	initialize: function(storyJson, currentIndex) {
+    	initialize: function(storyJson, currentIndex, storiesSection) {
     		_storyJson = storyJson;
             _index = currentIndex;
+            _storiesSection = storiesSection;
     		render();
     	},
         handleRemove: function() {
