@@ -190,18 +190,28 @@ body {
 #board {
 	position: absolute;
 	top: 156px;
-	margin: 0;
+	padding: 0;
 	width: 100%;
+
+	#boardHeader {
+		border-bottom: 1px solid #eee;
+	}
 
 	.row {
 		clear:both;
+		width: 100%;
+		display: flex;
+    	flex-wrap: wrap;
+    	margin: 0;
 
 		.progresscol {
 			margin:0;
-			padding:0;
-			// border-right:1px solid black;
+			padding: 15px 0;
+			border-right: 1px solid #eee;
 			min-height:50px;
 			min-width: 100px;
+			display: flex;
+    		flex-direction: column;
 
 			h4 {
 				padding-left: 10px;
@@ -214,7 +224,6 @@ body {
 	}
 
 	.story {
-		padding: 15px 0;
 	   	border-bottom: 1px solid #eee;
 
 	   	.addTaskButton {
@@ -313,7 +322,7 @@ body {
 			overflow-y: auto;
 			width: 200px;
 			max-width: calc(100% - 50px);
-			min-width: 100px;
+			min-width: 50px;
 
 			.editCover {
 				position: absolute;
