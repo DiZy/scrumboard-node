@@ -211,7 +211,7 @@ body {
 			min-height:50px;
 			min-width: 100px;
 			display: flex;
-    		flex-direction: column;
+    		flex-wrap: wrap;
 
 			h4 {
 				padding-left: 10px;

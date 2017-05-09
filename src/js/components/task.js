@@ -293,16 +293,9 @@ var task = function() {
 		},
 		handleEdit: function(taskData) {
 			_taskJson = taskData;
-			_taskDiv.children('.taskcenter').text(_taskJson.name);
-
-			var leftPanelDO = _taskDiv.children('.taskpanel')[0];
-			var rightPanelDO = _taskDiv.children('.taskpanel')[2];
-			leftPanelDO.innerHTML = "";
-			rightPanelDO.innerHTML = "";
-
-			leftPanelInit($(leftPanelDO));
-			rightPanelInit($(rightPanelDO));
-			middlePanelInit(_taskDiv.children('.taskcenter'));
+			var middlePanel = _taskDiv.children('.task-panels').children('.taskcenter');
+			middlePanel.text(_taskJson.name);
+			middlePanelInit(middlePanel);
 		},
 		handleMove: function(newStatusCode) {
 			_taskJson.statusCode = newStatusCode;

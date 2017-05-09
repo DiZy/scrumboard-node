@@ -255,8 +255,8 @@ var story = function() {
         handleMove: function(newStatusCode) {
             _storyJson.statusCode = newStatusCode;
 
-            var leftPanelDO = _storySticky.children('.taskpanel')[0];
-            var rightPanelDO = _storySticky.children('.taskpanel')[2];
+            var leftPanelDO = _storySticky.children('.task-panels').children('.taskpanel')[0];
+            var rightPanelDO = _storySticky.children('.task-panels').children('.taskpanel')[2];
 
             _storyRow.remove('.story-descr');
 
