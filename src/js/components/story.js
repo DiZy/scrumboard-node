@@ -12,10 +12,11 @@ var story = function() {
 
         //add panels
         _storySticky = $("<div>").addClass('task story-descr');
-        var leftPanel = $('<div>').addClass('col-xs-2 taskpanel').appendTo(_storySticky);
-        var middlePanel = $('<div>').addClass('col-xs-8 taskpanel taskcenter story-sticky').appendTo(_storySticky);
+        var storyPanels = $('<div>').addClass('col-xs-12 task-panels').appendTo(_storySticky);
+        var leftPanel = $('<div>').addClass('taskpanel').appendTo(storyPanels);
+        var middlePanel = $('<div>').addClass('taskpanel taskcenter story-sticky').appendTo(storyPanels);
         middlePanel.text(_storyJson.name);
-        var rightPanel = $('<div>').addClass('col-xs-2 taskpanel').appendTo(_storySticky);
+        var rightPanel = $('<div>').addClass('taskpanel').appendTo(storyPanels);
         leftPanelInit(leftPanel);
         rightPanelInit(rightPanel);
         middlePanelInit(middlePanel);
