@@ -97,13 +97,27 @@ board = (function(){
     function renderStories() {
     	getListOfStoryJson(function(storyList) {
             _storyObjMap = {};
+            var doneStories = [];
+
         	for(var i = 0; i < storyList.length; i++) {
-                var storyObj = story();
-                var storyJson = storyList[i];
-                _storyObjMap[storyJson._id] = storyObj;
-        		storyObj.initialize(storyJson, _currentStoryIndex, _storiesSection);
-                _currentStoryIndex++;
+                var storyData = storyList[i];
+                if(storyData.statusCode != 3) {
+                    var storyObj = story();
+                    _storyObjMap[storyData._id] = storyObj;
+            		storyObj.initialize(storyData, _currentStoryIndex, _storiesSection);
+                    _currentStoryIndex++;
+                }
+                else {
+                    doneStories.push(storyData);
+                }
         	}
+            for(var i = 0; i < doneStories.length; i++) {
+                var storyData = doneStories[i];
+                var storyObj = story();
+                _storyObjMap[storyData._id] = storyObj;
+                storyObj.initialize(storyData, _currentStoryIndex, _storiesSection);
+                _currentStoryIndex++;
+            }
             $('body').ploading({action: 'destroy'});
         });
     }
