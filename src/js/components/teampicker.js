@@ -106,7 +106,9 @@ teampicker = (function() {
             .done(function(data) {
                 console.log(data);
                 if(data.type == 'success'){
-                   loadSelectOptions();
+                   loadSelectOptions(function() {
+                        $('#select-div .selectpicker').trigger('change');
+                   });
                    $('.selectpicker').selectpicker('toggle');
                 }
                 else {
@@ -134,7 +136,9 @@ teampicker = (function() {
                 addOption.click(function() {
                     var newText = $('.bs-searchbox>input').val();
                     createTeamAddRequest(newText, function() {
-                        loadSelectOptions();
+                        loadSelectOptions(function() {
+                            $('#select-div .selectpicker').trigger('change');
+                        });
                     });
                 });
             }
