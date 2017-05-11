@@ -5,55 +5,20 @@ teampicker = (function() {
 
 
     function createTeamAddRequest(name, callback) {
-        $.ajax({
-            type: 'POST',
-            url: '/addTeam',
-            data: {
+        customAjax('POST', '/addTeam',
+            {
                 name: name
             },
-            dataType: "json",
-            contentType: "application/x-www-form-urlencoded"
-
-        })
-        .done(function(data) {
-            if(data.type == 'success'){
-                callback();
-            }
-            else {
-                alert(data.error);
-            }
-
-        })
-        .fail(function(data) {
-            alert("Internal Server Error");
-            console.log(data);
-        });
+            callback
+        );
     }
 
 	function getTeams(callback) {
-		$.ajax({
-            type: 'GET',
-            url: '/getTeams',
-            data: {
-            },
-            dataType: "json",
-            contentType: "application/x-www-form-urlencoded"
-
-        })
-        .done(function(data) {
-            console.log(data);
-            if(data.type == 'success'){
+		customAjax('GET', '/getTeams', {},
+            function(data) {
                 callback(data.teams);
             }
-            else {
-                alert(data.error);
-            }
-
-        })
-        .fail(function(data) {
-            alert("Internal Server Error");
-            console.log(data);
-        });
+        );
 	}
 
     function loadSelectOptions(callback) {
@@ -93,33 +58,17 @@ teampicker = (function() {
     function deleteTeam(teamId, teamName) {
         var confirmation = confirm('Are you sure you want to remove the team "' + teamName + '"?');
         if(confirmation) {
-            $.ajax({
-                type: 'DELETE',
-                url: '/deleteTeam',
-                data: {
+            customAjax('DELETE', '/deleteTeam',
+                {
                     teamId: teamId
                 },
-                dataType: "json",
-                contentType: "application/x-www-form-urlencoded"
-
-            })
-            .done(function(data) {
-                console.log(data);
-                if(data.type == 'success'){
+                function(data) {
                    loadSelectOptions(function() {
                         $('#select-div .selectpicker').trigger('change');
                    });
                    $('.selectpicker').selectpicker('toggle');
                 }
-                else {
-                    alert(data.error);
-                }
-
-            })
-            .fail(function(data) {
-                alert("Internal Server Error");
-                console.log(data);
-            });
+            );
         }
     }
 
