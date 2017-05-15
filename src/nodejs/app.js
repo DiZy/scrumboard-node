@@ -265,18 +265,29 @@ app.put('/editStory', requiresLogin, function(req, res) {
 
 	var teamId = req.body.teamId;
 	var newStoryJson = req.body.newStoryJson;
+	var newTeamId = newStoryJson.teamId;
 
-	teamsCollection.find({'_id': teamId}, function(err, results) {
+	var transferringTeams = teamId != newTeamId;
+
+	teamsCollection.find({'$or': [{'_id': teamId}, {'_id': newTeamId}]}, function(err, results) {
 		assert.equal(err, null);
-		if(results.length > 0) {
+		if((transferringTeams && results.length == 2) || (!transferringTeams && results.length == 1)) {
 			var team = results[0];
-			if(team.companyId == req.session.companyId) {
+			var newTeam;
+			if(transferringTeams) {
+				newTeam = results[1];
+			}
+			else {
+				newTeam = team;
+			}
+			if(team.companyId == req.session.companyId && newTeam.companyId == req.session.companyId) {
 				storiesCollection.updateOne(
 					{'_id': newStoryJson._id, 'teamId': teamId},
 					{
 						$set : {
 							'name': newStoryJson.name,
-							'points': newStoryJson.points
+							'points': newStoryJson.points,
+							'teamId': newTeamId
 						}
 					},
 					function(err, result) {
@@ -288,7 +299,7 @@ app.put('/editStory', requiresLogin, function(req, res) {
 				
 			}
 			else {
-				return res.json({ type: "error", error: "You do not have permissions to edit this story."});
+				return res.json({ type: "error", error: "You do not have permissions to edit this story in this way."});
 			}
 		}
 		else {

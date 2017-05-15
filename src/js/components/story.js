@@ -148,12 +148,13 @@ var story = function() {
     }
 
     function editStory() {
-        editStoryModal.open(_storyJson, function(newStoryJson) {
+        var oldTeamId = _storyJson.teamId;
+        editStoryModal.open(oldTeamId, _storyJson, function(newStoryJson) {
             $.ajax({
                 type: 'PUT',
                 url: '/editStory',
                 data: {
-                    teamId: _storyJson.teamId,
+                    teamId: oldTeamId,
                     newStoryJson: newStoryJson
                 },
                 dataType: "json",
@@ -161,7 +162,6 @@ var story = function() {
 
             })
             .done(function(data) {
-                console.log(data);
                 if(data.type == 'success'){
                     //Socket handles
                 }

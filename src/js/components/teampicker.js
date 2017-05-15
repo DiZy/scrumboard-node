@@ -28,6 +28,7 @@ teampicker = (function() {
             if(teams.length > 0) {
                 for(var i = 0; i < teams.length; i++) {
                     var newOption = $('<option>').text(teams[i].name).attr('id', i);
+                    newOption.val(teams[i]._id);
                     $('.selectpicker').append(newOption);
                 }
                 $('.selectpicker').selectpicker('val', teams[teams.length - 1].name);

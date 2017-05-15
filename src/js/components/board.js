@@ -60,17 +60,16 @@ board = (function(){
 
         var addStoryButton = $('<button>').addClass('btn btn-lg btn-default').attr('id', 'addStoryButton').text('Add a story').appendTo("#board");
         addStoryButton.click(function() {
-            editStoryModal.open(undefined, createStory)
+            editStoryModal.open(_teamJson._id, undefined, createStory)
         });
     }
 
     function createStory(storyJson) {
-        console.log(storyJson);
         $.ajax({
                 type: 'POST',
                 url: '/addStory',
                 data: {
-                    teamId: _teamJson._id,
+                    teamId: storyJson.teamId,
                     name: storyJson.name,
                     points: storyJson.points
                 },
@@ -192,16 +191,23 @@ board = (function(){
             });
         },
         handleAddStory: function(storyData) {
-            var storyObj = story();
-            _storyObjMap[storyData._id] = storyObj;
-            storyObj.initialize(storyData, _currentStoryIndex, _storiesSection);
-            _currentStoryIndex++;
+            if(storyData.teamId == _teamJson._id) {
+                var storyObj = story();
+                _storyObjMap[storyData._id] = storyObj;
+                storyObj.initialize(storyData, _currentStoryIndex, _storiesSection);
+                _currentStoryIndex++;
+            }
         },
         handleRemoveStory: function(storyId) {
             _storyObjMap[storyId].handleRemove();
         },
         handleEditStory: function(storyData) {
-            _storyObjMap[storyData._id].handleEdit(storyData);
+            if(storyData.teamId != _teamJson._id) {
+                _storyObjMap[storyData._id].handleRemove();
+            }
+            else {
+                _storyObjMap[storyData._id].handleEdit(storyData);
+            }
         },
         handleMoveStory: function(storyId, newStatusCode) {
             _storyObjMap[storyId].handleMove(newStatusCode);

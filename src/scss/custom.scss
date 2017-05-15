@@ -71,56 +71,56 @@ body {
 	left: 50px;
 	width: calc(100% - 50px);
 	z-index: 51;
-}
 
-.bootstrap-select{
-	width:100% !important;
+	.bootstrap-select{
+		width:100% !important;
 
-	.dropdown-toggle {
-		border-radius: 0;
-	}
-
-	.dropdown-menu {
-		margin-left: -50px;
-		width: 100vw;
-
-		li {
-			a:first-of-type {
-				padding-right: 0px;
-				width: calc(100% - 20px);
-				float: left;
-			}
-
-			.remove-team {
-				width: 20px;;
-				height: 29px;
-				float: left;
-				cursor: pointer;
-				text-align: center;
-				margin: auto;
-				font-size: 20px;
-				padding-top: 5px;
-				top: 0;
-			}
+		.dropdown-toggle {
+			border-radius: 0;
 		}
 
-		li.active {
-			background-color: #2196f3;
+		.dropdown-menu.open {
+			margin-left: -50px;
+			width: 100vw;
 
-			.remove-team {
+			li {
+				a:first-of-type {
+					padding-right: 0px;
+					width: calc(100% - 20px);
+					float: left;
+				}
+
+				.remove-team {
+					width: 20px;;
+					height: 29px;
+					float: left;
+					cursor: pointer;
+					text-align: center;
+					margin: auto;
+					font-size: 20px;
+					padding-top: 5px;
+					top: 0;
+				}
+			}
+
+			li.active {
 				background-color: #2196f3;
+
+				.remove-team {
+					background-color: #2196f3;
+				}
 			}
 		}
+		/*height:75px;*/
 	}
-	/*height:75px;*/
-}
 
-.dropdown-toggle{
-	/*height:100%;*/
-	font-size:35px;
-}
-.no-results {
-	display: none;
+	.dropdown-toggle{
+		/*height:100%;*/
+		font-size:35px;
+	}
+	.no-results {
+		display: none;
+	}
 }
 
 .btn {
