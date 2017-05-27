@@ -9,7 +9,8 @@ var task = function() {
 	function render() {
 		_taskDiv = $('<div>').addClass('task');
 
-		console.log(_taskJson);
+		var colSelector = ".progresscol[data-column=" + _taskJson.statusCode + "]";
+		_$storyRow.children(colSelector).append(_taskDiv);
 
 		//add panels
 		var taskPanels = $('<div>').addClass('col-xs-12 task-panels').appendTo(_taskDiv);
@@ -28,9 +29,6 @@ var task = function() {
 		rightPanelInit(rightPanel);
 		middlePanelInit(middlePanel);
 		peopleRowInit(peopleRow);
-
-		var colSelector = "." + 'progress-' + _taskJson.statusCode;
-		_$storyRow.children(colSelector).append(_taskDiv);
 
 		setDefaultSize(leftPanel, middlePanel, rightPanel, peopleRow);
 		makeResizable(leftPanel, middlePanel, rightPanel, peopleRow);
@@ -83,7 +81,7 @@ var task = function() {
 		var middleArrow = $('<span>').addClass('arrow glyphicon glyphicon-menu-right show-on-hover').css('display', 'none');
 		var deleteButton = $('<span>').addClass('delete glyphicon glyphicon-remove show-on-hover').css('display', 'none').appendTo($rightPanel);
 
-		if(_taskJson.statusCode != 3) {
+		if(_taskJson.statusCode != _$storyRow.children('.progresscol').length - 2) {
 			middleArrow.appendTo($rightPanel)
 		}
 

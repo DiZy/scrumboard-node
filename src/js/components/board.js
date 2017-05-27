@@ -44,21 +44,21 @@ board = (function(){
 
     function renderHeader() {
         var boardDiv = $('<div>').attr('id', 'board').addClass('container').appendTo('body');
-        boardDiv[0].innerHTML = '<div class="row" id="boardHeader">' +
-                            '<div class="col-xs-2 progresscol" data-column="-1"><h4>Story</h4></div>' +
-                            '<div class="col-xs-4 progresscol" data-column="0"><h4>Not started</h4></div>' +
-                            '<div class="col-xs-2 progresscol" data-column="1"><h4>In Progress</h4></div>' +
-                            '<div class="col-xs-2 progresscol" data-column="2"><h4>To Be Verified</h4></div>' +
-                            '<div class="col-xs-2 progresscol done-col" data-column="3"><h4>Done</h4></div>' +
-                        '</div>';
-        board.makeResizableCol($($('#boardHeader>div')[0]));
-        board.makeResizableCol($($('#boardHeader>div')[1]));
-        board.makeResizableCol($($('#boardHeader>div')[2]));
-        board.makeResizableCol($($('#boardHeader>div')[3]));
+        var boardWidth = ((_teamJson.columnNames.length + 1) * 20) + "vw";
+        boardDiv.width(boardWidth);
+        var boardHeader = $('<div>').addClass('row').attr('id', 'boardHeader').appendTo(boardDiv);
+        var boardStoryCol = $('<div>').addClass('progresscol').attr('data-column', -1).html('<h4>Story</h4>').appendTo(boardHeader);
+        board.makeResizableCol(boardStoryCol);
+
+        for(var i = 0; i < _teamJson.columnNames.length; i++) {
+            var colText = '<h4>' + _teamJson.columnNames[i] + '</h4>';
+            var boardCol = $('<div>').addClass('progresscol').attr('data-column', i).html(colText).appendTo(boardHeader);
+            board.makeResizableCol(boardCol);
+        }
 
         _storiesSection = $('<div>').addClass('row').attr('id', 'storiesSection').appendTo('#board');
 
-        var addStoryButton = $('<button>').addClass('btn btn-lg btn-default').attr('id', 'addStoryButton').text('Add a story').appendTo("#board");
+        var addStoryButton = $('<button>').addClass('btn btn-lg btn-default').attr('id', 'addStoryButton').text('Add a story').appendTo('#board');
         addStoryButton.click(function() {
             editStoryModal.open(_teamJson._id, undefined, createStory)
         });
@@ -103,7 +103,7 @@ board = (function(){
                 if(storyData.statusCode != 3) {
                     var storyObj = story();
                     _storyObjMap[storyData._id] = storyObj;
-            		storyObj.initialize(storyData, _currentStoryIndex, _storiesSection);
+            		storyObj.initialize(storyData, _currentStoryIndex, _storiesSection, _teamJson.columnNames);
                     _currentStoryIndex++;
                 }
                 else {
@@ -114,7 +114,7 @@ board = (function(){
                 var storyData = doneStories[i];
                 var storyObj = story();
                 _storyObjMap[storyData._id] = storyObj;
-                storyObj.initialize(storyData, _currentStoryIndex, _storiesSection);
+                storyObj.initialize(storyData, _currentStoryIndex, _storiesSection, _teamJson.columnNames);
                 _currentStoryIndex++;
             }
             $('body').ploading({action: 'destroy'});
@@ -157,6 +157,7 @@ board = (function(){
     return {
         render: function(teamjson) {
         	_teamJson = teamjson;
+            _teamJson.columnNames = ['Not started', 'in progress', 'to be verified', 'done'];
             _currentStoryIndex = 0;
             removeBoard();
             renderPeople();
@@ -164,26 +165,25 @@ board = (function(){
         	renderStories();
         },
         resizeColumn: function(columnNumber, newWidth) {
-            var selector = 'div[data-column=' + columnNumber + ']';
+            var selector = '.progresscol[data-column=' + columnNumber + ']';
             $(selector).width(newWidth);
         },
         makeResizableCol: function($div) {
             $div.resizable({
                 handles: 'e',
                 start: function(e, ui) {
-                    otherColWidths = $($('#boardHeader>div')[0]).width() +
-                                     $($('#boardHeader>div')[1]).width() +
-                                     $($('#boardHeader>div')[2]).width() +
-                                     $($('#boardHeader>div')[3]).width() +
-                                     100 - $(this).width();
+                    colOriginalWidth = $(this).width();
                 },
                 resize: function(e, ui) {
-                    var headerWidth = $('#boardHeader').width();
-                    var tooBig = (ui.size.width + otherColWidths) >= headerWidth;
-                    ui.size.width = tooBig ? (headerWidth - otherColWidths - 5) : ui.size.width;
+                    ui.size.width = ui.size.width >= 100 ? ui.size.width : 100;
+
                     board.resizeColumn($(this).attr('data-column'), ui.size.width);
-                    var doneColWidth = headerWidth - $(this).width() - otherColWidths + 100 - 5;
-                    board.resizeColumn(3, doneColWidth);
+
+                    var widthAdded = ui.size.width - colOriginalWidth;
+                    var originalBoardWidth = $('#board').width();
+                    $('#board').width(originalBoardWidth + widthAdded);
+
+                    colOriginalWidth = ui.size.width;
                 },
                 stop: function(e, ui) {
                     board.resizeColumn($(this).attr('data-column'), $(this).width());
@@ -194,7 +194,7 @@ board = (function(){
             if(storyData.teamId == _teamJson._id) {
                 var storyObj = story();
                 _storyObjMap[storyData._id] = storyObj;
-                storyObj.initialize(storyData, _currentStoryIndex, _storiesSection);
+                storyObj.initialize(storyData, _currentStoryIndex, _storiesSection, _teamJson.columnNames);
                 _currentStoryIndex++;
             }
         },

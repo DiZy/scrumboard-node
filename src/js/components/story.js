@@ -5,13 +5,33 @@ var story = function() {
     var _storySticky;
     var _taskObjMap;
     var _storiesSection;
+    var _columnNames;
 
     function render() {
         _storyRow = $('<div>').addClass('row story').attr('data-story', _index);
-        var leftcol = $('<div>').addClass('col-xs-2 progresscol').attr('data-column', -1).appendTo(_storyRow);
 
-        //add panels
+        var leftcol = $('<div>').addClass('progresscol').attr('data-column', -1).appendTo(_storyRow);
+        var cols = [];
+        for(var i = 0; i < _columnNames.length; i++) {
+            var newColumn = $('<div>').addClass('progresscol').attr('data-column', i).appendTo(_storyRow);
+            if(i == _columnNames.length - 1) {
+                newColumn.addClass('done-col');
+            }
+            cols.push(newColumn);
+        }
+
+        //attempt at droppable
+        // var dropScope = "story_" + _index;
+        // for(var i = 0; i < cols.length;i++) {
+        //     console.log('make droppable' + cols[i]);
+        //     cols[i].droppable({scope: dropScope});
+        // }
+
         _storySticky = $("<div>").addClass('task story-descr');
+        var colSelector = "." + 'progresscol[data-column=' + _storyJson.statusCode + ']';
+        _storyRow.children(colSelector).append(_storySticky);
+
+        //Add Panels
         var storyPanels = $('<div>').addClass('col-xs-12 task-panels').appendTo(_storySticky);
         var leftPanel = $('<div>').addClass('taskpanel').appendTo(storyPanels);
         var middlePanel = $('<div>').addClass('taskpanel taskcenter story-sticky').appendTo(storyPanels);
@@ -43,21 +63,6 @@ var story = function() {
 
         addTaskButton.click(addTaskToStory);
 
-        // var dropScope = "story_" + _index;
-        var maxColumn = 4;
-        var cols = [];
-        cols.push($('<div>').addClass('progress-0 col-xs-4 progresscol').attr('data-column', 0).appendTo(_storyRow));
-        cols.push($('<div>').addClass('progress-1 col-xs-2 progresscol').attr('data-column', 1).appendTo(_storyRow));
-        cols.push($('<div>').addClass('progress-2 col-xs-2 progresscol').attr('data-column', 2).appendTo(_storyRow));
-        cols.push($('<div>').addClass('progress-3 col-xs-2 progresscol done-col').attr('data-column', 3).appendTo(_storyRow));
-        
-        //attempt at droppable
-        // for(var i = 0; i < cols.length;i++) {
-        //     console.log('make droppable' + cols[i]);
-        //     cols[i].droppable({scope: dropScope});
-        // }
-
-
         var allTasks = _storyJson.tasks;
         _taskObjMap = {};
         for(var i = 0; i < allTasks.length; i++) {
@@ -68,11 +73,6 @@ var story = function() {
         }
 
         _storyRow.appendTo(_storiesSection);
-        var colSelector = "." + 'progresscol[data-column=' + _storyJson.statusCode + ']';
-        _storyRow.children(colSelector).append(_storySticky);
-
-
-
     }
 
     function leftPanelInit($leftPanel, people) {
@@ -97,11 +97,11 @@ var story = function() {
 
     }
 
-    function rightPanelInit($rightPanel, people, isLastColumn) {
+    function rightPanelInit($rightPanel, people) {
         var middleArrow = $('<span>').addClass('arrow glyphicon glyphicon-menu-right show-on-hover').css('display', 'none');
         var deleteButton = $('<span>').addClass('delete glyphicon glyphicon-remove show-on-hover').css('display', 'none').appendTo($rightPanel);
 
-        if(_storyJson.statusCode != 3) {
+        if(_storyJson.statusCode != _columnNames.length - 1) {
             middleArrow.appendTo($rightPanel)
         }
 
@@ -239,10 +239,11 @@ var story = function() {
     }
 
     return {
-    	initialize: function(storyJson, currentIndex, storiesSection) {
+    	initialize: function(storyJson, currentIndex, storiesSection, columnNames) {
     		_storyJson = storyJson;
             _index = currentIndex;
             _storiesSection = storiesSection;
+            _columnNames = columnNames;
     		render();
     	},
         handleRemove: function() {
