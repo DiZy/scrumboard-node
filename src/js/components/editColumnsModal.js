@@ -7,6 +7,9 @@ editColumnsModal = (function() {
 	}
 
 	function renderDetails() {
+		$('#editModal .modal-title').text('Edit Columns');
+
+
 		var modalBody = $('#editModal .modal-body');
 		var editDetails = $('<div>').attr('id', 'editDetails').appendTo(modalBody);
 
@@ -23,9 +26,10 @@ editColumnsModal = (function() {
 			addColumn(newColumnInput.val());
 		});
 
-		$('<div>').text('The last column will be treated as the done column for the burndown.').appendTo(editDetails);
 		$('<br>').appendTo(editDetails);
-		$('<div>').text('It is recommended not to remove columns while tasks are present on the board.').appendTo(editDetails);
+		$('<div>').addClass('center').text('The last column will be treated as the done column for the burndown.').appendTo(editDetails);
+		$('<br>').appendTo(editDetails);
+		$('<div>').addClass('center').text('It is recommended not to remove columns while tasks are present on the board.').appendTo(editDetails);
 	}
 
 	function addColumn(columnName) {

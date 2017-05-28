@@ -54,13 +54,14 @@ board = (function(){
             var colText = '<h4>' + _teamJson.columnNames[i] + '</h4>';
             var boardCol = $('<div>').addClass('progresscol').attr('data-column', i).html(colText).appendTo(boardHeader);
 
+            board.makeResizableCol(boardCol);
+
             if(i == _teamJson.columnNames.length - 1) {
+                boardCol.addClass('done-col');
+
                 var editColumnsButton = $('<span>').addClass('glyphicon glyphicon-cog').attr('id', 'editColumnsButton').appendTo(boardCol);
                 editColumnsButton.attr('title', 'Edit columns');
                 editColumnsButton.on('click', editColumns);
-            }
-            else {
-                board.makeResizableCol(boardCol);
             }
         }
 
@@ -70,6 +71,8 @@ board = (function(){
         addStoryButton.click(function() {
             editStoryModal.open(_teamJson._id, undefined, createStory)
         });
+
+        adjustDoneColumnWidth();
     }
 
     function editColumns() {
@@ -176,6 +179,20 @@ board = (function(){
         $('#addStoryButton').remove();
     }
 
+    function adjustDoneColumnWidth() {
+        //adjust last column to fill screen width
+        var doneColWidth = $('#boardHeader>.done-col').width();
+        var otherColsWidth = 0;
+        var otherCols = $('#boardHeader>.progresscol:not(.done-col)');
+        for(var i = 0; i < otherCols.length; i++) {
+            otherColsWidth += ($(otherCols[i]).width() + 1);
+        }
+        if(otherColsWidth + 100 < window.innerWidth) {
+            $('.done-col').width(window.innerWidth - otherColsWidth);
+            $('#board').width(window.innerWidth + (1 * otherCols.length) + 1);
+        }
+    }
+
     return {
         render: function(teamjson) {
         	_teamJson = teamjson;
@@ -205,9 +222,12 @@ board = (function(){
                     $('#board').width(originalBoardWidth + widthAdded + 1);
 
                     colOriginalWidth = ui.size.width;
+
                 },
                 stop: function(e, ui) {
                     board.resizeColumn($(this).attr('data-column'), $(this).width() + 1);
+
+                    adjustDoneColumnWidth();
                 }
             });
         },

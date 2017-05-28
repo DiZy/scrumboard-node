@@ -74,7 +74,7 @@ body {
 
 	.bootstrap-select{
 		min-width: calc(100vw - 50px);
-d
+
 		.dropdown-toggle {
 			border-radius: 0;
 		}
@@ -218,7 +218,7 @@ d
 		.progresscol {
 			margin:0;
 			padding: 15px 0;
-			border-left: 1px solid #eee;
+			border-right: 1px solid #eee;
 			min-height:50px;
 			min-width: 100px;
 			display: flex;
@@ -374,5 +374,21 @@ d
 	.bootstrap-select {
 		margin: auto;
 		display: block;
+	}
+
+	#editColumnNamesDiv {
+		font-size: 18px;
+
+		.row {
+			border-bottom: 1px solid #eee;
+		}
+
+		.row:last-child {
+			margin-bottom: 25px;
+		}
+
+		.glyphicon {
+			cursor: pointer;
+		}
 	}
 }
