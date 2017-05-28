@@ -81,9 +81,6 @@ board = (function(){
                 {
                     teamId: _teamJson._id,
                     newColumnNames: newColumnNames
-                },
-                function(data) {
-                    $('#select-div .selectpicker').trigger('change');
                 }
             );
         });
@@ -270,6 +267,9 @@ board = (function(){
         },
         getPeopleDivForTask: function(storyId, taskId) {
             return _storyObjMap[storyId].getPeopleDivForTask(taskId);
+        },
+        handleEditColumns: function() {
+            $('#select-div .selectpicker').trigger('change');
         }
     }
 

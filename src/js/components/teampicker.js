@@ -212,5 +212,10 @@ teampicker = (function() {
         socket.on('undo burndown', function(data) {
             burndown.handleUndo();
         });
+
+        socket.off('edit columns');
+        socket.on('edit columns', function(data) {
+            board.handleEditColumns();
+        });
     }
 })();

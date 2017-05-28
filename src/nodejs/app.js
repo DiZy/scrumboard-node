@@ -183,6 +183,7 @@ app.put('/updateTeamColumns', requiresLogin, checkPostPermissionForTeam, functio
 		},
 		function(err, result) {
 			assert.equal(err, null);
+			socketio.sockets.in(teamId).emit('edit columns', {});
 			return res.json({type: "success"});
 		}
 	);
