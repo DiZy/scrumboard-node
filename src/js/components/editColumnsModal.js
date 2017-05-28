@@ -35,7 +35,12 @@ editColumnsModal = (function() {
 			var columnDeleteButton = $('<span>').addClass('col-xs-2 glyphicon glyphicon-remove').appendTo(columnNameRow);
 
 			columnDeleteButton.click(function() {
-				columnNameRow.remove();
+				if($('#editColumnNamesDiv').find('.columnNameDiv').length > 1) {
+					columnNameRow.remove();
+				}
+				else {
+					alert('You cannot remove all columns.');
+				}
 			});
 		}
 		else {
