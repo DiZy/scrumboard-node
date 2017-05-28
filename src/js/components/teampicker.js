@@ -31,7 +31,7 @@ teampicker = (function() {
                     newOption.val(teams[i]._id);
                     $('.selectpicker').append(newOption);
                 }
-                $('.selectpicker').selectpicker('val', teams[teams.length - 1].name);
+                $('.selectpicker').selectpicker('val', teams[teams.length - 1]._id);
                 $('.selectpicker').selectpicker('refresh');
                 $('.bootstrap-select .dropdown-menu li').each(function(index, value) {
                     var removeTeamButton = $('<spann>').addClass('glyphicon glyphicon-remove-circle remove-team');
