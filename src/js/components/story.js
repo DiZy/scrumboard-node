@@ -10,10 +10,14 @@ var story = function() {
     function render() {
         _storyRow = $('<div>').addClass('row story').attr('data-story', _index);
 
+        var headerCols = $('#boardHeader>.progresscol'); 
+
         var leftcol = $('<div>').addClass('progresscol').attr('data-column', -1).appendTo(_storyRow);
+        leftcol.width($(headerCols[0]).width() + 1);
         var cols = [];
         for(var i = 0; i < _columnNames.length; i++) {
             var newColumn = $('<div>').addClass('progresscol').attr('data-column', i).appendTo(_storyRow);
+            newColumn.width($(headerCols[i + 1]).width() + 1);
             if(i == _columnNames.length - 1) {
                 newColumn.addClass('done-col');
             }

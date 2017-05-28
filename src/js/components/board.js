@@ -53,7 +53,15 @@ board = (function(){
         for(var i = 0; i < _teamJson.columnNames.length; i++) {
             var colText = '<h4>' + _teamJson.columnNames[i] + '</h4>';
             var boardCol = $('<div>').addClass('progresscol').attr('data-column', i).html(colText).appendTo(boardHeader);
-            board.makeResizableCol(boardCol);
+
+            if(i == _teamJson.columnNames.length - 1) {
+                var editColumnsButton = $('<span>').addClass('glyphicon glyphicon-cog').attr('id', 'editColumnsButton').appendTo(boardCol);
+                editColumnsButton.attr('title', 'Edit columns');
+                editColumnsButton.on('click', editColumns);
+            }
+            else {
+                board.makeResizableCol(boardCol);
+            }
         }
 
         _storiesSection = $('<div>').addClass('row').attr('id', 'storiesSection').appendTo('#board');
@@ -61,6 +69,20 @@ board = (function(){
         var addStoryButton = $('<button>').addClass('btn btn-lg btn-default').attr('id', 'addStoryButton').text('Add a story').appendTo('#board');
         addStoryButton.click(function() {
             editStoryModal.open(_teamJson._id, undefined, createStory)
+        });
+    }
+
+    function editColumns() {
+        editColumnsModal.open(_teamJson.columnNames, function(newColumnNames) {
+            customAjax('PUT', '/updateTeamColumns',
+                {
+                    teamId: _teamJson._id,
+                    newColumnNames: newColumnNames
+                },
+                function(data) {
+                    $('#select-div .selectpicker').trigger('change');
+                }
+            );
         });
     }
 
@@ -157,7 +179,6 @@ board = (function(){
     return {
         render: function(teamjson) {
         	_teamJson = teamjson;
-            _teamJson.columnNames = ['Not started', 'in progress', 'to be verified', 'done'];
             _currentStoryIndex = 0;
             removeBoard();
             renderPeople();
@@ -177,16 +198,16 @@ board = (function(){
                 resize: function(e, ui) {
                     ui.size.width = ui.size.width >= 100 ? ui.size.width : 100;
 
-                    board.resizeColumn($(this).attr('data-column'), ui.size.width);
+                    board.resizeColumn($(this).attr('data-column'), ui.size.width + 1);
 
                     var widthAdded = ui.size.width - colOriginalWidth;
                     var originalBoardWidth = $('#board').width();
-                    $('#board').width(originalBoardWidth + widthAdded);
+                    $('#board').width(originalBoardWidth + widthAdded + 1);
 
                     colOriginalWidth = ui.size.width;
                 },
                 stop: function(e, ui) {
-                    board.resizeColumn($(this).attr('data-column'), $(this).width());
+                    board.resizeColumn($(this).attr('data-column'), $(this).width() + 1);
                 }
             });
         },

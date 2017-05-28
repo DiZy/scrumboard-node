@@ -132,7 +132,8 @@ app.post('/signUp', function(req, res) {
 //TODO: update to not allow duplicate names within same company probably
 app.post('/addTeam', requiresLogin, function(req, res) {
 	var name = req.body.name;
-	teamsCollection.insert({"_id": uuidV4(), "name": name, "companyId": req.session.companyId, "people": []}, function(err, results, team) {
+	var defaultColumns = ['Not Started', 'In Progress', 'To Be Verified', 'Done'];
+	teamsCollection.insert({"_id": uuidV4(), "name": name, "companyId": req.session.companyId, "people": [], "columnNames": defaultColumns}, function(err, results, team) {
 		assert.equal(err, null);
 		return res.json({type: "success", team: team});
 	});
@@ -167,6 +168,24 @@ app.get('/getTeamDetails', requiresLogin, function(req, res) {
 			return res.json({type: "error", error: "This team does not exist."});
 		}
 	});
+});
+
+app.put('/updateTeamColumns', requiresLogin, checkPostPermissionForTeam, function(req, res, next) {
+	var teamId = req.body.teamId;
+	var newColumnNames = req.body.newColumnNames;
+
+	teamsCollection.updateOne(
+		{'_id': teamId},
+		{
+			$set: {
+				"columnNames": newColumnNames
+			}
+		},
+		function(err, result) {
+			assert.equal(err, null);
+			return res.json({type: "success"});
+		}
+	);
 });
 
 app.delete('/deleteTeam', requiresLogin, function(req, res, next) {
@@ -235,20 +254,24 @@ app.put('/moveStory', requiresLogin, function(req, res) {
 		if(results.length > 0) {
 			var team = results[0];
 			if(team.companyId == req.session.companyId) {
-				storiesCollection.updateOne(
-					{'_id': storyId, 'teamId': teamId},
-					{
-						$set : {
-							'statusCode': newStatusCode
+				if(newStatusCode < team.columnNames.length && newStatusCode >= -1) {
+					storiesCollection.updateOne(
+						{'_id': storyId, 'teamId': teamId},
+						{
+							$set : {
+								'statusCode': newStatusCode
+							}
+						},
+						function(err, result) {
+							assert.equal(err, null);
+							socketio.sockets.in(teamId).emit('move story', {storyId: storyId, newStatusCode: newStatusCode});
+							return res.json({type: "success", newStatusCode: newStatusCode, result: result });
 						}
-					},
-					function(err, result) {
-						assert.equal(err, null);
-						socketio.sockets.in(teamId).emit('move story', {storyId: storyId, newStatusCode: newStatusCode});
-						return res.json({type: "success", newStatusCode: newStatusCode, result: result });
-					}
-				);
-				
+					);
+				}
+				else {
+					return res.json({ type: "error", error: "Cannot move story to a column that does not exist"});
+				}
 			}
 			else {
 				return res.json({ type: "error", error: "You do not have permissions to edit this story."});
@@ -445,19 +468,24 @@ app.put('/moveTask', requiresLogin, function(req, res) {
 		if(results.length > 0) {
 			var team = results[0];
 			if(team.companyId == req.session.companyId) {
-				storiesCollection.updateOne(
-					{'_id': storyId, 'teamId': teamId, 'tasks._id': taskId},
-					{
-						$set : {
-							'tasks.$.statusCode': newStatusCode
+				if(newStatusCode < team.columnNames.length && newStatusCode >= 0) {
+					storiesCollection.updateOne(
+						{'_id': storyId, 'teamId': teamId, 'tasks._id': taskId},
+						{
+							$set : {
+								'tasks.$.statusCode': newStatusCode
+							}
+						},
+						function(err, result) {
+							assert.equal(err, null);
+							socketio.sockets.in(teamId).emit('move task', {storyId: storyId, taskId: taskId, newStatusCode: newStatusCode});
+							return res.json({type: "success", newStatusCode: newStatusCode, result: result });
 						}
-					},
-					function(err, result) {
-						assert.equal(err, null);
-						socketio.sockets.in(teamId).emit('move task', {storyId: storyId, taskId: taskId, newStatusCode: newStatusCode});
-						return res.json({type: "success", newStatusCode: newStatusCode, result: result });
-					}
-				);
+					);
+				}
+				else {
+					return res.json({ type: "error", error: "Cannot move task to a column that does not exist"});
+				}
 				
 			}
 			else {
@@ -619,37 +647,21 @@ app.put('/assignPerson', requiresLogin, function(req, res) {
 	});
 });
 
-app.delete('/removePersonFromTeam', requiresLogin, function(req, res) {
+app.delete('/removePersonFromTeam', requiresLogin, checkPostPermissionForTeam, function(req, res) {
 	var teamId = req.body.teamId;
 	var personId = req.body.personId;
-
-	teamsCollection.find({'_id': teamId}, function(err, results) {
-		assert.equal(err, null);
-		if(results.length > 0) {
-			var team = results[0];
-			if(team.companyId == req.session.companyId) {
-				teamsCollection.updateOne(
-					{'_id': teamId},
-					{$pull: { 
-						"people": {"_id": personId} 
-						}
-					},
-					function(err, result) {
-						assert.equal(err, null);
-						socketio.sockets.in(teamId).emit('remove person', {personId: personId});
-						return res.json({type: "success"});
-					}
-				);
-				
+	teamsCollection.updateOne(
+		{'_id': teamId},
+		{$pull: { 
+			"people": {"_id": personId} 
 			}
-			else {
-				return res.json({ type: "error", error: "You do not have permissions to edit this team's stories."});
-			}
+		},
+		function(err, result) {
+			assert.equal(err, null);
+			socketio.sockets.in(teamId).emit('remove person', {personId: personId});
+			return res.json({type: "success"});
 		}
-		else {
-			return res.json({ type: "error", error: "This team does not exist."});
-		}
-	});
+	);
 });
 
 app.get('/getBurndown', requiresLogin, checkGetPermissionForTeam, function(req, res, next) {
@@ -701,44 +713,59 @@ app.post('/startBurndown', requiresLogin, checkPostPermissionForTeam, function(r
 	);
 });
 
-app.post('/markBurndown', requiresLogin, checkPostPermissionForTeam, function(req, res) {
+app.post('/markBurndown', requiresLogin, function(req, res) {
 	var teamId = req.body.teamId;
 
-	storiesCollection.find(
-		{'teamId' : teamId, 'statusCode' : {'$ne': "3"}}, 
-		function(err, results) {
-			var totalHours = 0;
-			var totalStoryPoints = 0;
-			for(var i = 0; i < results.length; i++) {
-				var curStory = results[i];
-				if(!isNaN(parseFloat(curStory.points))){
-					totalStoryPoints += parseFloat(curStory.points);
-				}
-				var curTasks = curStory.tasks;
-				for(var j = 0; j < curTasks.length; j++) {
-					var hoursToAdd = curTasks[j].points;
-					var isNotDone = curTasks[j].statusCode != 3;
-					if(!isNaN(parseFloat(hoursToAdd)) && isNotDone){
-						totalHours += parseFloat(hoursToAdd);
+	teamsCollection.find({'_id': teamId}, function(err, results) {
+		assert.equal(err, null);
+		if(results.length == 1) {
+			var team = results[0];
+			if(team.companyId == req.session.companyId) {
+				var lastColIndex = team.columnNames.length - 1
+				storiesCollection.find(
+					{'teamId' : teamId, 'statusCode' : {'$ne': lastColIndex.toString()}}, 
+					function(err, results) {
+						var totalHours = 0;
+						var totalStoryPoints = 0;
+						for(var i = 0; i < results.length; i++) {
+							var curStory = results[i];
+							if(!isNaN(parseFloat(curStory.points))){
+								totalStoryPoints += parseFloat(curStory.points);
+							}
+							var curTasks = curStory.tasks;
+							for(var j = 0; j < curTasks.length; j++) {
+								var hoursToAdd = curTasks[j].points;
+								var isNotDone = curTasks[j].statusCode != lastColIndex;
+								if(!isNaN(parseFloat(hoursToAdd)) && isNotDone){
+									totalHours += parseFloat(hoursToAdd);
+								}
+							}
+						}
+
+						burndownsCollection.updateOne(
+							{'teamId': teamId},
+							{$push: { 
+								"hoursData": totalHours,
+								"pointsData": totalStoryPoints
+							}},
+							function(err, result) {
+								assert.equal(err, null);
+								socketio.sockets.in(teamId).emit('mark burndown', {newHours: totalHours, newPoints: totalStoryPoints});
+								return res.json({type: "success", newHours: totalHours, newPoints: totalStoryPoints });
+							}
+						);
+
 					}
-				}
+				);
 			}
-
-			burndownsCollection.updateOne(
-				{'teamId': teamId},
-				{$push: { 
-					"hoursData": totalHours,
-					"pointsData": totalStoryPoints
-				}},
-				function(err, result) {
-					assert.equal(err, null);
-					socketio.sockets.in(teamId).emit('mark burndown', {newHours: totalHours, newPoints: totalStoryPoints});
-					return res.json({type: "success", newHours: totalHours, newPoints: totalStoryPoints });
-				}
-			);
-
+			else {
+				return res.json({ type: "error", error: "You do not have permissions to do anything for this team."});
+			}
 		}
-	);
+		else {
+			return res.json({ type: "error", error: "This team does not exist."});
+		}
+	});
 });
 
 app.post('/undoBurndown', requiresLogin, checkPostPermissionForTeam, function(req, res) {
