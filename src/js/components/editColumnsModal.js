@@ -26,6 +26,8 @@ editColumnsModal = (function() {
 			addColumn(newColumnInput.val());
 		});
 
+		editColumnNamesDiv.sortable();
+
 		$('<br>').appendTo(editDetails);
 		$('<div>').addClass('center').text('The last column will be treated as the done column for the burndown.').appendTo(editDetails);
 		$('<br>').appendTo(editDetails);

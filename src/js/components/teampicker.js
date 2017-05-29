@@ -114,6 +114,8 @@ teampicker = (function() {
                 var id = $(this).children(":selected").attr('id');
                 if(id) {
                     team.initialize(_teamsArray[id]);
+                    _socket.disconnect();
+                    _socket = io();
                     _socket.emit('join room', _teamsArray[id]._id);
                     initializeSocket(_socket);
                 }
@@ -215,7 +217,7 @@ teampicker = (function() {
 
         socket.off('edit columns');
         socket.on('edit columns', function(data) {
-            board.handleEditColumns();
+            board.handleEditColumns(data.newColumnNames);
         });
     }
 })();
