@@ -191,6 +191,9 @@ board = (function(){
     }
 
     return {
+        clear: function() {
+            removeBoard();
+        },
         render: function(teamjson) {
         	_teamJson = teamjson;
             _currentStoryIndex = 0;

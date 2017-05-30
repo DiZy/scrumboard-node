@@ -47,6 +47,7 @@ teampicker = (function() {
                 }
             }
             else {
+                board.clear();
                 $('.selectpicker').selectpicker('refresh');
                 $('#select-div .bs-placeholder .filter-option').text('Please add or select a team here.');
                 if(callback) {
@@ -65,9 +66,9 @@ teampicker = (function() {
                 },
                 function(data) {
                    loadSelectOptions(function() {
+                        $('.selectpicker').selectpicker('toggle');
                         $('#select-div .selectpicker').trigger('change');
                    });
-                   $('.selectpicker').selectpicker('toggle');
                 }
             );
         }
