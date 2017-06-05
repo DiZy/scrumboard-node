@@ -225,7 +225,7 @@ body {
     		flex-wrap: wrap;
     		position: relative;
     		float: left;
-    		width: 20vw;
+    		width: calc(20vw - 1px);
 
 			h4 {
 				padding-left: 10px;
