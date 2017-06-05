@@ -73,6 +73,10 @@ board = (function(){
         });
 
         adjustDoneColumnWidth();
+
+        $(window).resize(function() {
+            $('#select-div .selectpicker').trigger('change');
+        });
     }
 
     function editColumns() {
@@ -184,9 +188,13 @@ board = (function(){
         for(var i = 0; i < otherCols.length; i++) {
             otherColsWidth += ($(otherCols[i]).width() + 1);
         }
-        if(otherColsWidth + 100 < window.innerWidth) {
-            $('.done-col').width(window.innerWidth - otherColsWidth - 1);
-            $('#board').width(window.innerWidth);
+
+        var windowWidth = $(window).width();
+
+        if(otherColsWidth + 100 < windowWidth) {
+            console.log(doneColWidthStyle);
+            $('.done-col').width(windowWidth - otherColsWidth - 3);
+            $('#board').width(windowWidth);
         }
     }
 
