@@ -192,7 +192,6 @@ board = (function(){
         var windowWidth = $(window).width();
 
         if(otherColsWidth + 100 < windowWidth) {
-            console.log(doneColWidthStyle);
             $('.done-col').width(windowWidth - otherColsWidth - 3);
             $('#board').width(windowWidth);
         }
