@@ -73,10 +73,6 @@ board = (function(){
         });
 
         adjustDoneColumnWidth();
-
-        $(window).resize(function() {
-            $('#select-div .selectpicker').trigger('change');
-        });
     }
 
     function editColumns() {
