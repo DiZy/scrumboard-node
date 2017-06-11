@@ -253,6 +253,9 @@ board = (function(){
                 _storyObjMap[storyData._id].handleEdit(storyData);
             }
         },
+        requestStoryStatusCodeChange: function(storyId, newStatusCode) {
+            _storyObjMap[storyId].requestStoryStatusCodeChange(newStatusCode);
+        },
         handleMoveStory: function(storyId, newStatusCode) {
             _storyObjMap[storyId].handleMove(newStatusCode);
         },
