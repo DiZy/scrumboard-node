@@ -368,6 +368,12 @@ body {
 	.story-descr {
 		height: 125px;
 	}
+
+	.task.ui-draggable-dragging {
+		.editCover, .arrow, .delete {
+			display: none;
+		}
+	}
 }
 
 #editModal {
@@ -391,4 +397,8 @@ body {
 			cursor: pointer;
 		}
 	}
+}
+
+.ui-draggable-dragging {
+	z-index: 10;
 }
