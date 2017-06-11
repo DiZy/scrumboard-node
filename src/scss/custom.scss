@@ -370,8 +370,10 @@ body {
 	}
 
 	.task.ui-draggable-dragging {
-		.editCover, .arrow, .delete {
-			display: none;
+		.show-on-hover {
+			// It looks like something is setting an inline style and overriding this, so we have to make it important
+			// so that the clickables don't get triggered on drags
+			display: none !important;
 		}
 	}
 }

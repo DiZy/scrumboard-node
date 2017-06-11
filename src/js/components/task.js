@@ -40,7 +40,8 @@ var task = function() {
 		});
 
 		_taskDiv.draggable({
-			revert: true
+			revert: true,
+			handle: ".taskcenter"
 		});
 
 		_taskDiv.attr("data-taskId", _taskJson._id);
