@@ -248,6 +248,9 @@ var task = function() {
 	}
 
 	function editTask() {
+		if (_taskDiv.hasClass("ui-draggable-dragging")) {
+			return;
+		}
 		editTaskModal.open(_taskJson, function(newTaskJson) {
 			$.ajax({
                 type: 'PUT',
