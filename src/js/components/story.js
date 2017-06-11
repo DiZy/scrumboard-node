@@ -7,8 +7,12 @@ var story = function() {
     var _storiesSection;
     var _columnNames;
 
-    function handleTaskDrop(statusCode, draggable, ui) {
+    function handleTaskDrop(statusCode, ignored_draggable, ui) {
         var taskId = ui.helper.attr("data-taskId");
+        var storyId = ui.helper.attr("data-storyId");
+        if (storyId !== _storyJson._id) {
+            return false;
+        }
         board.requestTaskStatusCodeChange(_storyJson._id, taskId, statusCode);
         return true;
     }

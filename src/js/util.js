@@ -34,8 +34,8 @@ function customAjax(method, url, data, successCallback, failCallback) {
 	});
 }
 
-// Borrowed from Kevin Ennis (http://kevvv.in/currying-in-javascript/)
-// Permission pending [email sent]
+// Author: Kevin Ennis (http://kevvv.in/currying-in-javascript/)
+// Used with permission
 function curry( fn ) {
 	var arity = fn.length;
 

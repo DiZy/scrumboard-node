@@ -44,6 +44,7 @@ var task = function() {
 		});
 
 		_taskDiv.attr("data-taskId", _taskJson._id);
+		_taskDiv.attr("data-storyId", _storyId);
 
 		_taskDiv.hover(
 			//Hover in
