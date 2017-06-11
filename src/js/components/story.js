@@ -7,6 +7,12 @@ var story = function() {
     var _storiesSection;
     var _columnNames;
 
+    function handleTaskDrop(statusCode, draggable, ui) {
+        var taskId = ui.helper.attr("data-taskId");
+        board.requestTaskStatusCodeChange(_storyJson._id, taskId, statusCode);
+        return true;
+    }
+
     function render() {
         _storyRow = $('<div>').addClass('row story').attr('data-story', _index);
 
@@ -17,6 +23,10 @@ var story = function() {
         var cols = [];
         for(var i = 0; i < _columnNames.length; i++) {
             var newColumn = $('<div>').addClass('progresscol').attr('data-column', i).appendTo(_storyRow);
+            newColumn.droppable({
+                accept: '.task',
+                drop: curry(handleTaskDrop)(i)
+            });
             newColumn.width($(headerCols[i + 1]).width() + 1);
             if(i == _columnNames.length - 1) {
                 newColumn.addClass('done-col');
@@ -285,6 +295,9 @@ var story = function() {
         },
         handleEditTask: function(taskData) {
             _taskObjMap[taskData._id].handleEdit(taskData);
+        },
+        requestTaskStatusCodeChange: function(taskId, newStatusCode) {
+            _taskObjMap[taskId].requestStatusCodeChange(newStatusCode);
         },
         handleMoveTask: function(taskId, newStatusCode) {
             _taskObjMap[taskId].handleMove(newStatusCode);

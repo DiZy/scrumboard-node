@@ -39,6 +39,12 @@ var task = function() {
 			drop: handlePersonDrop
 		});
 
+		_taskDiv.draggable({
+			revert: true
+		});
+
+		_taskDiv.attr("data-taskId", _taskJson._id);
+
 		_taskDiv.hover(
 			//Hover in
 			function() {
@@ -295,6 +301,9 @@ var task = function() {
 			middlePanel.text(_taskJson.name);
 			middlePanelInit(middlePanel);
 		},
+		/** Asks the server to move (change the status code) the task **/
+		requestStatusCodeChange: updateStatusCode,
+		/** Moves the task UI (called in response to the server) */
 		handleMove: function(newStatusCode) {
 			_taskJson.statusCode = newStatusCode;
 			_taskDiv.remove();
