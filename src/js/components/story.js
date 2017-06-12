@@ -1,37 +1,39 @@
 var story = function() {
 	var _storyJson;
     var _storyRow;
-    var _index;
     var _storySticky;
     var _taskObjMap;
     var _storiesSection;
     var _columnNames;
+    var STORY_COLUMN = -1;
 
-    function render() {
-        _storyRow = $('<div>').addClass('row story').attr('data-story', _index);
-
-        var headerCols = $('#boardHeader>.progresscol'); 
-
-        var leftcol = $('<div>').addClass('progresscol').attr('data-column', -1).appendTo(_storyRow);
-        leftcol.width($(headerCols[0]).width() + 1);
-        var cols = [];
-        for(var i = 0; i < _columnNames.length; i++) {
-            var newColumn = $('<div>').addClass('progresscol').attr('data-column', i).appendTo(_storyRow);
-            newColumn.width($(headerCols[i + 1]).width() + 1);
-            if(i == _columnNames.length - 1) {
-                newColumn.addClass('done-col');
-            }
-            cols.push(newColumn);
+    function stickyDropHandler(e, ui) {
+        var newStatusCode = $(this).attr("data-column");
+        var droppedSticky = ui.helper;
+        var stickyStoryId = droppedSticky.attr("data-storyId");
+        if (stickyStoryId !== _storyJson._id) { // The dropped sticky doesn't belong to this row, so cancel the drag
+            return false;
         }
+        if (droppedSticky.hasClass("story-descr")){ // Sticky is a story
+            updateStatusCode(newStatusCode);
+        } else { // Sticky is a task
+            if (newStatusCode === STORY_COLUMN) { // Cannot drop a task into the story column
+                return false;
+            }
+            var stickyTaskId = droppedSticky.attr("data-taskId");
+            _taskObjMap[stickyTaskId].requestStatusCodeChange(newStatusCode);
+        }
+        return true;
+    }
 
-        //attempt at droppable
-        // var dropScope = "story_" + _index;
-        // for(var i = 0; i < cols.length;i++) {
-        //     console.log('make droppable' + cols[i]);
-        //     cols[i].droppable({scope: dropScope});
-        // }
-
+    function renderStorySticky() {
         _storySticky = $("<div>").addClass('task story-descr');
+        _storySticky.attr("data-storyId", _storyJson._id);
+        _storySticky.draggable({
+            revert: true,
+            handle: ".taskcenter"
+        });
+
         var colSelector = "." + 'progresscol[data-column=' + _storyJson.statusCode + ']';
         _storyRow.children(colSelector).append(_storySticky);
 
@@ -59,13 +61,42 @@ var story = function() {
         );
 
 
-        var addTaskButton = $('<button>').text('Add task').addClass('btn btn-default addTaskButton').appendTo(leftcol);
+        var addTaskButton = $('<button>').text('Add task').addClass('btn btn-default addTaskButton');
         addTaskButton.addClass('show-on-hover');
         addTaskButton.css('display', 'none');
         addTaskButton.appendTo(_storySticky);
 
 
         addTaskButton.click(addTaskToStory);
+    }
+
+    function render() {
+        _storyRow = $('<div>').addClass('row story');
+
+        var headerCols = $('#boardHeader>.progresscol'); 
+
+        var storyColumn = $('<div>').addClass('progresscol').attr('data-column', STORY_COLUMN).appendTo(_storyRow);
+        storyColumn.droppable({
+            accept: '.task',
+            drop: stickyDropHandler
+        });
+        storyColumn.width($(headerCols[0]).width() + 1);
+
+        var cols = [];
+        for(var i = 0; i < _columnNames.length; i++) {
+            var newColumn = $('<div>').addClass('progresscol').attr('data-column', i).appendTo(_storyRow);
+            newColumn.droppable({
+                accept: '.task',
+                drop: stickyDropHandler
+            });
+            newColumn.width($(headerCols[i + 1]).width() + 1);
+            if(i == _columnNames.length - 1) {
+                newColumn.addClass('done-col');
+            }
+            cols.push(newColumn);
+        }
+
+        renderStorySticky();
 
         var allTasks = _storyJson.tasks;
         _taskObjMap = {};
@@ -73,7 +104,7 @@ var story = function() {
             var taskObj = task();
             var taskData = allTasks[i];
             _taskObjMap[taskData._id] = taskObj;
-            taskObj.initialize(taskData, _storyRow, _index, _storyJson._id, _storyJson.teamId);
+            taskObj.initialize(taskData, _storyRow, _storyJson._id, _storyJson.teamId);
         }
 
         _storyRow.appendTo(_storiesSection);
@@ -97,7 +128,6 @@ var story = function() {
         editCover.click(editStory);
 
         var points = $('<div>').addClass('points').text(_storyJson.points).appendTo($middlePanel);
-
 
     }
 
@@ -243,9 +273,8 @@ var story = function() {
     }
 
     return {
-    	initialize: function(storyJson, currentIndex, storiesSection, columnNames) {
+    	initialize: function(storyJson, storiesSection, columnNames) {
     		_storyJson = storyJson;
-            _index = currentIndex;
             _storiesSection = storiesSection;
             _columnNames = columnNames;
     		render();
@@ -260,25 +289,13 @@ var story = function() {
         },
         handleMove: function(newStatusCode) {
             _storyJson.statusCode = newStatusCode;
-
-            var leftPanelDO = _storySticky.children('.task-panels').children('.taskpanel')[0];
-            var rightPanelDO = _storySticky.children('.task-panels').children('.taskpanel')[2];
-
-            _storyRow.remove('.story-descr');
-
-            leftPanelDO.innerHTML = "";
-            rightPanelDO.innerHTML = "";
-
-            leftPanelInit($(leftPanelDO));
-            rightPanelInit($(rightPanelDO));
-
-            var colSelector = "." + 'progresscol[data-column=' + _storyJson.statusCode + ']';
-            _storyRow.children(colSelector).append(_storySticky);
+            _storyRow.find(".story-descr").remove()
+            renderStorySticky();
         },
         handleAddTask: function(taskData) {
             var taskObj = task();
             _taskObjMap[taskData._id] = taskObj;
-            taskObj.initialize(taskData, _storyRow, _index, _storyJson._id, _storyJson.teamId);
+            taskObj.initialize(taskData, _storyRow, _storyJson._id, _storyJson.teamId);
         },
         handleRemoveTask: function(taskId) {
             _taskObjMap[taskId].handleRemove();

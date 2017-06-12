@@ -4,7 +4,7 @@ $post-yellow: #FFFBD0;
 
 $shadow: 0px 3px 5px #888888;
 
-.not(textarea)::webkit-scrollbar {
+not(textarea)::webkit-scrollbar {
 	display: none;
 }
 
@@ -372,6 +372,14 @@ body {
 	.story-descr {
 		height: 125px;
 	}
+
+	.task.ui-draggable-dragging {
+		.show-on-hover {
+			// It looks like something is setting an inline style and overriding this, so we have to make it important
+			// so that the clickables don't get triggered on drags
+			display: none !important;
+		}
+	}
 }
 
 #editModal {
@@ -395,4 +403,8 @@ body {
 			cursor: pointer;
 		}
 	}
+}
+
+.ui-draggable-dragging {
+	z-index: 10;
 }

@@ -1,7 +1,6 @@
 board = (function(){
 
     var _teamJson;
-    var _currentStoryIndex;
     var _storyObjMap;
     var _storiesSection;
 
@@ -125,8 +124,7 @@ board = (function(){
                 if(storyData.statusCode != 3) {
                     var storyObj = story();
                     _storyObjMap[storyData._id] = storyObj;
-            		storyObj.initialize(storyData, _currentStoryIndex, _storiesSection, _teamJson.columnNames);
-                    _currentStoryIndex++;
+            		storyObj.initialize(storyData, _storiesSection, _teamJson.columnNames);
                 }
                 else {
                     doneStories.push(storyData);
@@ -136,8 +134,7 @@ board = (function(){
                 var storyData = doneStories[i];
                 var storyObj = story();
                 _storyObjMap[storyData._id] = storyObj;
-                storyObj.initialize(storyData, _currentStoryIndex, _storiesSection, _teamJson.columnNames);
-                _currentStoryIndex++;
+                storyObj.initialize(storyData, _storiesSection, _teamJson.columnNames);
             }
             $('body').ploading({action: 'destroy'});
         });
@@ -199,7 +196,6 @@ board = (function(){
         },
         render: function(teamjson) {
         	_teamJson = teamjson;
-            _currentStoryIndex = 0;
             removeBoard();
             renderPeople();
             renderHeader();
@@ -238,8 +234,7 @@ board = (function(){
             if(storyData.teamId == _teamJson._id) {
                 var storyObj = story();
                 _storyObjMap[storyData._id] = storyObj;
-                storyObj.initialize(storyData, _currentStoryIndex, _storiesSection, _teamJson.columnNames);
-                _currentStoryIndex++;
+                storyObj.initialize(storyData, _storiesSection, _teamJson.columnNames);
             }
         },
         handleRemoveStory: function(storyId) {
