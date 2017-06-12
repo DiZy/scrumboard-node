@@ -1,27 +1,27 @@
 var story = function() {
 	var _storyJson;
     var _storyRow;
-    var _index;
     var _storySticky;
     var _taskObjMap;
     var _storiesSection;
     var _columnNames;
     var STORY_COLUMN = -1;
 
-    function handleStickyDrop(statusCode, ignored_draggable, ui) {
+    function stickyDropHandler(e, ui) {
+        var newStatusCode = $(this).attr("data-column");
         var droppedSticky = ui.helper;
         var stickyStoryId = droppedSticky.attr("data-storyId");
         if (stickyStoryId !== _storyJson._id) { // The dropped sticky doesn't belong to this row, so cancel the drag
             return false;
         }
         if (droppedSticky.hasClass("story-descr")){ // Sticky is a story
-            board.requestStoryStatusCodeChange(stickyStoryId, statusCode);
+            updateStatusCode(newStatusCode);
         } else { // Sticky is a task
-            if (statusCode === STORY_COLUMN) { // Cannot drop a task into the story column
+            if (newStatusCode === STORY_COLUMN) { // Cannot drop a task into the story column
                 return false;
             }
             var stickyTaskId = droppedSticky.attr("data-taskId");
-            board.requestTaskStatusCodeChange(stickyStoryId, stickyTaskId, statusCode);
+            _taskObjMap[stickyTaskId].requestStatusCodeChange(newStatusCode);
         }
         return true;
     }
@@ -71,14 +71,14 @@ var story = function() {
     }
 
     function render() {
-        _storyRow = $('<div>').addClass('row story').attr('data-story', _index);
+        _storyRow = $('<div>').addClass('row story');
 
         var headerCols = $('#boardHeader>.progresscol'); 
 
         var storyColumn = $('<div>').addClass('progresscol').attr('data-column', STORY_COLUMN).appendTo(_storyRow);
         storyColumn.droppable({
             accept: '.task',
-            drop: curry(handleStickyDrop)(STORY_COLUMN)
+            drop: stickyDropHandler
         });
         storyColumn.width($(headerCols[0]).width() + 1);
 
@@ -87,7 +87,7 @@ var story = function() {
             var newColumn = $('<div>').addClass('progresscol').attr('data-column', i).appendTo(_storyRow);
             newColumn.droppable({
                 accept: '.task',
-                drop: curry(handleStickyDrop)(i)
+                drop: stickyDropHandler
             });
             newColumn.width($(headerCols[i + 1]).width() + 1);
             if(i == _columnNames.length - 1) {
@@ -104,7 +104,7 @@ var story = function() {
             var taskObj = task();
             var taskData = allTasks[i];
             _taskObjMap[taskData._id] = taskObj;
-            taskObj.initialize(taskData, _storyRow, _index, _storyJson._id, _storyJson.teamId);
+            taskObj.initialize(taskData, _storyRow, _storyJson._id, _storyJson.teamId);
         }
 
         _storyRow.appendTo(_storiesSection);
@@ -128,7 +128,6 @@ var story = function() {
         editCover.click(editStory);
 
         var points = $('<div>').addClass('points').text(_storyJson.points).appendTo($middlePanel);
-
 
     }
 
@@ -274,9 +273,8 @@ var story = function() {
     }
 
     return {
-    	initialize: function(storyJson, currentIndex, storiesSection, columnNames) {
+    	initialize: function(storyJson, storiesSection, columnNames) {
     		_storyJson = storyJson;
-            _index = currentIndex;
             _storiesSection = storiesSection;
             _columnNames = columnNames;
     		render();
@@ -291,23 +289,19 @@ var story = function() {
         },
         handleMove: function(newStatusCode) {
             _storyJson.statusCode = newStatusCode;
-            $(_storyRow).find(".story-descr").remove()
+            _storyRow.find(".story-descr").remove()
             renderStorySticky();
         },
         handleAddTask: function(taskData) {
             var taskObj = task();
             _taskObjMap[taskData._id] = taskObj;
-            taskObj.initialize(taskData, _storyRow, _index, _storyJson._id, _storyJson.teamId);
+            taskObj.initialize(taskData, _storyRow, _storyJson._id, _storyJson.teamId);
         },
         handleRemoveTask: function(taskId) {
             _taskObjMap[taskId].handleRemove();
         },
         handleEditTask: function(taskData) {
             _taskObjMap[taskData._id].handleEdit(taskData);
-        },
-        requestStoryStatusCodeChange: updateStatusCode,
-        requestTaskStatusCodeChange: function(taskId, newStatusCode) {
-            _taskObjMap[taskId].requestStatusCodeChange(newStatusCode);
         },
         handleMoveTask: function(taskId, newStatusCode) {
             _taskObjMap[taskId].handleMove(newStatusCode);

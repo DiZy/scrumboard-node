@@ -2,7 +2,6 @@ var task = function() {
 	var _taskJson;
 	var _$storyRow;
 	var _taskDiv;
-	var _storyIndex;
 	var _storyId;
 	var _teamId;
 
@@ -286,10 +285,9 @@ var task = function() {
 
     return {
 
-    	initialize: function(taskJson, $storyRow, storyIndex, storyId, teamId) {
+    	initialize: function(taskJson, $storyRow, storyId, teamId) {
     		_taskJson = taskJson;
     		_$storyRow = $storyRow;
-    		_storyIndex = storyIndex;
     		_storyId = storyId;
     		_teamId = teamId;
     		render();
