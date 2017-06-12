@@ -17,9 +17,6 @@ var story = function() {
         if (droppedSticky.hasClass("story-descr")){ // Sticky is a story
             updateStatusCode(newStatusCode);
         } else { // Sticky is a task
-            if (newStatusCode === STORY_COLUMN) { // Cannot drop a task into the story column
-                return false;
-            }
             var stickyTaskId = droppedSticky.attr("data-taskId");
             _taskObjMap[stickyTaskId].requestStatusCodeChange(newStatusCode);
         }
@@ -77,7 +74,7 @@ var story = function() {
 
         var storyColumn = $('<div>').addClass('progresscol').attr('data-column', STORY_COLUMN).appendTo(_storyRow);
         storyColumn.droppable({
-            accept: '.task',
+            accept: '.story-descr',
             drop: stickyDropHandler
         });
         storyColumn.width($(headerCols[0]).width() + 1);
