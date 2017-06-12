@@ -4,6 +4,10 @@ $post-yellow: #FFFBD0;
 
 $shadow: 0px 3px 5px #888888;
 
+.not(textarea)::webkit-scrollbar {
+	display: none;
+}
+
 body {
 	min-height: 100vh;
 }

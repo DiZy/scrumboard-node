@@ -188,7 +188,7 @@ board = (function(){
         var windowWidth = $(window).width();
 
         if(otherColsWidth + 100 < windowWidth) {
-            $('.done-col').width(windowWidth - otherColsWidth - 3);
+            $('.done-col').width(windowWidth - otherColsWidth - 4);
             $('#board').width(windowWidth);
         }
     }
