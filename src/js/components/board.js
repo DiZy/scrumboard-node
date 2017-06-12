@@ -253,6 +253,9 @@ board = (function(){
                 _storyObjMap[storyData._id].handleEdit(storyData);
             }
         },
+        requestStoryStatusCodeChange: function(storyId, newStatusCode) {
+            _storyObjMap[storyId].requestStoryStatusCodeChange(newStatusCode);
+        },
         handleMoveStory: function(storyId, newStatusCode) {
             _storyObjMap[storyId].handleMove(newStatusCode);
         },
@@ -264,6 +267,9 @@ board = (function(){
         },
         handleEditTask: function(storyId, taskData) {
              _storyObjMap[storyId].handleEditTask(taskData);
+        },
+        requestTaskStatusCodeChange: function(storyId, taskId, newStatusCode) {
+            _storyObjMap[storyId].requestTaskStatusCodeChange(taskId, newStatusCode);
         },
         handleMoveTask: function(storyId, taskId, newStatusCode) {
             _storyObjMap[storyId].handleMoveTask(taskId, newStatusCode);

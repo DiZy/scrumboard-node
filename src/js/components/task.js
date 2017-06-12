@@ -39,6 +39,14 @@ var task = function() {
 			drop: handlePersonDrop
 		});
 
+		_taskDiv.draggable({
+			revert: true,
+			handle: ".taskcenter"
+		});
+
+		_taskDiv.attr("data-taskId", _taskJson._id);
+		_taskDiv.attr("data-storyId", _storyId);
+
 		_taskDiv.hover(
 			//Hover in
 			function() {
@@ -241,6 +249,9 @@ var task = function() {
 	}
 
 	function editTask() {
+		if (_taskDiv.hasClass("ui-draggable-dragging")) {
+			return;
+		}
 		editTaskModal.open(_taskJson, function(newTaskJson) {
 			$.ajax({
                 type: 'PUT',
@@ -295,6 +306,9 @@ var task = function() {
 			middlePanel.text(_taskJson.name);
 			middlePanelInit(middlePanel);
 		},
+		/** Asks the server to move (change the status code) the task **/
+		requestStatusCodeChange: updateStatusCode,
+		/** Moves the task UI (called in response to the server) */
 		handleMove: function(newStatusCode) {
 			_taskJson.statusCode = newStatusCode;
 			_taskDiv.remove();
