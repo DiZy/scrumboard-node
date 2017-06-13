@@ -141,9 +141,12 @@ body {
 }
 
 #addStoryButton {
-	margin-top: 15px;
-	margin-bottom: 40px;
-	margin-left: 25px;
+	position: absolute;
+	z-index: 99;
+	top: 0px;
+    right: 0px;
+    box-shadow: none;
+    font-size: 20px;
 }
 
 #unassignedPeople {
@@ -192,6 +195,7 @@ body {
 	float: left;
 	cursor: pointer;
 	box-shadow: $shadow;
+	z-index: 60;
 }
 
 #board {
@@ -203,6 +207,11 @@ body {
 
 	#boardHeader {
 		border-bottom: 1px solid #eee;
+		position: fixed;
+    	top:156px;
+    	display: block;
+    	z-index: 9;
+    	background-color: white;
 		#editColumnsButton {
 			position: absolute;
 			top: 10px;
@@ -212,12 +221,19 @@ body {
 		}
 	}
 
+	#storiesSection {
+		position: absolute;
+    	top:80px;
+    	overflow: auto;
+	}
+
 	.row {
 		clear:both;
 		display: flex;
     	flex-wrap: wrap;
     	margin: 0;
     	min-width: 100vw;
+    	width:inherit;
 
 		.progresscol {
 			margin:0;

@@ -66,12 +66,16 @@ board = (function(){
 
         _storiesSection = $('<div>').addClass('row').attr('id', 'storiesSection').appendTo('#board');
 
-        var addStoryButton = $('<button>').addClass('btn btn-lg btn-default').attr('id', 'addStoryButton').text('Add a story').appendTo('#board');
+        var addStoryButton = $('<button>').addClass('btn btn-lg btn-default').attr('id', 'addStoryButton').attr('title', 'Add a story').text("+").appendTo(boardStoryCol);
         addStoryButton.click(function() {
             editStoryModal.open(_teamJson._id, undefined, createStory)
         });
 
         adjustDoneColumnWidth();
+
+        $(window).off('scroll').on('scroll', function() {
+            boardHeader.css('left', '-' + window.scrollX + 'px');
+        });
     }
 
     function editColumns() {
