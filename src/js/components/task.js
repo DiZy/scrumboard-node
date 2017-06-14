@@ -32,6 +32,16 @@ var task = function() {
 		setDefaultSize(leftPanel, middlePanel, rightPanel, peopleRow);
 		makeResizable(leftPanel, middlePanel, rightPanel, peopleRow);
 
+		if (_taskJson.notes !== "") {
+			middlePanel.tooltip({
+				items: "div",
+				content: function() { return ("Notes:\n" + escapeHtml(_taskJson.notes)).replace(/\n/g, "<br />")},
+				position: {
+					my: "center top+15", at: "center bottom", of: middlePanel
+				},
+				show: { delay: 500 }
+			});
+		}
 
 		_taskDiv.droppable({
 			accept: '.person',
@@ -51,7 +61,6 @@ var task = function() {
 			function() {
 				$(_taskDiv).find('.hide-on-hover').hide();
 				$(_taskDiv).find('.show-on-hover').show();
-				$(_taskDiv).attr('title', "Notes:\n" + _taskJson.notes);
 			},
 			//Hover out
 			function() {

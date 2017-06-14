@@ -424,3 +424,10 @@ body {
 .ui-draggable-dragging {
 	z-index: 10;
 }
+
+.ui-tooltip {
+	border: 1px solid #444444;
+	box-shadow: $shadow;
+	background-color: $post-yellow;
+	border-radius: 10px;
+}
