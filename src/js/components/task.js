@@ -39,7 +39,7 @@ var task = function() {
 				position: {
 					my: "center top+15", at: "center bottom", of: middlePanel
 				},
-				show: { delay: 500 }
+				show: { delay: 1000 }
 			});
 		}
 
@@ -50,7 +50,9 @@ var task = function() {
 
 		_taskDiv.draggable({
 			revert: true,
-			handle: ".taskcenter"
+			handle: ".taskcenter",
+			start: function() {if (_taskJson.notes !== "") {middlePanel.tooltip("disable")}},
+			stop: function() {if (_taskJson.notes !== "") {middlePanel.tooltip("enable")}}
 		});
 
 		_taskDiv.attr("data-taskId", _taskJson._id);
@@ -259,6 +261,11 @@ var task = function() {
 	function editTask() {
 		if (_taskDiv.hasClass("ui-draggable-dragging")) {
 			return;
+		}
+		if (_taskJson.notes !== "") {
+			// We can't programmatically close the tooltip, because it wasn't opened programmatically.
+			// We can disable and then immediately enable it though, which has the same effect.
+			_taskDiv.find(".taskcenter").tooltip("disable").tooltip("enable");
 		}
 		editTaskModal.open(_taskJson, function(newTaskJson) {
 			$.ajax({
