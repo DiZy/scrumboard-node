@@ -12,9 +12,9 @@ Clone your new fork via `git`.
 ## Install dependencies
 Install the program's dependencies by running `npm install` in the directory you just cloned.
 
-##Set up IDE
+## Set up IDE
 
-###IntelliJ (written by Kevin)
+### IntelliJ (written by Kevin)
 I've had success working on this project in IntelliJ Ultimate.
  - In IntelliJ, create a new project from existing sources, and select the path to the repository you just cloned.
 
