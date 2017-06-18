@@ -404,7 +404,7 @@ body {
 		display: block;
 	}
 
-	#editColumnNamesDiv {
+	#editColumnNamesDiv, #editCriteriaDiv {
 		font-size: 18px;
 
 		.row {
@@ -418,6 +418,27 @@ body {
 		.glyphicon {
 			cursor: pointer;
 		}
+	}
+
+	#editCriteriaDiv {
+		width: 250px;
+		max-width: 100%;
+		margin: auto;
+
+		.row {
+			float: left;
+			width: 100%;
+			margin: 0;
+		}
+	}
+
+	h6 {
+		margin-top: 30px;
+		display: block;
+	    position: relative;
+	    float: left;
+	    width: 100%;
+	    text-align: center;
 	}
 }
 

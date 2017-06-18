@@ -228,7 +228,7 @@ app.post('/addStory', requiresLogin, function(req, res) {
 			var team = results[0];
 			if(team.companyId == req.session.companyId) {
 				storiesCollection.insert(
-					{"_id": uuidV4(), "name": name, "teamId": teamId, "companyId": team.companyId, "tasks": [], "statusCode": -1, "points": points}, 
+					{"_id": uuidV4(), "name": name, "teamId": teamId, "companyId": team.companyId, "tasks": [], "statusCode": -1, "points": points, "acceptanceCriteria": []}, 
 					function(err, results, story) {
 						assert.equal(err, null);
 						socketio.sockets.in(teamId).emit('add story', {story: story});
@@ -312,7 +312,8 @@ app.put('/editStory', requiresLogin, function(req, res) {
 						$set : {
 							'name': newStoryJson.name,
 							'points': newStoryJson.points,
-							'teamId': newTeamId
+							'teamId': newTeamId,
+							'acceptanceCriteria': newStoryJson.acceptanceCriteria
 						}
 					},
 					function(err, result) {
