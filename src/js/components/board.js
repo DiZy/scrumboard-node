@@ -209,6 +209,7 @@ board = (function(){
             $(selector).width(newWidth);
         },
         makeResizableCol: function($div) {
+            let colOriginalWidth;
             $div.resizable({
                 handles: 'e',
                 start: function(e, ui) {
