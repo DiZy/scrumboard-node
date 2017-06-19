@@ -156,7 +156,6 @@ board = (function(){
 
         })
         .done(function(data) {
-            console.log(data);
             if(data.type == 'success'){
                 callback(data.stories);
             }

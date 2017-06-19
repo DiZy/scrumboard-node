@@ -15,7 +15,6 @@ burndown = (function() {
 
 		})
 		.done(function(data) {
-		    console.log(data);
 		    if(data.type == 'success'){
 		        renderChart(data.chartLabels, data.hoursData, data.pointsData);
 		    }
