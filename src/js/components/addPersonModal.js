@@ -3,15 +3,15 @@ addPersonModal = (function() {
 
 	function removeDetails() {
 		$('#editDetails').remove();
-		$('#editModal .modal-save').remove();
+		$('#editModal').find('.modal-save').remove();
 	}
 
 	function renderDetails() {
-		$('#editModal .modal-title').text('Add Person');
+		$('#editModal').find('.modal-title').text('Add Person');
 
 		_personName = "";
 
-		var modalBody = $('#editModal .modal-body');
+		var modalBody = $('#editModal').find('.modal-body');
 		var editDetails = $('<div>').attr('id', 'editDetails').appendTo(modalBody);
 
 		var personNameInput = $('<input>').addClass('input form-control').attr('placeholder', 'Person Initials').appendTo(editDetails);
@@ -23,7 +23,7 @@ addPersonModal = (function() {
 	}
 
 	function renderSaveButton(callback) {
-		var modalFooter = $('#editModal .modal-footer');
+		var modalFooter = $('#editModal').find('.modal-footer');
 		var saveButton = $('<button type="button" class="btn btn-primary modal-save">Save</button>').appendTo(modalFooter);
 
 		saveButton.click(function() {

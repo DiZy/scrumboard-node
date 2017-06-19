@@ -3,19 +3,19 @@ editStoryModal = (function() {
 
 	function removeDetails() {
 		$('#editDetails').remove();
-		$('#editModal .modal-save').remove();
+		$('#editModal').find('.modal-save').remove();
 	}
 
 	function renderDetails(teamId, storyJson) {
 		if(storyJson) {
-			$('#editModal .modal-title').text('Edit story');
+			$('#editModal').find('.modal-title').text('Edit story');
 		}
 		else {
-			$('#editModal .modal-title').text('Add story');
+			$('#editModal').find('.modal-title').text('Add story');
 		}
 
 		_storyJsonEdited = storyJson ? storyJson : {name: "New Story", points: "", teamId: teamId};
-		var modalBody = $('#editModal .modal-body');
+		var modalBody = $('#editModal').find('.modal-body');
 		var editDetails = $('<div>').attr('id', 'editDetails').appendTo(modalBody);
 
 		var nameInput = $('<textarea>').addClass('input form-control').attr('placeholder', 'Story Name').appendTo(editDetails);
@@ -89,11 +89,11 @@ editStoryModal = (function() {
 			var optionText = $(option).text();
 			var optionVal = $(option).val();
 			var newOption = $('<option>').text(optionText).val(optionVal).appendTo(teamInput)
-		};
+		}
 	}
 
 	function renderSaveButton(callback) {
-		var modalFooter = $('#editModal .modal-footer');
+		var modalFooter = $('#editModal').find('.modal-footer');
 		var saveButton = $('<button type="button" class="btn btn-primary modal-save">Save</button>').appendTo(modalFooter);
 
 		saveButton.click(function() {

@@ -179,9 +179,9 @@ board = (function(){
 
     function adjustDoneColumnWidth() {
         //adjust last column to fill screen width
-        var doneColWidth = $('#boardHeader>.done-col').width();
+        var doneColWidth = $('#boardHeader').children('.done-col').width();
         var otherColsWidth = 0;
-        var otherCols = $('#boardHeader>.progresscol:not(.done-col)');
+        var otherCols = $('#boardHeader').children('.progresscol:not(.done-col)');
         for(var i = 0; i < otherCols.length; i++) {
             otherColsWidth += ($(otherCols[i]).width() + 1);
         }
@@ -274,7 +274,7 @@ board = (function(){
             return _storyObjMap[storyId].getPeopleDivForTask(taskId);
         },
         handleEditColumns: function() {
-            $('#select-div .selectpicker').trigger('change');
+            $('#select-div').find('.selectpicker').trigger('change');
         }
     }
 

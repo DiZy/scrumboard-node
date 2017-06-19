@@ -70,7 +70,7 @@ var story = function() {
     function render() {
         _storyRow = $('<div>').addClass('row story');
 
-        var headerCols = $('#boardHeader>.progresscol'); 
+        var headerCols = $('#boardHeader').children('.progresscol'); 
 
         var storyColumn = $('<div>').addClass('progresscol').attr('data-column', STORY_COLUMN).appendTo(_storyRow);
         storyColumn.droppable({

@@ -4,19 +4,19 @@ editTaskModal = (function() {
 
 	function removeDetails() {
 		$('#editDetails').remove();
-		$('#editModal .modal-save').remove();
+		$('#editModal').find('.modal-save').remove();
 	}
 
 	function renderDetails(taskJson) {
 		if(taskJson) {
-			$('#editModal .modal-title').text('Edit task');
+			$('#editModal').find('.modal-title').text('Edit task');
 		}
 		else {
-			$('#editModal .modal-title').text('Add task');
+			$('#editModal').find('.modal-title').text('Add task');
 		}
 
 		_taskJsonEdited = taskJson ? taskJson : {name: "New Task"};
-		var modalBody = $('#editModal .modal-body');
+		var modalBody = $('#editModal').find('.modal-body');
 		var editDetails = $('<div>').attr('id', 'editDetails').appendTo(modalBody);
 
 		_taskForm = $('<form id="peopleForm">' +
@@ -34,7 +34,7 @@ editTaskModal = (function() {
 	}
 
 	function renderSaveButton(callback) {
-		var modalFooter = $('#editModal .modal-footer');
+		var modalFooter = $('#editModal').find('.modal-footer');
 		var saveButton = $('<button type="button" class="btn btn-primary modal-save">Save</button>').appendTo(modalFooter);
 
 		saveButton.click(function() {

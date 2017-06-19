@@ -22,7 +22,7 @@ teampicker = (function() {
 	}
 
     function loadSelectOptions(callback) {
-        $('.selectpicker>option').remove();
+        $('.selectpicker').children('option').remove();
         getTeams(function(teams) {
             _teamsArray = teams;
             if(teams.length > 0) {
@@ -33,7 +33,7 @@ teampicker = (function() {
                 }
                 $('.selectpicker').selectpicker('val', teams[teams.length - 1]._id);
                 $('.selectpicker').selectpicker('refresh');
-                $('.bootstrap-select .dropdown-menu li').each(function(index, value) {
+                $('.bootstrap-select').find('.dropdown-menu li').each(function(index, value) {
                     var removeTeamButton = $('<spann>').addClass('glyphicon glyphicon-remove-circle remove-team');
                     removeTeamButton.click(function(e) {
                         e.stopPropagation();
@@ -49,7 +49,7 @@ teampicker = (function() {
             else {
                 board.clear();
                 $('.selectpicker').selectpicker('refresh');
-                $('#select-div .bs-placeholder .filter-option').text('Please add or select a team here.');
+                $('#select-div').find('.bs-placeholder').find('.filter-option').text('Please add or select a team here.');
                 if(callback) {
                     callback();
                 }
@@ -67,7 +67,7 @@ teampicker = (function() {
                 function(data) {
                    loadSelectOptions(function() {
                         $('.selectpicker').selectpicker('toggle');
-                        $('#select-div .selectpicker').trigger('change');
+                        $('#select-div').find('.selectpicker').trigger('change');
                    });
                 }
             );
@@ -78,17 +78,17 @@ teampicker = (function() {
         if($('.no-results').length > 0) {
             if($('#create').length == 0) {
                 //add option to create
-                var dropdownMenu = $('#select-div .dropdown-menu .inner');
+                var dropdownMenu = $('#select-div').find('.dropdown-menu').find('.inner');
                 var addOption = $('<li>').attr('id', 'create').appendTo(dropdownMenu);
                 var addLink = $('<a>').appendTo(addOption);
                 var addSpan = $('<span>').addClass('text').text('CREATE THIS TEAM').css('color', 'red');
                 addSpan.appendTo(addLink);
 
                 addOption.click(function() {
-                    var newText = $('.bs-searchbox>input').val();
+                    var newText = $('.bs-searchbox').children('input').val();
                     createTeamAddRequest(newText, function() {
                         loadSelectOptions(function() {
-                            $('#select-div .selectpicker').trigger('change');
+                            $('#select-div').find('.selectpicker').trigger('change');
                         });
                     });
                 });
@@ -111,7 +111,7 @@ teampicker = (function() {
         loadSelectOptions(function() {
             $('body').ploading({action: 'destroy'});
 
-            $('#select-div .selectpicker').change(function() {
+            $('#select-div').find('.selectpicker').change(function() {
                 var id = $(this).children(":selected").attr('id');
                 if(id) {
                     team.initialize(_teamsArray[id]);
@@ -123,11 +123,12 @@ teampicker = (function() {
             });
 
             $('#select-div').click(function(){
-                $('.bs-searchbox>input').attr('placeholder', 'Search through your existing teams or type a new team name')
-                $('.bs-searchbox>input').off('input', handleSearch).on('input', handleSearch);
+                let inputs = $('.bs-searchbox').children('input');
+                inputs.attr('placeholder', 'Search through your existing teams or type a new team name')
+                inputs.off('input', handleSearch).on('input', handleSearch);
             });
 
-            $('#select-div .selectpicker').trigger('change');
+            $('#select-div').find('.selectpicker').trigger('change');
 
         });
 
