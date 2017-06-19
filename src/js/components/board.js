@@ -103,7 +103,6 @@ board = (function(){
 
             })
             .done(function(data) {
-                console.log(data);
                 if(data.type === 'success'){
                     //Socket has listener
                 }
@@ -114,7 +113,7 @@ board = (function(){
             })
             .fail(function(data) {
                 alert("Internal Server Error");
-                console.log(data);
+                console.error(data);
             });
     }
 

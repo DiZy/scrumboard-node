@@ -114,7 +114,6 @@ burndown = (function() {
 
 		})
 		.done(function(data) {
-		    console.log(data);
 		    if(data.type === 'success'){
 		        //Socket handles
 		    }
@@ -125,7 +124,7 @@ burndown = (function() {
 		})
 		.fail(function(data) {
 		    alert("Internal Server Error");
-		    console.log(data);
+		    console.error(data);
 		});
 	}
 
@@ -141,7 +140,6 @@ burndown = (function() {
 
 		})
 		.done(function(data) {
-		    console.log(data);
 		    if(data.type === 'success'){
 		    	//Socket handles
 		    }
@@ -152,7 +150,7 @@ burndown = (function() {
 		})
 		.fail(function(data) {
 		    alert("Internal Server Error");
-		    console.log(data);
+		    console.error(data);
 		});
 	}
 
@@ -168,7 +166,6 @@ burndown = (function() {
 
 		})
 		.done(function(data) {
-		    console.log(data);
 		    if(data.type === 'success'){
 		    	//Socket handles
 		    }
@@ -179,7 +176,7 @@ burndown = (function() {
 		})
 		.fail(function(data) {
 		    alert("Internal Server Error");
-		    console.log(data);
+		    console.error(data);
 		});
 	}
 

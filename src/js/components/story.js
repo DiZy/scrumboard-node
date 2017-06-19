@@ -163,7 +163,6 @@ let story = function() {
 
         })
         .done(function(data) {
-            console.log(data);
             if(data.type === 'success'){
                 //Socket handles
             }
@@ -174,7 +173,7 @@ let story = function() {
         })
         .fail(function(data) {
             alert("Internal Server Error");
-            console.log(data);
+            console.error(data);
         });
     }
 

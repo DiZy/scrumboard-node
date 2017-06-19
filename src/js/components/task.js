@@ -161,7 +161,7 @@ let task = function() {
 				})
 				.fail(function(data) {
 				    alert("Internal Server Error");
-				    console.log(data);
+				    console.error(data);
 				});
 			}
 		});
@@ -179,7 +179,6 @@ let task = function() {
 	function getPersonRenderDiv() {
 		let toReturn = null;
 		_taskDiv.find('.people-row').each(function(index, pplRow) {
-			console.log($(pplRow).html());
 			if(!$(pplRow).html()) {
 				toReturn = $(pplRow);
 			}
@@ -202,9 +201,7 @@ let task = function() {
 
 		})
 		.done(function(data) {
-		    console.log(data);
 		    if(data.type === 'success'){
-		    	console.log(data.result);
 		       //Socket handles
 		    }
 		    else {
@@ -213,7 +210,7 @@ let task = function() {
 		})
 		.fail(function(data) {
 		    alert("Internal Server Error");
-		    console.log(data);
+		    console.error(data);
 		});
 	}
 
@@ -231,7 +228,6 @@ let task = function() {
 
 		})
 		.done(function(data) {
-		    console.log(data);
 		    if(data.type === 'success'){
 		    	//Socket handles
 		    }
@@ -242,7 +238,7 @@ let task = function() {
 		})
 		.fail(function(data) {
 		    alert("Internal Server Error");
-		    console.log(data);
+		    console.error(data);
 		});
 	}
 
@@ -265,7 +261,6 @@ let task = function() {
 
             })
             .done(function(data) {
-                console.log(data);
                 if(data.type === 'success'){
                     //Socket handles
                 }
@@ -276,7 +271,7 @@ let task = function() {
             })
             .fail(function(data) {
                 alert("Internal Server Error");
-                console.log(data);
+                console.error(data);
             });
 		});
 	}
