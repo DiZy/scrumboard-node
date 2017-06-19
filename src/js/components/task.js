@@ -177,12 +177,11 @@ let task = function() {
 	}
 
 	function getPersonRenderDiv() {
-		let toReturn;
+		let toReturn = null;
 		_taskDiv.find('.people-row').each(function(index, pplRow) {
 			console.log($(pplRow).html());
 			if(!$(pplRow).html()) {
 				toReturn = $(pplRow);
-				return;
 			}
 		});
 		return toReturn;
