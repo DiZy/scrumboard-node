@@ -1,7 +1,7 @@
 teampicker = (function() {
-	var _selectpicker;
-    var _teamsArray = [];
-    var _socket;
+	let _selectpicker;
+    let _teamsArray = [];
+    let _socket;
 
 
     function createTeamAddRequest(name, callback) {
@@ -26,15 +26,15 @@ teampicker = (function() {
         getTeams(function(teams) {
             _teamsArray = teams;
             if(teams.length > 0) {
-                for(var i = 0; i < teams.length; i++) {
-                    var newOption = $('<option>').text(teams[i].name).attr('id', i);
+                for(let i = 0; i < teams.length; i++) {
+                    let newOption = $('<option>').text(teams[i].name).attr('id', i);
                     newOption.val(teams[i]._id);
                     $('.selectpicker').append(newOption);
                 }
                 $('.selectpicker').selectpicker('val', teams[teams.length - 1]._id);
                 $('.selectpicker').selectpicker('refresh');
                 $('.bootstrap-select').find('.dropdown-menu li').each(function(index, value) {
-                    var removeTeamButton = $('<spann>').addClass('glyphicon glyphicon-remove-circle remove-team');
+                    let removeTeamButton = $('<spann>').addClass('glyphicon glyphicon-remove-circle remove-team');
                     removeTeamButton.click(function(e) {
                         e.stopPropagation();
                         deleteTeam(_teamsArray[index]._id, _teamsArray[index].name);
@@ -58,7 +58,7 @@ teampicker = (function() {
     }
 
     function deleteTeam(teamId, teamName) {
-        var confirmation = confirm('Are you sure you want to remove the team "' + teamName + '"?');
+        let confirmation = confirm('Are you sure you want to remove the team "' + teamName + '"?');
         if(confirmation) {
             customAjax('DELETE', '/deleteTeam',
                 {
@@ -74,18 +74,18 @@ teampicker = (function() {
         }
     }
 
-    var handleSearch = function() {
+    let handleSearch = function() {
         if($('.no-results').length > 0) {
             if($('#create').length == 0) {
                 //add option to create
-                var dropdownMenu = $('#select-div').find('.dropdown-menu').find('.inner');
-                var addOption = $('<li>').attr('id', 'create').appendTo(dropdownMenu);
-                var addLink = $('<a>').appendTo(addOption);
-                var addSpan = $('<span>').addClass('text').text('CREATE THIS TEAM').css('color', 'red');
+                let dropdownMenu = $('#select-div').find('.dropdown-menu').find('.inner');
+                let addOption = $('<li>').attr('id', 'create').appendTo(dropdownMenu);
+                let addLink = $('<a>').appendTo(addOption);
+                let addSpan = $('<span>').addClass('text').text('CREATE THIS TEAM').css('color', 'red');
                 addSpan.appendTo(addLink);
 
                 addOption.click(function() {
-                    var newText = $('.bs-searchbox').children('input').val();
+                    let newText = $('.bs-searchbox').children('input').val();
                     createTeamAddRequest(newText, function() {
                         loadSelectOptions(function() {
                             $('#select-div').find('.selectpicker').trigger('change');
@@ -112,7 +112,7 @@ teampicker = (function() {
             $('body').ploading({action: 'destroy'});
 
             $('#select-div').find('.selectpicker').change(function() {
-                var id = $(this).children(":selected").attr('id');
+                let id = $(this).children(":selected").attr('id');
                 if(id) {
                     team.initialize(_teamsArray[id]);
                     _socket.disconnect();

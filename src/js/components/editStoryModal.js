@@ -1,5 +1,5 @@
 editStoryModal = (function() {
-	var _storyJsonEdited;
+	let _storyJsonEdited;
 
 	function removeDetails() {
 		$('#editDetails').remove();
@@ -15,17 +15,17 @@ editStoryModal = (function() {
 		}
 
 		_storyJsonEdited = storyJson ? storyJson : {name: "New Story", points: "", teamId: teamId};
-		var modalBody = $('#editModal').find('.modal-body');
-		var editDetails = $('<div>').attr('id', 'editDetails').appendTo(modalBody);
+		let modalBody = $('#editModal').find('.modal-body');
+		let editDetails = $('<div>').attr('id', 'editDetails').appendTo(modalBody);
 
-		var nameInput = $('<textarea>').addClass('input form-control').attr('placeholder', 'Story Name').appendTo(editDetails);
+		let nameInput = $('<textarea>').addClass('input form-control').attr('placeholder', 'Story Name').appendTo(editDetails);
 		nameInput.val(_storyJsonEdited.name);
 
 		nameInput.on('input', function() {
 			_storyJsonEdited.name = nameInput.val();
 		});
 
-		var pointsInput = $('<input>').addClass('input form-control').attr('placeholder', 'Story Points').appendTo(editDetails);
+		let pointsInput = $('<input>').addClass('input form-control').attr('placeholder', 'Story Points').appendTo(editDetails);
 		pointsInput.val(_storyJsonEdited.points);
 
 		pointsInput.on('input', function() {
@@ -33,7 +33,7 @@ editStoryModal = (function() {
 		});
 
 		$('<h6>').text('Choose a team/board').appendTo(editDetails);
-		var teamInput = $('<select>').attr('data-live-search', 'true').appendTo(editDetails);
+		let teamInput = $('<select>').attr('data-live-search', 'true').appendTo(editDetails);
 		loadTeamOptions(teamInput);
     	teamInput.val(teamId);
     	teamInput.selectpicker('refresh');
@@ -48,13 +48,13 @@ editStoryModal = (function() {
 
 		if(_storyJsonEdited.acceptanceCriteria) {
 			_storyJsonEdited.acceptanceCriteria.forEach(function(criteria) {
-				var isChecked = criteria.isChecked == true || criteria.isChecked == "true";
+				let isChecked = criteria.isChecked == true || criteria.isChecked == "true";
 				addCriteria(criteria.name, isChecked);
 			});
 		}
 
-		var newAcceptanceCriteriaInput = $('<textarea>').addClass('input form-control').attr('placeholder', 'New criteria').appendTo(editDetails);
-		var addCriteriaButton = $('<button>').addClass('btn btn-default').text('Add Criteria').appendTo(editDetails);
+		let newAcceptanceCriteriaInput = $('<textarea>').addClass('input form-control').attr('placeholder', 'New criteria').appendTo(editDetails);
+		let addCriteriaButton = $('<button>').addClass('btn btn-default').text('Add Criteria').appendTo(editDetails);
 
 		addCriteriaButton.click(function() {
 			addCriteria(newAcceptanceCriteriaInput.val());
@@ -63,10 +63,10 @@ editStoryModal = (function() {
 
 	function addCriteria(criteriaName, isChecked) {
 		if(criteriaName) {
-			var criteriaNameRow = $('<div>').addClass('row').appendTo('#editCriteriaDiv');
-			var criteriaCheckbox = $('<input>').attr('type', 'checkbox').addClass('col-xs-2 criteriaCheckbox').appendTo(criteriaNameRow);
-			var criteriaNameDiv = $('<div>').addClass('col-xs-8 criteriaNameDiv').text(criteriaName).appendTo(criteriaNameRow);
-			var criteriaDeleteButton = $('<span>').addClass('col-xs-2 glyphicon glyphicon-remove').appendTo(criteriaNameRow);
+			let criteriaNameRow = $('<div>').addClass('row').appendTo('#editCriteriaDiv');
+			let criteriaCheckbox = $('<input>').attr('type', 'checkbox').addClass('col-xs-2 criteriaCheckbox').appendTo(criteriaNameRow);
+			let criteriaNameDiv = $('<div>').addClass('col-xs-8 criteriaNameDiv').text(criteriaName).appendTo(criteriaNameRow);
+			let criteriaDeleteButton = $('<span>').addClass('col-xs-2 glyphicon glyphicon-remove').appendTo(criteriaNameRow);
 
 			if(isChecked) {
 				criteriaCheckbox.attr('checked', true);
@@ -82,25 +82,25 @@ editStoryModal = (function() {
 	}
 
 	function loadTeamOptions(teamInput) {
-		var mainTeamSelector = $('#select-div').children('.bootstrap-select').children('.selectpicker');
-		var options = mainTeamSelector.children('option');
-		for(var i = 0; i < options.length; i++) {
-			var option = options[i];
-			var optionText = $(option).text();
-			var optionVal = $(option).val();
-			var newOption = $('<option>').text(optionText).val(optionVal).appendTo(teamInput)
+		let mainTeamSelector = $('#select-div').children('.bootstrap-select').children('.selectpicker');
+		let options = mainTeamSelector.children('option');
+		for(let i = 0; i < options.length; i++) {
+			let option = options[i];
+			let optionText = $(option).text();
+			let optionVal = $(option).val();
+			let newOption = $('<option>').text(optionText).val(optionVal).appendTo(teamInput)
 		}
 	}
 
 	function renderSaveButton(callback) {
-		var modalFooter = $('#editModal').find('.modal-footer');
-		var saveButton = $('<button type="button" class="btn btn-primary modal-save">Save</button>').appendTo(modalFooter);
+		let modalFooter = $('#editModal').find('.modal-footer');
+		let saveButton = $('<button type="button" class="btn btn-primary modal-save">Save</button>').appendTo(modalFooter);
 
 		saveButton.click(function() {
-			var acceptanceCriteria = [];
-			var acceptanceCriteriaDiv = $('#editCriteriaDiv>.row');
-			for(var i = 0; i < acceptanceCriteriaDiv.length; i++) {
-				var row = $(acceptanceCriteriaDiv[i]);
+			let acceptanceCriteria = [];
+			let acceptanceCriteriaDiv = $('#editCriteriaDiv>.row');
+			for(let i = 0; i < acceptanceCriteriaDiv.length; i++) {
+				let row = $(acceptanceCriteriaDiv[i]);
 				acceptanceCriteria.push({
 					name: row.children('.criteriaNameDiv').text(),
 					isChecked: row.children('.criteriaCheckbox').get()[0].checked

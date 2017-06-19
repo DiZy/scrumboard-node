@@ -1,23 +1,23 @@
-var story = function() {
-	var _storyJson;
-    var _storyRow;
-    var _storySticky;
-    var _taskObjMap;
-    var _storiesSection;
-    var _columnNames;
-    var STORY_COLUMN = -1;
+let story = function() {
+	let _storyJson;
+    let _storyRow;
+    let _storySticky;
+    let _taskObjMap;
+    let _storiesSection;
+    let _columnNames;
+    let STORY_COLUMN = -1;
 
     function stickyDropHandler(e, ui) {
-        var newStatusCode = $(this).attr("data-column");
-        var droppedSticky = ui.helper;
-        var stickyStoryId = droppedSticky.attr("data-storyId");
+        let newStatusCode = $(this).attr("data-column");
+        let droppedSticky = ui.helper;
+        let stickyStoryId = droppedSticky.attr("data-storyId");
         if (stickyStoryId !== _storyJson._id) { // The dropped sticky doesn't belong to this row, so cancel the drag
             return false;
         }
         if (droppedSticky.hasClass("story-descr")){ // Sticky is a story
             updateStatusCode(newStatusCode);
         } else { // Sticky is a task
-            var stickyTaskId = droppedSticky.attr("data-taskId");
+            let stickyTaskId = droppedSticky.attr("data-taskId");
             _taskObjMap[stickyTaskId].requestStatusCodeChange(newStatusCode);
         }
         return true;
@@ -31,15 +31,15 @@ var story = function() {
             handle: ".taskcenter"
         });
 
-        var colSelector = "." + 'progresscol[data-column=' + _storyJson.statusCode + ']';
+        let colSelector = "." + 'progresscol[data-column=' + _storyJson.statusCode + ']';
         _storyRow.children(colSelector).append(_storySticky);
 
         //Add Panels
-        var storyPanels = $('<div>').addClass('col-xs-12 task-panels').appendTo(_storySticky);
-        var leftPanel = $('<div>').addClass('taskpanel').appendTo(storyPanels);
-        var middlePanel = $('<div>').addClass('taskpanel taskcenter story-sticky').appendTo(storyPanels);
+        let storyPanels = $('<div>').addClass('col-xs-12 task-panels').appendTo(_storySticky);
+        let leftPanel = $('<div>').addClass('taskpanel').appendTo(storyPanels);
+        let middlePanel = $('<div>').addClass('taskpanel taskcenter story-sticky').appendTo(storyPanels);
         middlePanel.text(_storyJson.name);
-        var rightPanel = $('<div>').addClass('taskpanel').appendTo(storyPanels);
+        let rightPanel = $('<div>').addClass('taskpanel').appendTo(storyPanels);
         leftPanelInit(leftPanel);
         rightPanelInit(rightPanel);
         middlePanelInit(middlePanel);
@@ -58,7 +58,7 @@ var story = function() {
         );
 
 
-        var addTaskButton = $('<button>').text('Add task').addClass('btn btn-default addTaskButton');
+        let addTaskButton = $('<button>').text('Add task').addClass('btn btn-default addTaskButton');
         addTaskButton.addClass('show-on-hover');
         addTaskButton.css('display', 'none');
         addTaskButton.appendTo(_storySticky);
@@ -70,18 +70,18 @@ var story = function() {
     function render() {
         _storyRow = $('<div>').addClass('row story');
 
-        var headerCols = $('#boardHeader').children('.progresscol'); 
+        let headerCols = $('#boardHeader').children('.progresscol');
 
-        var storyColumn = $('<div>').addClass('progresscol').attr('data-column', STORY_COLUMN).appendTo(_storyRow);
+        let storyColumn = $('<div>').addClass('progresscol').attr('data-column', STORY_COLUMN).appendTo(_storyRow);
         storyColumn.droppable({
             accept: '.story-descr',
             drop: stickyDropHandler
         });
         storyColumn.width($(headerCols[0]).width() + 1);
 
-        var cols = [];
-        for(var i = 0; i < _columnNames.length; i++) {
-            var newColumn = $('<div>').addClass('progresscol').attr('data-column', i).appendTo(_storyRow);
+        let cols = [];
+        for(let i = 0; i < _columnNames.length; i++) {
+            let newColumn = $('<div>').addClass('progresscol').attr('data-column', i).appendTo(_storyRow);
             newColumn.droppable({
                 accept: '.task',
                 drop: stickyDropHandler
@@ -95,11 +95,11 @@ var story = function() {
 
         renderStorySticky();
 
-        var allTasks = _storyJson.tasks;
+        let allTasks = _storyJson.tasks;
         _taskObjMap = {};
-        for(var i = 0; i < allTasks.length; i++) {
-            var taskObj = task();
-            var taskData = allTasks[i];
+        for(let i = 0; i < allTasks.length; i++) {
+            let taskObj = task();
+            let taskData = allTasks[i];
             _taskObjMap[taskData._id] = taskObj;
             taskObj.initialize(taskData, _storyRow, _storyJson._id, _storyJson.teamId);
         }
@@ -108,7 +108,7 @@ var story = function() {
     }
 
     function leftPanelInit($leftPanel, people) {
-        var middleArrow = $('<span>').addClass('arrow glyphicon glyphicon-menu-left show-on-hover').css('display', 'none');
+        let middleArrow = $('<span>').addClass('arrow glyphicon glyphicon-menu-left show-on-hover').css('display', 'none');
         if(_storyJson.statusCode != -1) {
             middleArrow.appendTo($leftPanel);
         }
@@ -119,18 +119,18 @@ var story = function() {
     }
 
     function middlePanelInit($middlePanel) {
-        var editCover = $("<div>").addClass('editCover show-on-hover').css('display', 'none').appendTo($middlePanel);
-        var editIcon = $("<span>").addClass('glyphicon glyphicon-pencil').appendTo(editCover);
+        let editCover = $("<div>").addClass('editCover show-on-hover').css('display', 'none').appendTo($middlePanel);
+        let editIcon = $("<span>").addClass('glyphicon glyphicon-pencil').appendTo(editCover);
 
         editCover.click(editStory);
 
-        var points = $('<div>').addClass('points').text(_storyJson.points).appendTo($middlePanel);
+        let points = $('<div>').addClass('points').text(_storyJson.points).appendTo($middlePanel);
 
     }
 
     function rightPanelInit($rightPanel, people) {
-        var middleArrow = $('<span>').addClass('arrow glyphicon glyphicon-menu-right show-on-hover').css('display', 'none');
-        var deleteButton = $('<span>').addClass('delete glyphicon glyphicon-remove show-on-hover').css('display', 'none').appendTo($rightPanel);
+        let middleArrow = $('<span>').addClass('arrow glyphicon glyphicon-menu-right show-on-hover').css('display', 'none');
+        let deleteButton = $('<span>').addClass('delete glyphicon glyphicon-remove show-on-hover').css('display', 'none').appendTo($rightPanel);
 
         if(_storyJson.statusCode != _columnNames.length - 1) {
             middleArrow.appendTo($rightPanel)
@@ -141,7 +141,7 @@ var story = function() {
         });
 
         deleteButton.click(function() {
-            var confirmation = confirm('Are you sure you want to delete this story and all its tasks?');
+            let confirmation = confirm('Are you sure you want to delete this story and all its tasks?');
             if(confirmation) {
                 removeStory();
             }
@@ -179,7 +179,7 @@ var story = function() {
     }
 
     function editStory() {
-        var oldTeamId = _storyJson.teamId;
+        let oldTeamId = _storyJson.teamId;
         editStoryModal.open(oldTeamId, _storyJson, function(newStoryJson) {
             $.ajax({
                 type: 'PUT',
@@ -290,7 +290,7 @@ var story = function() {
             renderStorySticky();
         },
         handleAddTask: function(taskData) {
-            var taskObj = task();
+            let taskObj = task();
             _taskObjMap[taskData._id] = taskObj;
             taskObj.initialize(taskData, _storyRow, _storyJson._id, _storyJson.teamId);
         },

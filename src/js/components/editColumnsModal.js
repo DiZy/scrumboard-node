@@ -1,5 +1,5 @@
 editColumnsModal = (function() {
-	var _editedColumnNames;
+	let _editedColumnNames;
 
 	function removeDetails() {
 		$('#editDetails').remove();
@@ -10,17 +10,17 @@ editColumnsModal = (function() {
 		$('#editModal').find('.modal-title').text('Edit Columns');
 
 
-		var modalBody = $('#editModal').find('.modal-body');
-		var editDetails = $('<div>').attr('id', 'editDetails').appendTo(modalBody);
+		let modalBody = $('#editModal').find('.modal-body');
+		let editDetails = $('<div>').attr('id', 'editDetails').appendTo(modalBody);
 
-		var editColumnNamesDiv = $('<div>').attr('id', 'editColumnNamesDiv').appendTo(editDetails);
+		let editColumnNamesDiv = $('<div>').attr('id', 'editColumnNamesDiv').appendTo(editDetails);
 
 		_editedColumnNames.forEach(function(columnName) {
 			addColumn(columnName);
 		});
 
-		var newColumnInput = $('<input>').addClass('input form-control').attr('placeholder', 'New column name').appendTo('#editDetails');
-		var addColumnButton = $('<button>').addClass('btn btn-default').text('Add Column').appendTo('#editDetails');
+		let newColumnInput = $('<input>').addClass('input form-control').attr('placeholder', 'New column name').appendTo('#editDetails');
+		let addColumnButton = $('<button>').addClass('btn btn-default').text('Add Column').appendTo('#editDetails');
 
 		addColumnButton.click(function() {
 			addColumn(newColumnInput.val());
@@ -36,9 +36,9 @@ editColumnsModal = (function() {
 
 	function addColumn(columnName) {
 		if(columnName) {
-			var columnNameRow = $('<div>').addClass('row').appendTo('#editColumnNamesDiv');
-			var columnNameDiv = $('<div>').addClass('col-xs-10 columnNameDiv').text(columnName).appendTo(columnNameRow);
-			var columnDeleteButton = $('<span>').addClass('col-xs-2 glyphicon glyphicon-remove').appendTo(columnNameRow);
+			let columnNameRow = $('<div>').addClass('row').appendTo('#editColumnNamesDiv');
+			let columnNameDiv = $('<div>').addClass('col-xs-10 columnNameDiv').text(columnName).appendTo(columnNameRow);
+			let columnDeleteButton = $('<span>').addClass('col-xs-2 glyphicon glyphicon-remove').appendTo(columnNameRow);
 
 			columnDeleteButton.click(function() {
 				if($('#editColumnNamesDiv').find('.columnNameDiv').length > 1) {
@@ -55,13 +55,13 @@ editColumnsModal = (function() {
 	}
 
 	function renderSaveButton(callback) {
-		var modalFooter = $('#editModal').find('.modal-footer');
-		var saveButton = $('<button type="button" class="btn btn-primary modal-save">Save</button>').appendTo(modalFooter);
+		let modalFooter = $('#editModal').find('.modal-footer');
+		let saveButton = $('<button type="button" class="btn btn-primary modal-save">Save</button>').appendTo(modalFooter);
 
 		saveButton.click(function() {
-			var columnNameDivs = $('#editColumnNamesDiv').find('.columnNameDiv');
+			let columnNameDivs = $('#editColumnNamesDiv').find('.columnNameDiv');
 			_editedColumnNames = [];
-			for(var i = 0; i < columnNameDivs.length; i++) {
+			for(let i = 0; i < columnNameDivs.length; i++) {
 				_editedColumnNames.push($(columnNameDivs[i]).text());
 			}
 			$('#editModal').modal('hide');

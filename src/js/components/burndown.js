@@ -1,7 +1,7 @@
 burndown = (function() {
-	var _teamId;
-	var hoursData = [];
-	var _burndownChart;
+	let _teamId;
+	let hoursData = [];
+	let _burndownChart;
 
 	function retrieveDataAndRenderChart() {
 		$.ajax({
@@ -85,7 +85,7 @@ burndown = (function() {
 
 		$('#burndown-start').unbind('click');
 		$('#burndown-start').click(function() {
-			var confirmation = confirm("Are you sure you want to reset the sprint data?");
+			let confirmation = confirm("Are you sure you want to reset the sprint data?");
 			if (confirmation) {
 				start();
 			}
@@ -96,7 +96,7 @@ burndown = (function() {
 
 		$('#burndown-undo').unbind('click');
 		$('#burndown-undo').click(function() {
-			var confirmation = confirm("Are you sure you want to undo the last point?");
+			let confirmation = confirm("Are you sure you want to undo the last point?");
 			if (confirmation) {
 				undo();
 			}
@@ -197,8 +197,8 @@ burndown = (function() {
 			_burndownChart.update();
 		},
 		handleMark: function(newHours, newPoints) {
-			var hoursDataSet = _burndownChart.data.datasets[0].data;
-			var storyPointsDataSet = _burndownChart.data.datasets[1].data;
+			let hoursDataSet = _burndownChart.data.datasets[0].data;
+			let storyPointsDataSet = _burndownChart.data.datasets[1].data;
 			_burndownChart.data.labels.push(hoursDataSet.length + 1);
 			hoursDataSet.push(newHours);
 			storyPointsDataSet.push(newPoints);

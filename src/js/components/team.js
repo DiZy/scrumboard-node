@@ -1,8 +1,8 @@
 team = (function() {
-	var _teamJson;
-	var _personIdToAttrMap;
-	var _personAttrToDataMap;
-	var _nextPersonAttr;
+	let _teamJson;
+	let _personIdToAttrMap;
+	let _personAttrToDataMap;
+	let _nextPersonAttr;
 
     return {
     	initialize: function(teamData) {
@@ -37,7 +37,7 @@ team = (function() {
 	        });
     	},
     	getPeopleForTask: function(taskId) {
-    		var toReturn = [];
+    		let toReturn = [];
     		_teamJson.people.forEach(function(p) {
     			if(p.taskId == taskId) {
     				toReturn.push(p);
@@ -82,7 +82,7 @@ team = (function() {
     	},
 
     	assignPersonToTask: function(attr, taskId, storyId) {
-			var p = _personAttrToDataMap[attr];
+			let p = _personAttrToDataMap[attr];
     		if(p) {
 				$.ajax({
 		            type: 'PUT',
@@ -114,7 +114,7 @@ team = (function() {
     	},
 
     	removePerson: function(attr) {
-    		var p = _personAttrToDataMap[attr];
+    		let p = _personAttrToDataMap[attr];
 
     		if(p) {
 				$.ajax({
@@ -148,10 +148,10 @@ team = (function() {
 			person().render(personData, $('#unassignedPeople'));	
 		},
 		handleRemovePerson: function(personId) {
-			var attr = _personIdToAttrMap[personId];
-			var personDiv = $('div[data-person=' + attr + ']');
+			let attr = _personIdToAttrMap[personId];
+			let personDiv = $('div[data-person=' + attr + ']');
 			personDiv.remove();
-			for(var i = 0; i < _teamJson.people.length; i++) {
+			for(let i = 0; i < _teamJson.people.length; i++) {
 				if(_teamJson.people[i] && _teamJson.people[i]._id == personId) {
 					delete _teamJson.people[i];
 					break;
@@ -161,17 +161,17 @@ team = (function() {
 			delete _personAttrToDataMap[attr];
 		},
 		handleAssignPerson: function(personId, storyId, taskId) {
-			for(var i = 0; i < _teamJson.people.length; i++) {
+			for(let i = 0; i < _teamJson.people.length; i++) {
 				if(_teamJson.people[i] && _teamJson.people[i]._id == personId) {
 					_teamJson.people[i].taskId = taskId;
 				}
 			}
-			var attr = _personIdToAttrMap[personId];
-			var p = _personAttrToDataMap[attr];
+			let attr = _personIdToAttrMap[personId];
+			let p = _personAttrToDataMap[attr];
 
-			var personDiv = $('div[data-person=' + attr + ']');
+			let personDiv = $('div[data-person=' + attr + ']');
 
-			var divToRenderTo;
+			let divToRenderTo;
 			if(taskId) {
 				divToRenderTo = board.getPeopleDivForTask(storyId, taskId);
 			} else {

@@ -1,28 +1,28 @@
-var task = function() {
-	var _taskJson;
-	var _$storyRow;
-	var _taskDiv;
-	var _storyId;
-	var _teamId;
+let task = function() {
+	let _taskJson;
+	let _$storyRow;
+	let _taskDiv;
+	let _storyId;
+	let _teamId;
 
 	function render() {
 		_taskDiv = $('<div>').addClass('task');
 
-		var colSelector = ".progresscol[data-column=" + _taskJson.statusCode + "]";
+		let colSelector = ".progresscol[data-column=" + _taskJson.statusCode + "]";
 		_$storyRow.children(colSelector).append(_taskDiv);
 
 		//add panels
-		var taskPanels = $('<div>').addClass('col-xs-12 task-panels').appendTo(_taskDiv);
-		var leftPanel = $('<div>').addClass('taskpanel').appendTo(taskPanels);
-		var middlePanel = $('<div>').addClass('taskpanel taskcenter').appendTo(taskPanels);
+		let taskPanels = $('<div>').addClass('col-xs-12 task-panels').appendTo(_taskDiv);
+		let leftPanel = $('<div>').addClass('taskpanel').appendTo(taskPanels);
+		let middlePanel = $('<div>').addClass('taskpanel taskcenter').appendTo(taskPanels);
 		if(_taskJson.name) {
 			middlePanel.text(_taskJson.name);
 		} else {
 			middlePanel.text('New Task');
 		}
-		var rightPanel = $('<div>').addClass('taskpanel').appendTo(taskPanels);
+		let rightPanel = $('<div>').addClass('taskpanel').appendTo(taskPanels);
 		$('<br>').appendTo(_taskDiv);
-		var peopleRow = $('<div>').addClass('people-row').appendTo(_taskDiv);
+		let peopleRow = $('<div>').addClass('people-row').appendTo(_taskDiv);
 
 		leftPanelInit(leftPanel);
 		rightPanelInit(rightPanel);
@@ -64,7 +64,7 @@ var task = function() {
 	}
 
 	function leftPanelInit($leftPanel, people) {
-		var middleArrow = $('<span>').addClass('arrow glyphicon glyphicon-menu-left show-on-hover').css('display', 'none');
+		let middleArrow = $('<span>').addClass('arrow glyphicon glyphicon-menu-left show-on-hover').css('display', 'none');
 		if(_taskJson.statusCode != 0) {
 			middleArrow.appendTo($leftPanel);
 		}
@@ -76,17 +76,17 @@ var task = function() {
 	}
 
 	function middlePanelInit($middlePanel) {
-		var editCover = $("<div>").addClass('editCover show-on-hover').css('display', 'none').appendTo($middlePanel);
-		var editIcon = $("<span>").addClass('glyphicon glyphicon-pencil').appendTo(editCover);
+		let editCover = $("<div>").addClass('editCover show-on-hover').css('display', 'none').appendTo($middlePanel);
+		let editIcon = $("<span>").addClass('glyphicon glyphicon-pencil').appendTo(editCover);
 
 		editCover.click(editTask);
 
-		var points = $('<div>').addClass('points').text(_taskJson.points).appendTo($middlePanel);
+		let points = $('<div>').addClass('points').text(_taskJson.points).appendTo($middlePanel);
 	}
 
 	function rightPanelInit($rightPanel) {
-		var middleArrow = $('<span>').addClass('arrow glyphicon glyphicon-menu-right show-on-hover').css('display', 'none');
-		var deleteButton = $('<span>').addClass('delete glyphicon glyphicon-remove show-on-hover').css('display', 'none').appendTo($rightPanel);
+		let middleArrow = $('<span>').addClass('arrow glyphicon glyphicon-menu-right show-on-hover').css('display', 'none');
+		let deleteButton = $('<span>').addClass('delete glyphicon glyphicon-remove show-on-hover').css('display', 'none').appendTo($rightPanel);
 
 		if(_taskJson.statusCode != _$storyRow.children('.progresscol').length - 2) {
 			middleArrow.appendTo($rightPanel)
@@ -102,10 +102,10 @@ var task = function() {
 
 	function peopleRowInit($peopleRow) {
 		$('<div>').addClass('peopleMargin').appendTo($peopleRow);
-		var peopleDiv = $('<div>').addClass('peopleDiv').appendTo($peopleRow);
+		let peopleDiv = $('<div>').addClass('peopleDiv').appendTo($peopleRow);
 		$('<div>').addClass('peopleMargin').appendTo($peopleRow);
 
-		var people = team.getPeopleForTask(_taskJson._id);
+		let people = team.getPeopleForTask(_taskJson._id);
 		people.forEach(function(p) {
 			person().render(p, peopleDiv);
 		});
@@ -170,14 +170,14 @@ var task = function() {
 	}
 
 	function handlePersonDrop(event, ui) {
-		var personDiv = ui.draggable;
-		var divToRenderTo = _taskDiv.children('.people-row').children('.peopleDiv');
+		let personDiv = ui.draggable;
+		let divToRenderTo = _taskDiv.children('.people-row').children('.peopleDiv');
 		team.assignPersonToTask(personDiv.attr('data-person'), _taskJson._id, _storyId);
 		return true;
 	}
 
 	function getPersonRenderDiv() {
-		var toReturn;
+		let toReturn;
 		_taskDiv.find('.people-row').each(function(index, pplRow) {
 			console.log($(pplRow).html());
 			if(!$(pplRow).html()) {
@@ -300,7 +300,7 @@ var task = function() {
 		},
 		handleEdit: function(taskData) {
 			_taskJson = taskData;
-			var middlePanel = _taskDiv.children('.task-panels').children('.taskcenter');
+			let middlePanel = _taskDiv.children('.task-panels').children('.taskcenter');
 			middlePanel.text(_taskJson.name);
 			middlePanelInit(middlePanel);
 		},
@@ -316,10 +316,10 @@ var task = function() {
 			_taskJson.width = width;
 			_taskJson.height = height;
 
-			var leftPanel = $(_taskDiv.children('.task-panels').children()[0]);
-			var middlePanel = $(_taskDiv.children('.task-panels').children()[1]);
-			var rightPanel = $(_taskDiv.children('.task-panels').children()[2]);
-			var peopleRow = $(_taskDiv.children('.people-row'));
+			let leftPanel = $(_taskDiv.children('.task-panels').children()[0]);
+			let middlePanel = $(_taskDiv.children('.task-panels').children()[1]);
+			let rightPanel = $(_taskDiv.children('.task-panels').children()[2]);
+			let peopleRow = $(_taskDiv.children('.people-row'));
 
 			setDefaultSize(leftPanel, middlePanel, rightPanel, peopleRow);
 		},

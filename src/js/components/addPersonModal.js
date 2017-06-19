@@ -1,5 +1,5 @@
 addPersonModal = (function() {
-	var _personName;
+	let _personName;
 
 	function removeDetails() {
 		$('#editDetails').remove();
@@ -11,10 +11,10 @@ addPersonModal = (function() {
 
 		_personName = "";
 
-		var modalBody = $('#editModal').find('.modal-body');
-		var editDetails = $('<div>').attr('id', 'editDetails').appendTo(modalBody);
+		let modalBody = $('#editModal').find('.modal-body');
+		let editDetails = $('<div>').attr('id', 'editDetails').appendTo(modalBody);
 
-		var personNameInput = $('<input>').addClass('input form-control').attr('placeholder', 'Person Initials').appendTo(editDetails);
+		let personNameInput = $('<input>').addClass('input form-control').attr('placeholder', 'Person Initials').appendTo(editDetails);
 
 		personNameInput.on('input', function() {
 			_personName = $(this).val();
@@ -23,8 +23,8 @@ addPersonModal = (function() {
 	}
 
 	function renderSaveButton(callback) {
-		var modalFooter = $('#editModal').find('.modal-footer');
-		var saveButton = $('<button type="button" class="btn btn-primary modal-save">Save</button>').appendTo(modalFooter);
+		let modalFooter = $('#editModal').find('.modal-footer');
+		let saveButton = $('<button type="button" class="btn btn-primary modal-save">Save</button>').appendTo(modalFooter);
 
 		saveButton.click(function() {
 			$('#editModal').modal('hide');
