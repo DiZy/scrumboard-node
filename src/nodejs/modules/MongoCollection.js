@@ -9,7 +9,7 @@ MongoCollection = function(collectionName) {
 		}
 		that.db = db;
 	})
-}
+};
 
 MongoCollection.prototype.getCollection= function(callback) {
 	this.db.collection(this.collectionName, function(error, thisCollection) {
@@ -65,7 +65,7 @@ MongoCollection.prototype.removeOne = function(user, callback) {
 			});
 		}
 	});	
-}
+};
 
 MongoCollection.prototype.updateOne = function(user, updatedData, callback) {
 	this.getCollection(function(error, thisCollection) {
@@ -92,6 +92,6 @@ MongoCollection.prototype.aggregate = function(options, callback) {
 			});
 		}
 	});
-}
+};
 
 module.exports = MongoCollection;

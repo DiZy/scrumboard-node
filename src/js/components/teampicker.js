@@ -124,7 +124,7 @@ teampicker = (function() {
 
             $('#select-div').click(function(){
                 let inputs = $('.bs-searchbox').children('input');
-                inputs.attr('placeholder', 'Search through your existing teams or type a new team name')
+                inputs.attr('placeholder', 'Search through your existing teams or type a new team name');
                 inputs.off('input', handleSearch).on('input', handleSearch);
             });
 

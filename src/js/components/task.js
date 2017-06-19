@@ -328,4 +328,4 @@ let task = function() {
 		}
         
     }
-}
+};

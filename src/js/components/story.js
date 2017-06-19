@@ -286,7 +286,7 @@ let story = function() {
         },
         handleMove: function(newStatusCode) {
             _storyJson.statusCode = newStatusCode;
-            _storyRow.find(".story-descr").remove()
+            _storyRow.find(".story-descr").remove();
             renderStorySticky();
         },
         handleAddTask: function(taskData) {
@@ -311,4 +311,4 @@ let story = function() {
         }
 
     }
-}
+};

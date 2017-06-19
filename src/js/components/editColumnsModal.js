@@ -71,7 +71,7 @@ editColumnsModal = (function() {
 
 	return {
 		open: function(columnNames, callback) {
-			_editedColumnNames = columnNames
+			_editedColumnNames = columnNames;
 			removeDetails();
 			renderDetails();
 			renderSaveButton(callback);
