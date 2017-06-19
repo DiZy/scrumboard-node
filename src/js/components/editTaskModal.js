@@ -21,7 +21,7 @@ editTaskModal = (function() {
 
 		_taskForm = $('<form id="peopleForm">' +
 			'<textarea type="text" class="input form-control" placeholder="Task Name" name="taskName" id="taskName"></textarea>' +
-			'</form').appendTo(editDetails);
+			'</form>').appendTo(editDetails);
 
 		let pointsInput = $('<input>').addClass('input form-control').attr('placeholder', 'Task Hours').attr('id', 'taskHours').appendTo(_taskForm);
 		pointsInput.val(_taskJsonEdited.points);
