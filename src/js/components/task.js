@@ -65,7 +65,7 @@ let task = function() {
 
 	function leftPanelInit($leftPanel, people) {
 		let middleArrow = $('<span>').addClass('arrow glyphicon glyphicon-menu-left show-on-hover').css('display', 'none');
-		if(_taskJson.statusCode != 0) {
+		if(_taskJson.statusCode !== 0) {
 			middleArrow.appendTo($leftPanel);
 		}
 
@@ -88,7 +88,7 @@ let task = function() {
 		let middleArrow = $('<span>').addClass('arrow glyphicon glyphicon-menu-right show-on-hover').css('display', 'none');
 		let deleteButton = $('<span>').addClass('delete glyphicon glyphicon-remove show-on-hover').css('display', 'none').appendTo($rightPanel);
 
-		if(_taskJson.statusCode != _$storyRow.children('.progresscol').length - 2) {
+		if(_taskJson.statusCode !== _$storyRow.children('.progresscol').length - 2) {
 			middleArrow.appendTo($rightPanel)
 		}
 
@@ -151,7 +151,7 @@ let task = function() {
 
 				})
 				.done(function(data) {
-				    if(data.type == 'success'){
+				    if(data.type === 'success'){
 				    	//Socket handles
 				    }
 				    else {
@@ -203,7 +203,7 @@ let task = function() {
 		})
 		.done(function(data) {
 		    console.log(data);
-		    if(data.type == 'success'){
+		    if(data.type === 'success'){
 		    	console.log(data.result);
 		       //Socket handles
 		    }
@@ -232,7 +232,7 @@ let task = function() {
 		})
 		.done(function(data) {
 		    console.log(data);
-		    if(data.type == 'success'){
+		    if(data.type === 'success'){
 		    	//Socket handles
 		    }
 		    else {
@@ -266,7 +266,7 @@ let task = function() {
             })
             .done(function(data) {
                 console.log(data);
-                if(data.type == 'success'){
+                if(data.type === 'success'){
                     //Socket handles
                 }
                 else {

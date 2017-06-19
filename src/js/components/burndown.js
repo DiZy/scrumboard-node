@@ -15,7 +15,7 @@ burndown = (function() {
 
 		})
 		.done(function(data) {
-		    if(data.type == 'success'){
+		    if(data.type === 'success'){
 		        renderChart(data.chartLabels, data.hoursData, data.pointsData);
 		    }
 		    else {
@@ -115,7 +115,7 @@ burndown = (function() {
 		})
 		.done(function(data) {
 		    console.log(data);
-		    if(data.type == 'success'){
+		    if(data.type === 'success'){
 		        //Socket handles
 		    }
 		    else {
@@ -142,7 +142,7 @@ burndown = (function() {
 		})
 		.done(function(data) {
 		    console.log(data);
-		    if(data.type == 'success'){
+		    if(data.type === 'success'){
 		    	//Socket handles
 		    }
 		    else {
@@ -169,7 +169,7 @@ burndown = (function() {
 		})
 		.done(function(data) {
 		    console.log(data);
-		    if(data.type == 'success'){
+		    if(data.type === 'success'){
 		    	//Socket handles
 		    }
 		    else {

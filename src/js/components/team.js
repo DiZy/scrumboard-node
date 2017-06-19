@@ -18,7 +18,7 @@ team = (function() {
 
 	        })
 	        .done(function(data) {
-	            if(data.type == 'success'){
+	            if(data.type === 'success'){
 	            	_teamJson = data.team;
 	            	_nextPersonAttr = 1;
 					_personIdToAttrMap = {};
@@ -39,7 +39,7 @@ team = (function() {
     	getPeopleForTask: function(taskId) {
     		let toReturn = [];
     		_teamJson.people.forEach(function(p) {
-    			if(p.taskId == taskId) {
+    			if(p.taskId === taskId) {
     				toReturn.push(p);
     			}
     		});
@@ -58,7 +58,7 @@ team = (function() {
 
 	        })
 	        .done(function(data) {
-	            if(data.type == 'success'){
+	            if(data.type === 'success'){
 	            	//Socket
 	            }
 	            else {
@@ -98,7 +98,7 @@ team = (function() {
 
 		        })
 		        .done(function(data) {
-		            if(data.type == 'success'){
+		            if(data.type === 'success'){
 		                //Socket handles
 		            }
 		            else {
@@ -129,7 +129,7 @@ team = (function() {
 
 		        })
 		        .done(function(data) {
-		            if(data.type == 'success'){
+		            if(data.type === 'success'){
 		                //Socket handles
 		            }
 		            else {
@@ -152,7 +152,7 @@ team = (function() {
 			let personDiv = $('div[data-person=' + attr + ']');
 			personDiv.remove();
 			for(let i = 0; i < _teamJson.people.length; i++) {
-				if(_teamJson.people[i] && _teamJson.people[i]._id == personId) {
+				if(_teamJson.people[i] && _teamJson.people[i]._id === personId) {
 					delete _teamJson.people[i];
 					break;
 				}
@@ -162,7 +162,7 @@ team = (function() {
 		},
 		handleAssignPerson: function(personId, storyId, taskId) {
 			for(let i = 0; i < _teamJson.people.length; i++) {
-				if(_teamJson.people[i] && _teamJson.people[i]._id == personId) {
+				if(_teamJson.people[i] && _teamJson.people[i]._id === personId) {
 					_teamJson.people[i].taskId = taskId;
 				}
 			}

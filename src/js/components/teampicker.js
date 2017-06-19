@@ -76,7 +76,7 @@ teampicker = (function() {
 
     let handleSearch = function() {
         if($('.no-results').length > 0) {
-            if($('#create').length == 0) {
+            if($('#create').length === 0) {
                 //add option to create
                 let dropdownMenu = $('#select-div').find('.dropdown-menu').find('.inner');
                 let addOption = $('<li>').attr('id', 'create').appendTo(dropdownMenu);

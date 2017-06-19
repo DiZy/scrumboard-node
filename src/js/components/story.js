@@ -87,7 +87,7 @@ let story = function() {
                 drop: stickyDropHandler
             });
             newColumn.width($(headerCols[i + 1]).width() + 1);
-            if(i == _columnNames.length - 1) {
+            if(i === _columnNames.length - 1) {
                 newColumn.addClass('done-col');
             }
             cols.push(newColumn);
@@ -109,7 +109,7 @@ let story = function() {
 
     function leftPanelInit($leftPanel, people) {
         let middleArrow = $('<span>').addClass('arrow glyphicon glyphicon-menu-left show-on-hover').css('display', 'none');
-        if(_storyJson.statusCode != -1) {
+        if(_storyJson.statusCode !== -1) {
             middleArrow.appendTo($leftPanel);
         }
         middleArrow.click(function() {
@@ -132,7 +132,7 @@ let story = function() {
         let middleArrow = $('<span>').addClass('arrow glyphicon glyphicon-menu-right show-on-hover').css('display', 'none');
         let deleteButton = $('<span>').addClass('delete glyphicon glyphicon-remove show-on-hover').css('display', 'none').appendTo($rightPanel);
 
-        if(_storyJson.statusCode != _columnNames.length - 1) {
+        if(_storyJson.statusCode !== _columnNames.length - 1) {
             middleArrow.appendTo($rightPanel)
         }
 
@@ -164,7 +164,7 @@ let story = function() {
         })
         .done(function(data) {
             console.log(data);
-            if(data.type == 'success'){
+            if(data.type === 'success'){
                 //Socket handles
             }
             else {
@@ -193,7 +193,7 @@ let story = function() {
 
             })
             .done(function(data) {
-                if(data.type == 'success'){
+                if(data.type === 'success'){
                     //Socket handles
                 }
                 else {
@@ -222,7 +222,7 @@ let story = function() {
         })
         .done(function(data) {
             console.log(data);
-            if(data.type == 'success'){
+            if(data.type === 'success'){
                 //Handled by Socket
             }
             else {
@@ -254,7 +254,7 @@ let story = function() {
             })
             .done(function(data) {
                 console.log(data);
-                if(data.type == 'success'){
+                if(data.type === 'success'){
                     //Socket handles
                 }
                 else {

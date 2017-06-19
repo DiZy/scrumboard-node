@@ -18,7 +18,7 @@ board = (function(){
         addPersonButton.click(function() {
             addPersonModal.open(function(personName) {
                 team.addPerson(personName);
-            });;
+            });
         });
 
         peopleDiv.droppable({
@@ -55,7 +55,7 @@ board = (function(){
 
             board.makeResizableCol(boardCol);
 
-            if(i == _teamJson.columnNames.length - 1) {
+            if(i === _teamJson.columnNames.length - 1) {
                 boardCol.addClass('done-col');
 
                 let editColumnsButton = $('<span>').addClass('glyphicon glyphicon-cog').attr('id', 'editColumnsButton').appendTo(boardCol);
@@ -104,7 +104,7 @@ board = (function(){
             })
             .done(function(data) {
                 console.log(data);
-                if(data.type == 'success'){
+                if(data.type === 'success'){
                     //Socket has listener
                 }
                 else {
@@ -125,7 +125,7 @@ board = (function(){
 
         	for(let i = 0; i < storyList.length; i++) {
                 let storyData = storyList[i];
-                if(storyData.statusCode != 3) {
+                if(storyData.statusCode !== 3) {
                     let storyObj = story();
                     _storyObjMap[storyData._id] = storyObj;
             		storyObj.initialize(storyData, _storiesSection, _teamJson.columnNames);
@@ -156,7 +156,7 @@ board = (function(){
 
         })
         .done(function(data) {
-            if(data.type == 'success'){
+            if(data.type === 'success'){
                 callback(data.stories);
             }
             else {
@@ -235,7 +235,7 @@ board = (function(){
             });
         },
         handleAddStory: function(storyData) {
-            if(storyData.teamId == _teamJson._id) {
+            if(storyData.teamId === _teamJson._id) {
                 let storyObj = story();
                 _storyObjMap[storyData._id] = storyObj;
                 storyObj.initialize(storyData, _storiesSection, _teamJson.columnNames);
@@ -245,7 +245,7 @@ board = (function(){
             _storyObjMap[storyId].handleRemove();
         },
         handleEditStory: function(storyData) {
-            if(storyData.teamId != _teamJson._id) {
+            if(storyData.teamId !== _teamJson._id) {
                 _storyObjMap[storyData._id].handleRemove();
             }
             else {
