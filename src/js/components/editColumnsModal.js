@@ -7,10 +7,11 @@ editColumnsModal = (function() {
 	}
 
 	function renderDetails() {
-		$('#editModal').find('.modal-title').text('Edit Columns');
+		let editModal = $('#editModal');
+        editModal.find('.modal-title').text('Edit Columns');
 
 
-		let modalBody = $('#editModal').find('.modal-body');
+		let modalBody = editModal.find('.modal-body');
 		let editDetails = $('<div>').attr('id', 'editDetails').appendTo(modalBody);
 
 		let editColumnNamesDiv = $('<div>').attr('id', 'editColumnNamesDiv').appendTo(editDetails);

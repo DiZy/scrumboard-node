@@ -77,24 +77,28 @@ burndown = (function() {
 
 
 	function addEventHandlers() {
-		$('#burndown-toggle').unbind('click');
-		$('#burndown-toggle').click(function() {
+		let burndownToggle = $('#burndown-toggle'),
+			burndownStart = $('#burndown-start'),
+			burndownMark = $('#burndown-mark'),
+			burndownUndo = $('#burndown-undo');
+		burndownToggle.unbind('click');
+        burndownToggle.click(function() {
 			$('#burndown').slideToggle({ direction: "up" }, 300);
 		});
 
-		$('#burndown-start').unbind('click');
-		$('#burndown-start').click(function() {
+        burndownStart.unbind('click');
+        burndownStart.click(function() {
 			let confirmation = confirm("Are you sure you want to reset the sprint data?");
 			if (confirmation) {
 				start();
 			}
 		});
 
-		$('#burndown-mark').unbind('click');
-		$('#burndown-mark').click(mark);
+        burndownMark.unbind('click');
+        burndownMark.click(mark);
 
-		$('#burndown-undo').unbind('click');
-		$('#burndown-undo').click(function() {
+        burndownUndo.unbind('click');
+        burndownUndo.click(function() {
 			let confirmation = confirm("Are you sure you want to undo the last point?");
 			if (confirmation) {
 				undo();

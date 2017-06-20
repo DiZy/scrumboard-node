@@ -7,39 +7,47 @@ editStoryModal = (function() {
 	}
 
 	function renderDetails(teamId, storyJson) {
-		if(storyJson) {
-			$('#editModal').find('.modal-title').text('Edit story');
-		}
-		else {
-			$('#editModal').find('.modal-title').text('Add story');
-		}
+        let editModal = $('#editModal'),
+            modalTitle = editModal.find('.modal-title'),
+            modalBody = editModal.find('.modal-body'),
+			editDetails,
+			nameInput,
+			pointsInput,
+			teamInput,
+            newAcceptanceCriteriaInput,
+            addCriteriaButton;
+
+		modalTitle.text(storyJson ? 'Edit Story' : 'Add Story');
 
 		_storyJsonEdited = storyJson ? storyJson : {name: "New Story", points: "", teamId: teamId};
-		let modalBody = $('#editModal').find('.modal-body');
-		let editDetails = $('<div>').attr('id', 'editDetails').appendTo(modalBody);
+		editDetails = $('<div>').attr('id', 'editDetails').appendTo(modalBody);
 
-		let nameInput = $('<textarea>').addClass('input form-control').attr('placeholder', 'Story Name').appendTo(editDetails);
-		nameInput.val(_storyJsonEdited.name);
+        nameInput = $('<textarea>')
+            .addClass('input form-control')
+            .attr('placeholder', 'Story Name')
+            .appendTo(editDetails)
+            .val(_storyJsonEdited.name)
+            .on('input', function() {
+                _storyJsonEdited.name = nameInput.val();
+            });
 
-		nameInput.on('input', function() {
-			_storyJsonEdited.name = nameInput.val();
-		});
-
-		let pointsInput = $('<input>').addClass('input form-control').attr('placeholder', 'Story Points').appendTo(editDetails);
-		pointsInput.val(_storyJsonEdited.points);
-
-		pointsInput.on('input', function() {
-			_storyJsonEdited.points = parseInt(pointsInput.val());
-		});
+		pointsInput = $('<input>')
+			.addClass('input form-control')
+			.attr('placeholder', 'Story Points')
+			.appendTo(editDetails)
+			.val(_storyJsonEdited.points)
+			.on('input', function() {
+				_storyJsonEdited.points = parseInt(pointsInput.val());
+			});
 
 		$('<h6>').text('Choose a team/board').appendTo(editDetails);
-		let teamInput = $('<select>').attr('data-live-search', 'true').appendTo(editDetails);
+		teamInput = $('<select>').attr('data-live-search', 'true').appendTo(editDetails);
 		loadTeamOptions(teamInput);
-    	teamInput.val(teamId);
-    	teamInput.selectpicker('refresh');
-		teamInput.change(function() {
-    		_storyJsonEdited.teamId = teamInput.val();
-    	});
+    	teamInput.val(teamId)
+			.selectpicker('refresh')
+			.change(function() {
+				_storyJsonEdited.teamId = teamInput.val();
+			});
 
 		$('<br>').appendTo(editDetails);
 		$('<h6>').text('Additional Acceptance Criteria').appendTo(editDetails);
@@ -48,17 +56,22 @@ editStoryModal = (function() {
 
 		if(_storyJsonEdited.acceptanceCriteria) {
 			_storyJsonEdited.acceptanceCriteria.forEach(function(criteria) {
-				let isChecked = criteria.isChecked == true || criteria.isChecked == "true";
+				let isChecked = criteria.isChecked === true || criteria.isChecked === "true";
 				addCriteria(criteria.name, isChecked);
 			});
 		}
 
-		let newAcceptanceCriteriaInput = $('<textarea>').addClass('input form-control').attr('placeholder', 'New criteria').appendTo(editDetails);
-		let addCriteriaButton = $('<button>').addClass('btn btn-default').text('Add Criteria').appendTo(editDetails);
-
-		addCriteriaButton.click(function() {
-			addCriteria(newAcceptanceCriteriaInput.val());
-		});
+		newAcceptanceCriteriaInput = $('<textarea>')
+			.addClass('input form-control')
+			.attr('placeholder', 'New criteria')
+			.appendTo(editDetails);
+		addCriteriaButton = $('<button>')
+			.addClass('btn btn-default')
+			.text('Add Criteria')
+			.appendTo(editDetails)
+			.click(function() {
+				addCriteria(newAcceptanceCriteriaInput.val());
+			});
 	}
 
 	function addCriteria(criteriaName, isChecked) {
@@ -93,12 +106,13 @@ editStoryModal = (function() {
 	}
 
 	function renderSaveButton(callback) {
-		let modalFooter = $('#editModal').find('.modal-footer');
+        let editModal = $('#editModal');
+		let modalFooter = editModal.find('.modal-footer');
 		let saveButton = $('<button type="button" class="btn btn-primary modal-save">Save</button>').appendTo(modalFooter);
 
 		saveButton.click(function() {
 			let acceptanceCriteria = [];
-			let acceptanceCriteriaDiv = $('#editCriteriaDiv>.row');
+			let acceptanceCriteriaDiv = $('#editCriteriaDiv').children('.row');
 			for(let i = 0; i < acceptanceCriteriaDiv.length; i++) {
 				let row = $(acceptanceCriteriaDiv[i]);
 				acceptanceCriteria.push({
@@ -107,7 +121,7 @@ editStoryModal = (function() {
 				});
 			}
 			_storyJsonEdited.acceptanceCriteria = acceptanceCriteria;
-			$('#editModal').modal('hide');
+            editModal.modal('hide');
 			callback(_storyJsonEdited);
 		});
 

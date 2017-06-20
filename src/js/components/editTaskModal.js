@@ -8,15 +8,11 @@ editTaskModal = (function() {
 	}
 
 	function renderDetails(taskJson) {
-		if(taskJson) {
-			$('#editModal').find('.modal-title').text('Edit task');
-		}
-		else {
-			$('#editModal').find('.modal-title').text('Add task');
-		}
+		let editModal = $('#editModal');
+        editModal.find('.modal-title').text(taskJson ? 'Edit Task' : 'Add Task');
 
 		_taskJsonEdited = taskJson ? taskJson : {name: "New Task"};
-		let modalBody = $('#editModal').find('.modal-body');
+		let modalBody = editModal.find('.modal-body');
 		let editDetails = $('<div>').attr('id', 'editDetails').appendTo(modalBody);
 
 		_taskForm = $('<form id="peopleForm">' +

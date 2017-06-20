@@ -177,9 +177,10 @@ board = (function(){
 
     function adjustDoneColumnWidth() {
         //adjust last column to fill screen width
-        let doneColWidth = $('#boardHeader').children('.done-col').width();
+        let boardHeader = $('#boardHeader');
+        let doneColWidth = boardHeader.children('.done-col').width();
         let otherColsWidth = 0;
-        let otherCols = $('#boardHeader').children('.progresscol:not(.done-col)');
+        let otherCols = boardHeader.children('.progresscol:not(.done-col)');
         for(let i = 0; i < otherCols.length; i++) {
             otherColsWidth += ($(otherCols[i]).width() + 1);
         }
@@ -208,6 +209,7 @@ board = (function(){
             $(selector).width(newWidth);
         },
         makeResizableCol: function($div) {
+            let boardDiv = $('#board');
             let colOriginalWidth;
             $div.resizable({
                 handles: 'e',
@@ -220,8 +222,8 @@ board = (function(){
                     board.resizeColumn($(this).attr('data-column'), ui.size.width + 1);
 
                     let widthAdded = ui.size.width - colOriginalWidth;
-                    let originalBoardWidth = $('#board').width();
-                    $('#board').width(originalBoardWidth + widthAdded + 1);
+                    let originalBoardWidth = boardDiv.width();
+                    boardDiv.width(originalBoardWidth + widthAdded + 1);
 
                     colOriginalWidth = ui.size.width;
 
