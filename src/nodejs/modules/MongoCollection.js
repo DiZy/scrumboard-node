@@ -1,7 +1,7 @@
-var mongoUrl = process.env.SCRUM_MONGO;
-var MongoClient = require('mongodb').MongoClient;
+let mongoUrl = process.env.SCRUM_MONGO;
+let MongoClient = require('mongodb').MongoClient;
 MongoCollection = function(collectionName) {
-	var that = this;
+	let that = this;
 	this.collectionName = collectionName;
 	MongoClient.connect(mongoUrl, function(err, db){
 		if(err) { 
