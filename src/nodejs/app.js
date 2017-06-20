@@ -7,9 +7,9 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcryptjs');
 const uuidV4 = require('uuid/v4');
 const session = require('express-session');
-var http = require('http').Server(app);
-var socketio = require('socket.io')(http);
-var socketInit = require('./socketInit');
+let http = require('http').Server(app);
+let socketio = require('socket.io')(http);
+let socketInit = require('./socketInit');
 
 //Mongo
 const MongoCollection = require('./modules/MongoCollection');
@@ -26,7 +26,7 @@ app.use('/assets/', express.static(__dirname + '/assets'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-var sessionMiddleware = session({
+let sessionMiddleware = session({
   resave: false, // don't save session if unmodified
   saveUninitialized: false, // don't create session until something stored
   secret: 'everything is secret'
@@ -54,15 +54,15 @@ app.get('/teamhome', requiresLoginRedirect, function(req, res) {
 });
 
 app.post('/signIn', function(req, res) {
-	var username = req.body.username;
-	var password = req.body.password;
+	let username = req.body.username;
+	let password = req.body.password;
 
 	username = username.toLowerCase();
 
 	usersCollection.find({'username' : username}, function(err, results){
 		assert.equal(null, err);
 		if(results.length > 0) {
-			var foundUser = results[0];
+			let foundUser = results[0];
 			if(bcrypt.compareSync(password, foundUser.password)){
 				logIn(req, foundUser._id, foundUser.companyId);
 				return res.json({type: "success"});
@@ -79,11 +79,11 @@ app.post('/signIn', function(req, res) {
 });
 
 app.post('/signUp', function(req, res) {
-	var username = req.body.username;
-	var password = req.body.password;
-	var passwordConfirm = req.body.password_confirm;
-	var fullName = req.body.full_name;
-	var email = req.body.email;
+	let username = req.body.username;
+	let password = req.body.password;
+	let passwordConfirm = req.body.password_confirm;
+	let fullName = req.body.full_name;
+	let email = req.body.email;
 
 	if(!username || username.length < 3) {
 		return res.json({ type: "error", error: "Please enter a username of 3 or more chaacters"});
@@ -91,10 +91,10 @@ app.post('/signUp', function(req, res) {
 	if(!password || password.length < 3) {
 		return res.json({ type: "error", error: "Please enter a password of 3 or more chaacters"});
 	}
-	if(passwordConfirm != password) {
+	if(passwordConfirm !== password) {
 		return res.json({ type: "error", error: "Please make sure your password confirmation is the same as your password"});
 	}
-	if(!email || email.length == 0) {
+	if(!email || email.length === 0) {
 		return res.json({ type: "error", error: "Please enter a valid email address"});
 	}
 
@@ -106,9 +106,9 @@ app.post('/signUp', function(req, res) {
 			return res.json({ type: "error", error: "That username is already taken"});
 		}
 		else {
-			var salt = bcrypt.genSaltSync(10);
+			let salt = bcrypt.genSaltSync(10);
 			password = bcrypt.hashSync(password, salt);
-			var companyId = uuidV4();
+			let companyId = uuidV4();
 
 			companiesCollection.insert(
 			{"_id": companyId, "name": fullName},
@@ -131,8 +131,8 @@ app.post('/signUp', function(req, res) {
 
 //TODO: update to not allow duplicate names within same company probably
 app.post('/addTeam', requiresLogin, function(req, res) {
-	var name = req.body.name;
-	var defaultColumns = ['Not Started', 'In Progress', 'To Be Verified', 'Done'];
+	let name = req.body.name;
+	let defaultColumns = ['Not Started', 'In Progress', 'To Be Verified', 'Done'];
 	teamsCollection.insert({"_id": uuidV4(), "name": name, "companyId": req.session.companyId, "people": [], "columnNames": defaultColumns}, function(err, results, team) {
 		assert.equal(err, null);
 		return res.json({type: "success", team: team});
@@ -150,14 +150,14 @@ app.get('/getTeams', requiresLogin, function(req, res) {
 });
 
 app.get('/getTeamDetails', requiresLogin, function(req, res) {
-	var teamId = req.query.teamId;
+	let teamId = req.query.teamId;
 	// assert(teamId);
 
 	teamsCollection.find({'_id': teamId}, function(err, results) {
 		assert.equal(err, null);
 		if(results.length > 0) {
-			var team = results[0];
-			if(team.companyId == req.session.companyId) {
+			let team = results[0];
+			if(team.companyId === req.session.companyId) {
 				return res.json({type: "success", team: team});
 			}
 			else {
@@ -171,8 +171,8 @@ app.get('/getTeamDetails', requiresLogin, function(req, res) {
 });
 
 app.put('/updateTeamColumns', requiresLogin, checkPostPermissionForTeam, function(req, res, next) {
-	var teamId = req.body.teamId;
-	var newColumnNames = req.body.newColumnNames;
+	let teamId = req.body.teamId;
+	let newColumnNames = req.body.newColumnNames;
 
 	teamsCollection.updateOne(
 		{'_id': teamId},
@@ -191,13 +191,13 @@ app.put('/updateTeamColumns', requiresLogin, checkPostPermissionForTeam, functio
 });
 
 app.delete('/deleteTeam', requiresLogin, function(req, res, next) {
-	var teamId = req.body.teamId;
+	let teamId = req.body.teamId;
 
 	teamsCollection.find({'_id': teamId}, function(err, results) {
 		assert.equal(err, null);
 		if(results.length > 0) {
-			var team = results[0];
-			if(team.companyId == req.session.companyId) {
+			let team = results[0];
+			if(team.companyId === req.session.companyId) {
 				teamsCollection.removeOne(
 					{'_id': teamId},
 					function(err, result) {
@@ -217,16 +217,16 @@ app.delete('/deleteTeam', requiresLogin, function(req, res, next) {
 });
 
 app.post('/addStory', requiresLogin, function(req, res) {
-	var name = req.body.name;
-	var points = req.body.points;
-	var teamId = req.body.teamId;
+	let name = req.body.name;
+	let points = req.body.points;
+	let teamId = req.body.teamId;
 	// assert(teamId);
 
 	teamsCollection.find({'_id': teamId}, function(err, results) {
 		assert.equal(err, null);
 		if(results.length > 0) {
-			var team = results[0];
-			if(team.companyId == req.session.companyId) {
+			let team = results[0];
+			if(team.companyId === req.session.companyId) {
 				storiesCollection.insert(
 					{"_id": uuidV4(), "name": name, "teamId": teamId, "companyId": team.companyId, "tasks": [], "statusCode": -1, "points": points, "acceptanceCriteria": []}, 
 					function(err, results, story) {
@@ -247,15 +247,15 @@ app.post('/addStory', requiresLogin, function(req, res) {
 });
 
 app.put('/moveStory', requiresLogin, function(req, res) {
-	var teamId = req.body.teamId;
-	var storyId = req.body.storyId;
-	var newStatusCode = req.body.newStatusCode;
+	let teamId = req.body.teamId;
+	let storyId = req.body.storyId;
+	let newStatusCode = req.body.newStatusCode;
 
 	teamsCollection.find({'_id': teamId}, function(err, results) {
 		assert.equal(err, null);
 		if(results.length > 0) {
-			var team = results[0];
-			if(team.companyId == req.session.companyId) {
+			let team = results[0];
+			if(team.companyId === req.session.companyId) {
 				if(newStatusCode < team.columnNames.length && newStatusCode >= -1) {
 					storiesCollection.updateOne(
 						{'_id': storyId, 'teamId': teamId},
@@ -288,24 +288,24 @@ app.put('/moveStory', requiresLogin, function(req, res) {
 
 app.put('/editStory', requiresLogin, function(req, res) {
 
-	var teamId = req.body.teamId;
-	var newStoryJson = req.body.newStoryJson;
-	var newTeamId = newStoryJson.teamId;
+	let teamId = req.body.teamId;
+	let newStoryJson = req.body.newStoryJson;
+	let newTeamId = newStoryJson.teamId;
 
-	var transferringTeams = teamId != newTeamId;
+	let transferringTeams = teamId !==  newTeamId;
 
 	teamsCollection.find({'$or': [{'_id': teamId}, {'_id': newTeamId}]}, function(err, results) {
 		assert.equal(err, null);
-		if((transferringTeams && results.length == 2) || (!transferringTeams && results.length == 1)) {
-			var team = results[0];
-			var newTeam;
+		if((transferringTeams && results.length === 2) || (!transferringTeams && results.length === 1)) {
+			let team = results[0];
+			let newTeam;
 			if(transferringTeams) {
 				newTeam = results[1];
 			}
 			else {
 				newTeam = team;
 			}
-			if(team.companyId == req.session.companyId && newTeam.companyId == req.session.companyId) {
+			if(team.companyId === req.session.companyId && newTeam.companyId === req.session.companyId) {
 				storiesCollection.updateOne(
 					{'_id': newStoryJson._id, 'teamId': teamId},
 					{
@@ -335,14 +335,14 @@ app.put('/editStory', requiresLogin, function(req, res) {
 });
 
 app.delete('/deleteStory', requiresLogin, function(req, res) {
-	var teamId = req.body.teamId;
-	var storyId = req.body.storyId;
+	let teamId = req.body.teamId;
+	let storyId = req.body.storyId;
 
 	teamsCollection.find({'_id': teamId}, function(err, results) {
 		assert.equal(err, null);
 		if(results.length > 0) {
-			var team = results[0];
-			if(team.companyId == req.session.companyId) {
+			let team = results[0];
+			if(team.companyId === req.session.companyId) {
 				storiesCollection.removeOne(
 					{'_id': storyId, 'teamId': teamId},
 					function(err, result) {
@@ -364,14 +364,14 @@ app.delete('/deleteStory', requiresLogin, function(req, res) {
 });
 
 app.get('/getStories', requiresLogin, function(req, res, next) {
-	var teamId = req.query.teamId;
+	let teamId = req.query.teamId;
 	// assert(teamId);
 
 	teamsCollection.find({'_id': teamId}, function(err, results) {
 		assert.equal(err, null);
 		if(results.length > 0) {
-			var team = results[0];
-			if(team.companyId == req.session.companyId) {
+			let team = results[0];
+			if(team.companyId === req.session.companyId) {
 				storiesCollection.find({"teamId": teamId, "companyId": team.companyId}, function(err, results) {
 					assert.equal(err, null);
 					return res.json({ type: "success", stories: results});
@@ -389,18 +389,18 @@ app.get('/getStories', requiresLogin, function(req, res, next) {
 });
 
 app.post('/addTask', requiresLogin, function(req, res, next) {
-	var teamId = req.body.teamId;
-	var storyId = req.body.storyId;
-	var name = req.body.name;
-	var points = req.body.points;
-	var notes = req.body.notes;
+	let teamId = req.body.teamId;
+	let storyId = req.body.storyId;
+	let name = req.body.name;
+	let points = req.body.points;
+	let notes = req.body.notes;
 
 	teamsCollection.find({'_id': teamId}, function(err, results) {
 		assert.equal(err, null);
 		if(results.length > 0) {
-			var team = results[0];
-			if(team.companyId == req.session.companyId) {
-				var newTaskId = uuidV4();
+			let team = results[0];
+			if(team.companyId === req.session.companyId) {
+				let newTaskId = uuidV4();
 				storiesCollection.updateOne(
 					{'_id': storyId, 'teamId': teamId},
 					{$push: { 
@@ -409,7 +409,7 @@ app.post('/addTask', requiresLogin, function(req, res, next) {
 					},
 					function(err, result) {
 						assert.equal(err, null);
-						var newTaskCreated = {_id: newTaskId, name: name, statusCode: 0, points: points, notes: notes};
+						let newTaskCreated = {_id: newTaskId, name: name, statusCode: 0, points: points, notes: notes};
 						socketio.sockets.in(teamId).emit('add task', {storyId: storyId, task: newTaskCreated});
 						return res.json({type: "success", storyId: storyId, task: newTaskCreated });
 					}
@@ -427,15 +427,15 @@ app.post('/addTask', requiresLogin, function(req, res, next) {
 });
 
 app.delete('/deleteTask', requiresLogin, function(req, res, next) {
-	var teamId = req.body.teamId;
-	var storyId = req.body.storyId;
-	var taskId = req.body.taskId;
+	let teamId = req.body.teamId;
+	let storyId = req.body.storyId;
+	let taskId = req.body.taskId;
 
 	teamsCollection.find({'_id': teamId}, function(err, results) {
 		assert.equal(err, null);
 		if(results.length > 0) {
-			var team = results[0];
-			if(team.companyId == req.session.companyId) {
+			let team = results[0];
+			if(team.companyId === req.session.companyId) {
 				storiesCollection.updateOne(
 					{'_id': storyId, 'teamId': teamId},
 					{$pull: { 
@@ -461,16 +461,16 @@ app.delete('/deleteTask', requiresLogin, function(req, res, next) {
 });
 
 app.put('/moveTask', requiresLogin, function(req, res) {
-	var teamId = req.body.teamId;
-	var storyId = req.body.storyId;
-	var taskId = req.body.taskId;
-	var newStatusCode = req.body.newStatusCode;
+	let teamId = req.body.teamId;
+	let storyId = req.body.storyId;
+	let taskId = req.body.taskId;
+	let newStatusCode = req.body.newStatusCode;
 
 	teamsCollection.find({'_id': teamId}, function(err, results) {
 		assert.equal(err, null);
 		if(results.length > 0) {
-			var team = results[0];
-			if(team.companyId == req.session.companyId) {
+			let team = results[0];
+			if(team.companyId === req.session.companyId) {
 				if(newStatusCode < team.columnNames.length && newStatusCode >= 0) {
 					storiesCollection.updateOne(
 						{'_id': storyId, 'teamId': teamId, 'tasks._id': taskId},
@@ -504,16 +504,16 @@ app.put('/moveTask', requiresLogin, function(req, res) {
 
 app.put('/editTask', requiresLogin, function(req, res) {
 
-	var teamId = req.body.teamId;
-	var storyId = req.body.storyId;
-	var taskId = req.body.taskId;
-	var newTaskJson = req.body.newTaskJson;
+	let teamId = req.body.teamId;
+	let storyId = req.body.storyId;
+	let taskId = req.body.taskId;
+	let newTaskJson = req.body.newTaskJson;
 
 	teamsCollection.find({'_id': teamId}, function(err, results) {
 		assert.equal(err, null);
 		if(results.length > 0) {
-			var team = results[0];
-			if(team.companyId == req.session.companyId) {
+			let team = results[0];
+			if(team.companyId === req.session.companyId) {
 				storiesCollection.updateOne(
 					{'_id': storyId, 'teamId': teamId, 'tasks._id': taskId},
 					{
@@ -543,17 +543,17 @@ app.put('/editTask', requiresLogin, function(req, res) {
 });
 
 app.put('/updateTaskStyling', requiresLogin, function(req, res) {
-	var teamId = req.body.teamId;
-	var storyId = req.body.storyId;
-	var taskId = req.body.taskId;
-	var width = req.body.width;
-	var height = req.body.height;
+	let teamId = req.body.teamId;
+	let storyId = req.body.storyId;
+	let taskId = req.body.taskId;
+	let width = req.body.width;
+	let height = req.body.height;
 
 	teamsCollection.find({'_id': teamId}, function(err, results) {
 		assert.equal(err, null);
 		if(results.length > 0) {
-			var team = results[0];
-			if(team.companyId == req.session.companyId) {
+			let team = results[0];
+			if(team.companyId === req.session.companyId) {
 				storiesCollection.updateOne(
 					{'_id': storyId, 'teamId': teamId, 'tasks._id': taskId},
 					{
@@ -581,15 +581,15 @@ app.put('/updateTaskStyling', requiresLogin, function(req, res) {
 });
 
 app.post('/addPersonToTeam', requiresLogin, function(req, res) {
-    var teamId = req.body.teamId;
-    var personName = req.body.personName;
+    let teamId = req.body.teamId;
+    let personName = req.body.personName;
 
     teamsCollection.find({'_id': teamId}, function(err, results) {
     	assert.equal(err, null);
     	if(results.length > 0) {
-    		var team = results[0];
-    		if(team.companyId == req.session.companyId) {
-    			var newPersonId = uuidV4();
+    		let team = results[0];
+    		if(team.companyId === req.session.companyId) {
+    			let newPersonId = uuidV4();
     			teamsCollection.updateOne(
     				{'_id': teamId},
     				{$push: { 
@@ -598,7 +598,7 @@ app.post('/addPersonToTeam', requiresLogin, function(req, res) {
     				},
     				function(err, result) {
     					assert.equal(err, null);
-						var newPersonData = {_id: newPersonId, name: personName, taskId: null};
+						let newPersonData = {_id: newPersonId, name: personName, taskId: null};
 						socketio.sockets.in(teamId).emit('add person', {person: newPersonData});
     					return res.json({type: "success", person: newPersonData });
     				}
@@ -615,16 +615,16 @@ app.post('/addPersonToTeam', requiresLogin, function(req, res) {
 });
 
 app.put('/assignPerson', requiresLogin, function(req, res) {
-	var teamId = req.body.teamId;
-	var personId = req.body.personId;
-	var newTaskId = req.body.newTaskId;
-	var storyId = req.body.storyId;
+	let teamId = req.body.teamId;
+	let personId = req.body.personId;
+	let newTaskId = req.body.newTaskId;
+	let storyId = req.body.storyId;
 
 	teamsCollection.find({'_id': teamId}, function(err, results) {
 		assert.equal(err, null);
 		if(results.length > 0) {
-			var team = results[0];
-			if(team.companyId == req.session.companyId) {
+			let team = results[0];
+			if(team.companyId === req.session.companyId) {
 				teamsCollection.updateOne(
 					{'_id': teamId, 'people._id': personId},
 					{
@@ -651,8 +651,8 @@ app.put('/assignPerson', requiresLogin, function(req, res) {
 });
 
 app.delete('/removePersonFromTeam', requiresLogin, checkPostPermissionForTeam, function(req, res) {
-	var teamId = req.body.teamId;
-	var personId = req.body.personId;
+	let teamId = req.body.teamId;
+	let personId = req.body.personId;
 	teamsCollection.updateOne(
 		{'_id': teamId},
 		{$pull: { 
@@ -668,18 +668,18 @@ app.delete('/removePersonFromTeam', requiresLogin, checkPostPermissionForTeam, f
 });
 
 app.get('/getBurndown', requiresLogin, checkGetPermissionForTeam, function(req, res, next) {
-	var teamId = req.query.teamId;
+	let teamId = req.query.teamId;
 	burndownsCollection.find(
 		{'teamId': teamId},
 		function(err, results) {
 			assert.equal(err, null);
-			if(results.length == 0) {
+			if(results.length === 0) {
 				next();
 			}
 			else {
-				var result = results[0];
-				var labels = [];
-				for(var i = 0; i < result.hoursData.length; i++) {
+				let result = results[0];
+				let labels = [];
+				for(let i = 0; i < result.hoursData.length; i++) {
 					labels.push(i + 1);
 				}
 				return res.json({type: "success", chartLabels: labels, hoursData: result.hoursData, pointsData: result.pointsData});
@@ -689,7 +689,7 @@ app.get('/getBurndown', requiresLogin, checkGetPermissionForTeam, function(req, 
 }, createBurndown);
 
 function createBurndown(req, res) {
-	var teamId = req.query.teamId;
+	let teamId = req.query.teamId;
 	burndownsCollection.insert(
 		{"_id": uuidV4(), "teamId": teamId, "hoursData": [], "pointsData": []}, 
 		function(err, results, burndown) {
@@ -700,7 +700,7 @@ function createBurndown(req, res) {
 }
 
 app.post('/startBurndown', requiresLogin, checkPostPermissionForTeam, function(req, res) {
-	var teamId = req.body.teamId;
+	let teamId = req.body.teamId;
 
 	burndownsCollection.updateOne(
 		{'teamId': teamId},
@@ -717,28 +717,28 @@ app.post('/startBurndown', requiresLogin, checkPostPermissionForTeam, function(r
 });
 
 app.post('/markBurndown', requiresLogin, function(req, res) {
-	var teamId = req.body.teamId;
+	let teamId = req.body.teamId;
 
 	teamsCollection.find({'_id': teamId}, function(err, results) {
 		assert.equal(err, null);
-		if(results.length == 1) {
-			var team = results[0];
-			if(team.companyId == req.session.companyId) {
-				var lastColIndex = team.columnNames.length - 1
+		if(results.length === 1) {
+			let team = results[0];
+			if(team.companyId === req.session.companyId) {
+				let lastColIndex = team.columnNames.length - 1;
 				storiesCollection.find(
 					{'teamId' : teamId, 'statusCode' : {'$ne': lastColIndex.toString()}}, 
 					function(err, results) {
-						var totalHours = 0;
-						var totalStoryPoints = 0;
-						for(var i = 0; i < results.length; i++) {
-							var curStory = results[i];
+						let totalHours = 0;
+						let totalStoryPoints = 0;
+						for(let i = 0; i < results.length; i++) {
+							let curStory = results[i];
 							if(!isNaN(parseFloat(curStory.points))){
 								totalStoryPoints += parseFloat(curStory.points);
 							}
-							var curTasks = curStory.tasks;
-							for(var j = 0; j < curTasks.length; j++) {
-								var hoursToAdd = curTasks[j].points;
-								var isNotDone = curTasks[j].statusCode != lastColIndex;
+							let curTasks = curStory.tasks;
+							for(let j = 0; j < curTasks.length; j++) {
+								let hoursToAdd = curTasks[j].points;
+								let isNotDone = curTasks[j].statusCode !== lastColIndex;
 								if(!isNaN(parseFloat(hoursToAdd)) && isNotDone){
 									totalHours += parseFloat(hoursToAdd);
 								}
@@ -772,7 +772,7 @@ app.post('/markBurndown', requiresLogin, function(req, res) {
 });
 
 app.post('/undoBurndown', requiresLogin, checkPostPermissionForTeam, function(req, res) {
-	var teamId = req.body.teamId;
+	let teamId = req.body.teamId;
 
 	burndownsCollection.updateOne(
 		{'teamId': teamId},
@@ -794,13 +794,13 @@ app.post('/undoBurndown', requiresLogin, checkPostPermissionForTeam, function(re
 //Helpers
 
 function checkPostPermissionForTeam(req, res, next) {
-	var teamId = req.body.teamId;
+	let teamId = req.body.teamId;
 
 	teamsCollection.find({'_id': teamId}, function(err, results) {
 		assert.equal(err, null);
-		if(results.length == 1) {
-			var team = results[0];
-			if(team.companyId == req.session.companyId) {
+		if(results.length === 1) {
+			let team = results[0];
+			if(team.companyId === req.session.companyId) {
 				next();
 			}
 			else {
@@ -814,13 +814,13 @@ function checkPostPermissionForTeam(req, res, next) {
 }
 
 function checkGetPermissionForTeam(req, res, next) {
-	var teamId = req.query.teamId;
+	let teamId = req.query.teamId;
 
 	teamsCollection.find({'_id': teamId}, function(err, results) {
 		assert.equal(err, null);
-		if(results.length == 1) {
-			var team = results[0];
-			if(team.companyId == req.session.companyId) {
+		if(results.length === 1) {
+			let team = results[0];
+			if(team.companyId === req.session.companyId) {
 				next();
 			}
 			else {
@@ -865,7 +865,6 @@ function isLoggedIn(req) {
 		return true;
 	}
 	return false;
-
 }
 
 function logIn(req, userId, companyId) {
@@ -878,5 +877,5 @@ function logOut(req) {
   	});
 }
 
-http.listen(process.env.PORT || 5000)
+http.listen(process.env.PORT || 5000);
 console.log("RUNNING ON PORT 5000");
