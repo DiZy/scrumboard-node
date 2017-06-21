@@ -234,6 +234,12 @@ board = (function(){
                 }
             });
         },
+        getPeopleDivForTask: function(storyId, taskId) {
+            return _storyObjMap[storyId].getPeopleDivForTask(taskId);
+        },
+        getPeopleDivForStory: function(storyId) {
+            return _storyObjMap[storyId].getPeopleDiv();
+        },
         handleAddStory: function(storyData) {
             if(storyData.teamId == _teamJson._id) {
                 var storyObj = story();
@@ -269,9 +275,6 @@ board = (function(){
         },
         handleRestyleTask: function(storyId, taskId, height, width) {
             _storyObjMap[storyId].handleRestyleTask(taskId, height, width);
-        },
-        getPeopleDivForTask: function(storyId, taskId) {
-            return _storyObjMap[storyId].getPeopleDivForTask(taskId);
         },
         handleEditColumns: function() {
             $('#select-div .selectpicker').trigger('change');

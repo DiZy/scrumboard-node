@@ -35,7 +35,7 @@ var task = function() {
 
 		_taskDiv.droppable({
 			accept: '.person',
-			drop: handlePersonDrop
+			drop: personDropHandler
 		});
 
 		_taskDiv.draggable({
@@ -169,7 +169,7 @@ var task = function() {
 		_taskDiv.children('.ui-resizable-handle').css('display', 'none');
 	}
 
-	function handlePersonDrop(event, ui) {
+	function personDropHandler(event, ui) {
 		var personDiv = ui.draggable;
 		var divToRenderTo = _taskDiv.children('.people-row').children('.peopleDiv');
 		team.assignPersonToTask(personDiv.attr('data-person'), _taskJson._id, _storyId);
@@ -292,6 +292,9 @@ var task = function() {
     		_teamId = teamId;
     		render();
     	},
+		getPeopleDiv: function() {
+			return _taskDiv.children('.people-row').children('.peopleDiv');
+		},
 		handleRemove: function() {
 			_taskDiv.find('.person').each(function(index, personDiv) {
 				team.assignPersonToTask($(personDiv).attr('data-person'), "", _storyId);
@@ -322,9 +325,6 @@ var task = function() {
 			var peopleRow = $(_taskDiv.children('.people-row'));
 
 			setDefaultSize(leftPanel, middlePanel, rightPanel, peopleRow);
-		},
-		getPeopleDiv: function() {
-			return _taskDiv.children('.people-row').children('.peopleDiv');
 		}
         
     }

@@ -250,18 +250,20 @@ body {
 			h4 {
 				padding-left: 10px;
 			}
+
+			.addTaskButton {
+	   			position: absolute;
+	   			z-index: 99;
+	   			top: 0px;
+	   		    right: 0px;
+	   		    box-shadow: none;
+	   		    font-size: 20px;
+		   	}
 		}
 	}
 
 	.story {
 	   	border-bottom: 1px solid #eee;
-
-	   	.addTaskButton {
-	   		margin-top: 5px;
-	   		width: 200px;
-	   		margin-left: 25px;
-	   		float: left;
-	   	}
 	}
 
 	.story-sticky {

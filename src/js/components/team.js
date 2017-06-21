@@ -45,6 +45,15 @@ team = (function() {
     		});
     		return JSON.parse(JSON.stringify(toReturn));
     	},
+    	getPeopleForStory: function(storyId) {
+    		var toReturn = [];
+    		_teamJson.people.forEach(function(p) {
+    			if(!p.taskId && p.storyId == storyId) {
+    				toReturn.push(p);
+    			}
+    		});
+    		return JSON.parse(JSON.stringify(toReturn));
+    	},
     	addPerson: function(personName) {
 			$.ajax({
 	            type: 'POST',
@@ -164,6 +173,7 @@ team = (function() {
 			for(var i = 0; i < _teamJson.people.length; i++) {
 				if(_teamJson.people[i] && _teamJson.people[i]._id == personId) {
 					_teamJson.people[i].taskId = taskId;
+					_teamJson.people[i].storyId = storyId;
 				}
 			}
 			var attr = _personIdToAttrMap[personId];
@@ -172,9 +182,13 @@ team = (function() {
 			var personDiv = $('div[data-person=' + attr + ']');
 
 			var divToRenderTo;
-			if(taskId) {
+			if(storyId && taskId) {
 				divToRenderTo = board.getPeopleDivForTask(storyId, taskId);
-			} else {
+			} 
+			else if(storyId) {
+				divToRenderTo = board.getPeopleDivForStory(storyId);	
+			}
+			else {
 				 divToRenderTo = $('#unassignedPeople')
 			}
 

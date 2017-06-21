@@ -593,7 +593,7 @@ app.post('/addPersonToTeam', requiresLogin, function(req, res) {
     			teamsCollection.updateOne(
     				{'_id': teamId},
     				{$push: { 
-    					"people": {"_id": newPersonId, "name": personName, "taskId": ""} 
+    					"people": {"_id": newPersonId, "name": personName, "taskId": "", "storyId": ""} 
     					}
     				},
     				function(err, result) {
@@ -629,7 +629,8 @@ app.put('/assignPerson', requiresLogin, function(req, res) {
 					{'_id': teamId, 'people._id': personId},
 					{
 						$set : {
-							'people.$.taskId': newTaskId
+							'people.$.taskId': newTaskId,
+							'people.$.storyId': storyId
 						}
 					},
 					function(err, result) {
