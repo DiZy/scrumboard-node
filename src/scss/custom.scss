@@ -253,7 +253,7 @@ body {
 
 			.addTaskButton {
 	   			position: absolute;
-	   			z-index: 99;
+	   			z-index: 4;
 	   			top: 0px;
 	   		    right: 0px;
 	   		    box-shadow: none;
@@ -280,6 +280,7 @@ body {
 		float: left;
 		max-width:100%;
 		padding: 5px 1px;
+		z-index: 5;
 
 		.task-panels {
 			padding: 0;
