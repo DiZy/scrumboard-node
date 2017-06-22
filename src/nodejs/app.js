@@ -170,6 +170,26 @@ app.get('/getTeamDetails', requiresLogin, function(req, res) {
 	});
 });
 
+app.put('/editTeamName', requiresLogin, checkPostPermissionForTeam, function(req, res) {
+	var teamId = req.body.teamId;
+	var newTeamName = req.body.newTeamName;
+
+	teamsCollection.updateOne(
+		{'_id': teamId},
+		{
+			$set: {
+				"name": newTeamName
+			}
+		},
+		function(err, result) {
+			assert.equal(err, null);
+
+			return res.json({type: "success"});
+		}
+	);
+
+});
+
 app.put('/updateTeamColumns', requiresLogin, checkPostPermissionForTeam, function(req, res, next) {
 	var teamId = req.body.teamId;
 	var newColumnNames = req.body.newColumnNames;

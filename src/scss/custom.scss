@@ -90,11 +90,11 @@ body {
 			li {
 				a:first-of-type {
 					padding-right: 0px;
-					width: calc(100% - 20px);
+					width: calc(100% - 40px);
 					float: left;
 				}
 
-				.remove-team {
+				.edit-team, .remove-team {
 					width: 20px;;
 					height: 29px;
 					float: left;
@@ -110,7 +110,7 @@ body {
 			li.active {
 				background-color: #2196f3;
 
-				.remove-team {
+				.remove-team, .edit-team{
 					background-color: #2196f3;
 				}
 			}
