@@ -170,6 +170,26 @@ app.get('/getTeamDetails', requiresLogin, function(req, res) {
 	});
 });
 
+app.put('/editTeamName', requiresLogin, checkPostPermissionForTeam, function(req, res) {
+	var teamId = req.body.teamId;
+	var newTeamName = req.body.newTeamName;
+
+	teamsCollection.updateOne(
+		{'_id': teamId},
+		{
+			$set: {
+				"name": newTeamName
+			}
+		},
+		function(err, result) {
+			assert.equal(err, null);
+
+			return res.json({type: "success"});
+		}
+	);
+
+});
+
 app.put('/updateTeamColumns', requiresLogin, checkPostPermissionForTeam, function(req, res, next) {
 	let teamId = req.body.teamId;
 	let newColumnNames = req.body.newColumnNames;
@@ -593,7 +613,7 @@ app.post('/addPersonToTeam', requiresLogin, function(req, res) {
     			teamsCollection.updateOne(
     				{'_id': teamId},
     				{$push: { 
-    					"people": {"_id": newPersonId, "name": personName, "taskId": ""} 
+    					"people": {"_id": newPersonId, "name": personName, "taskId": "", "storyId": ""} 
     					}
     				},
     				function(err, result) {
@@ -629,7 +649,8 @@ app.put('/assignPerson', requiresLogin, function(req, res) {
 					{'_id': teamId, 'people._id': personId},
 					{
 						$set : {
-							'people.$.taskId': newTaskId
+							'people.$.taskId': newTaskId,
+							'people.$.storyId': storyId
 						}
 					},
 					function(err, result) {

@@ -34,6 +34,13 @@ teampicker = (function() {
                 selectPicker.selectpicker('val', teams[teams.length - 1]._id);
                 selectPicker.selectpicker('refresh');
                 $('.bootstrap-select').find('.dropdown-menu li').each(function(index, value) {
+                    let editTeamButton = $('<span>').addClass('glyphicon glyphicon-edit edit-team').appendTo(value);
+
+                    editTeamButton.click(function(e) {
+                        e.stopPropagation();
+                        editTeam(_teamsArray[index]._id, _teamsArray[index].name);
+                    });
+
                     let removeTeamButton = $('<span>').addClass('glyphicon glyphicon-remove-circle remove-team');
                     removeTeamButton.click(function(e) {
                         e.stopPropagation();
@@ -72,6 +79,23 @@ teampicker = (function() {
                 }
             );
         }
+    }
+
+    function editTeam(teamId, teamName) {
+        editTeamNameModal.open(teamName, function(newTeamName) {
+            customAjax('put', '/editTeamName',
+                {
+                    teamId: teamId,
+                    newTeamName: newTeamName
+                },
+                function(data) {
+                   loadSelectOptions(function() {
+                        $('#select-div .selectpicker').selectpicker('toggle');
+                        $('#select-div .selectpicker').trigger('change');
+                   });
+                }
+            );
+        });
     }
 
     let handleSearch = function() {

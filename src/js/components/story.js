@@ -39,10 +39,12 @@ let story = function() {
         let leftPanel = $('<div>').addClass('taskpanel').appendTo(storyPanels);
         let middlePanel = $('<div>').addClass('taskpanel taskcenter story-sticky').appendTo(storyPanels);
         middlePanel.text(_storyJson.name);
-        let rightPanel = $('<div>').addClass('taskpanel').appendTo(storyPanels);
+        var rightPanel = $('<div>').addClass('taskpanel').appendTo(storyPanels);
+        var peopleRow = $('<div>').addClass('people-row').appendTo(_storySticky);
         leftPanelInit(leftPanel);
         rightPanelInit(rightPanel);
         middlePanelInit(middlePanel);
+        peopleRowInit(peopleRow);
 
         _storySticky.hover(
             //Hover in
@@ -57,14 +59,10 @@ let story = function() {
             }
         );
 
-
-        let addTaskButton = $('<button>').text('Add task').addClass('btn btn-default addTaskButton');
-        addTaskButton.addClass('show-on-hover');
-        addTaskButton.css('display', 'none');
-        addTaskButton.appendTo(_storySticky);
-
-
-        addTaskButton.click(addTaskToStory);
+        _storySticky.droppable({
+            accept: '.person',
+            drop: personDropHandler
+        });
     }
 
     function render() {
@@ -92,6 +90,9 @@ let story = function() {
             }
             cols.push(newColumn);
         }
+
+        let addTaskButton = $('<button>').addClass('btn btn-lg btn-default addTaskButton').attr('title', 'Add a task').text("+").appendTo(cols[0]);
+        addTaskButton.click(addTaskToStory);
 
         renderStorySticky();
 
@@ -147,6 +148,24 @@ let story = function() {
             }
         });
 
+    }
+
+    function peopleRowInit($peopleRow) {
+        $('<div>').addClass('peopleMargin').appendTo($peopleRow);
+        var peopleDiv = $('<div>').addClass('peopleDiv').appendTo($peopleRow);
+        $('<div>').addClass('peopleMargin').appendTo($peopleRow);
+
+        var people = team.getPeopleForStory(_storyJson._id);
+        people.forEach(function(p) {
+            person().render(p, peopleDiv);
+        });
+    }
+
+    function personDropHandler(event, ui) {
+        var personDiv = ui.draggable;
+        var divToRenderTo = _storySticky.children('.people-row').children('.peopleDiv');
+        team.assignPersonToTask(personDiv.attr('data-person'), undefined, _storyJson._id);
+        return true;
     }
 
     function updateStatusCode(newStatusCode) {
@@ -275,6 +294,9 @@ let story = function() {
             _columnNames = columnNames;
     		render();
     	},
+        getPeopleDiv: function() {
+            return _storySticky.children('.people-row').children('.peopleDiv');
+        },
         handleRemove: function() {
             _storyRow.remove();
         },
