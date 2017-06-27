@@ -96,7 +96,8 @@ board = (function(){
                 data: {
                     teamId: storyJson.teamId,
                     name: storyJson.name,
-                    points: storyJson.points
+                    points: storyJson.points,
+                    acceptanceCriteria: storyJson.acceptanceCriteria
                 },
                 dataType: "json",
                 contentType: "application/x-www-form-urlencoded"
