@@ -372,6 +372,17 @@ var story = function() {
             _storyRow.find(".story-descr").remove()
             renderStorySticky();
         },
+        handleRestyle: function(height, width) {
+            _storyJson.width = width;
+            _storyJson.height = height;
+
+            var leftPanel = $(_storySticky.children('.task-panels').children()[0]);
+            var middlePanel = $(_storySticky.children('.task-panels').children()[1]);
+            var rightPanel = $(_storySticky.children('.task-panels').children()[2]);
+            var peopleRow = $(_storySticky.children('.people-row'));
+
+            setDefaultSize(leftPanel, middlePanel, rightPanel, peopleRow);
+        },
         handleAddTask: function(taskData) {
             var taskObj = task();
             _taskObjMap[taskData._id] = taskObj;

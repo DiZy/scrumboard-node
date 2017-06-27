@@ -261,6 +261,9 @@ board = (function(){
         handleMoveStory: function(storyId, newStatusCode) {
             _storyObjMap[storyId].handleMove(newStatusCode);
         },
+        handleRestyleStory: function(storyId, height, width) {
+            _storyObjMap[storyId].handleRestyle(height, width);
+        },
         handleAddTask: function(storyId, taskData) {
             _storyObjMap[storyId].handleAddTask(taskData);
         },
