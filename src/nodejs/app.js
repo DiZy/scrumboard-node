@@ -562,6 +562,43 @@ app.put('/editTask', requiresLogin, function(req, res) {
 	});
 });
 
+
+app.put('/updateStoryStyling', requiresLogin, function(req, res) {
+	var teamId = req.body.teamId;
+	var storyId = req.body.storyId;
+	var width = req.body.width;
+	var height = req.body.height;
+
+	teamsCollection.find({'_id': teamId}, function(err, results) {
+		assert.equal(err, null);
+		if(results.length > 0) {
+			var team = results[0];
+			if(team.companyId == req.session.companyId) {
+				storiesCollection.updateOne(
+					{'_id': storyId, 'teamId': teamId},
+					{
+						$set : {
+							'width': width,
+							'height': height
+						}
+					},
+					function(err, result) {
+						assert.equal(err, null);
+						socketio.sockets.in(teamId).emit('update story style', {storyId: storyId, height: height, width: width});
+						return res.json({type: "success"});
+					}
+				);
+			}
+			else {
+				return res.json({ type: "error", error: "You do not have permissions to edit this story."});
+			}
+		}
+		else {
+			return res.json({ type: "error", error: "This team does not exist."});
+		}
+	});
+});
+
 app.put('/updateTaskStyling', requiresLogin, function(req, res) {
 	var teamId = req.body.teamId;
 	var storyId = req.body.storyId;
