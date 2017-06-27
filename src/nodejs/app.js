@@ -240,6 +240,7 @@ app.post('/addStory', requiresLogin, function(req, res) {
 	var name = req.body.name;
 	var points = req.body.points;
 	var teamId = req.body.teamId;
+	var acceptanceCriteria = req.body.acceptanceCriteria;
 	// assert(teamId);
 
 	teamsCollection.find({'_id': teamId}, function(err, results) {
@@ -248,7 +249,7 @@ app.post('/addStory', requiresLogin, function(req, res) {
 			var team = results[0];
 			if(team.companyId == req.session.companyId) {
 				storiesCollection.insert(
-					{"_id": uuidV4(), "name": name, "teamId": teamId, "companyId": team.companyId, "tasks": [], "statusCode": -1, "points": points, "acceptanceCriteria": []}, 
+					{"_id": uuidV4(), "name": name, "teamId": teamId, "companyId": team.companyId, "tasks": [], "statusCode": -1, "points": points, "acceptanceCriteria": acceptanceCriteria}, 
 					function(err, results, story) {
 						assert.equal(err, null);
 						socketio.sockets.in(teamId).emit('add story', {story: story});
