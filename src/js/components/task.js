@@ -32,6 +32,16 @@ var task = function() {
 		setDefaultSize(leftPanel, middlePanel, rightPanel, peopleRow);
 		makeResizable(leftPanel, middlePanel, rightPanel, peopleRow);
 
+		if (_taskJson.notes !== "") {
+			middlePanel.tooltip({
+				items: "div",
+				content: function() { return ("Notes:\n" + escapeHtml(_taskJson.notes)).replace(/\n/g, "<br />")},
+				position: {
+					my: "center top+15", at: "center bottom", of: middlePanel
+				},
+				show: { delay: 1000 }
+			});
+		}
 
 		_taskDiv.droppable({
 			accept: '.person',
@@ -40,7 +50,9 @@ var task = function() {
 
 		_taskDiv.draggable({
 			revert: true,
-			handle: ".taskcenter"
+			handle: ".taskcenter",
+			start: function() {if (_taskJson.notes !== "") {middlePanel.tooltip("disable")}},
+			stop: function() {if (_taskJson.notes !== "") {middlePanel.tooltip("enable")}}
 		});
 
 		_taskDiv.attr("data-taskId", _taskJson._id);
@@ -51,7 +63,6 @@ var task = function() {
 			function() {
 				$(_taskDiv).find('.hide-on-hover').hide();
 				$(_taskDiv).find('.show-on-hover').show();
-				$(_taskDiv).attr('title', "Notes:\n" + _taskJson.notes);
 			},
 			//Hover out
 			function() {
@@ -250,6 +261,11 @@ var task = function() {
 	function editTask() {
 		if (_taskDiv.hasClass("ui-draggable-dragging")) {
 			return;
+		}
+		if (_taskJson.notes !== "") {
+			// We can't programmatically close the tooltip, because it wasn't opened programmatically.
+			// We can disable and then immediately enable it though, which has the same effect.
+			_taskDiv.find(".taskcenter").tooltip("disable").tooltip("enable");
 		}
 		editTaskModal.open(_taskJson, function(newTaskJson) {
 			$.ajax({
