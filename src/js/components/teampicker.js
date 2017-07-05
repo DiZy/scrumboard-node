@@ -190,6 +190,11 @@ teampicker = (function() {
             board.handleMoveStory(data.storyId, data.newStatusCode);
         });
 
+        socket.off('update story style');
+        socket.on('update story style', function(data) {
+            board.handleRestyleStory(data.storyId, data.height, data.width);
+        });
+
         socket.off('add task');
         socket.on('add task', function(data) {
             board.handleAddTask(data.storyId, data.task);

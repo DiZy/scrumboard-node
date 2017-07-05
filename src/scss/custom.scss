@@ -388,10 +388,6 @@ body {
 		}
 	}
 
-	.story-descr {
-		height: 125px;
-	}
-
 	.task.ui-draggable-dragging {
 		.show-on-hover {
 			// It looks like something is setting an inline style and overriding this, so we have to make it important

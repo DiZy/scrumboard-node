@@ -41,10 +41,14 @@ let story = function() {
         middlePanel.text(_storyJson.name);
         var rightPanel = $('<div>').addClass('taskpanel').appendTo(storyPanels);
         var peopleRow = $('<div>').addClass('people-row').appendTo(_storySticky);
+
         leftPanelInit(leftPanel);
         rightPanelInit(rightPanel);
         middlePanelInit(middlePanel);
         peopleRowInit(peopleRow);
+
+        setDefaultSize(leftPanel, middlePanel, rightPanel, peopleRow);
+        makeResizable(leftPanel, middlePanel, rightPanel, peopleRow);
 
         _storySticky.hover(
             //Hover in
@@ -159,6 +163,63 @@ let story = function() {
         people.forEach(function(p) {
             person().render(p, peopleDiv);
         });
+    }
+
+    function setDefaultSize(leftPanel, middlePanel, rightPanel, peopleRow) {
+        if(_storyJson.width){
+            middlePanel.width(_storyJson.width);
+            peopleRow.children('.peopleDiv').width(_storyJson.width);
+        }
+        if(_storyJson.height){
+            leftPanel.height(_storyJson.height);
+            middlePanel.height(_storyJson.height);
+            rightPanel.height(_storyJson.height);
+        }
+    }
+
+    function makeResizable(leftPanel, middlePanel, rightPanel, peopleRow) {
+        middlePanel.resizable({
+          handles: 'se',
+          classes: {
+              "ui-resizable-se": "ui-icon ui-icon-gripsmall-diagonal-se show-on-hover"
+          },
+          resize: function(e, ui) {
+              _storyJson.width = ui.size.width;
+              _storyJson.height = ui.size.height;
+
+              setDefaultSize(leftPanel, middlePanel, rightPanel, peopleRow);
+          },
+          stop: function(e, ui) {
+              $.ajax({
+                         type: 'PUT',
+                         url: '/updateStoryStyling',
+                         data: {
+                             teamId: _storyJson.teamId,
+                             storyId: _storyJson._id,
+                             width: ui.size.width,
+                             height: ui.size.height
+                         },
+                         dataType: "json",
+                         contentType: "application/x-www-form-urlencoded"
+
+                     })
+                  .done(function(data) {
+                      if(data.type == 'success'){
+                          //Socket handles
+                      }
+                      else {
+                          alert(data.error);
+                      }
+
+                  })
+                  .fail(function(data) {
+                      alert("Internal Server Error");
+                      console.log(data);
+                  });
+          }
+        });
+
+        _storySticky.children('.ui-resizable-handle').css('display', 'none');
     }
 
     function personDropHandler(event, ui) {
@@ -309,6 +370,17 @@ let story = function() {
             _storyJson.statusCode = newStatusCode;
             _storyRow.find(".story-descr").remove();
             renderStorySticky();
+        },
+        handleRestyle: function(height, width) {
+            _storyJson.width = width;
+            _storyJson.height = height;
+
+            var leftPanel = $(_storySticky.children('.task-panels').children()[0]);
+            var middlePanel = $(_storySticky.children('.task-panels').children()[1]);
+            var rightPanel = $(_storySticky.children('.task-panels').children()[2]);
+            var peopleRow = $(_storySticky.children('.people-row'));
+
+            setDefaultSize(leftPanel, middlePanel, rightPanel, peopleRow);
         },
         handleAddTask: function(taskData) {
             let taskObj = task();
