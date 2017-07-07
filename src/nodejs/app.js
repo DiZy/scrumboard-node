@@ -798,6 +798,10 @@ app.post('/markBurndown', requiresLogin, function(req, res) {
 							for(let j = 0; j < curTasks.length; j++) {
 								let hoursToAdd = curTasks[j].points;
 								let isNotDone = curTasks[j].statusCode !== lastColIndex;
+								console.log(curTasks[j].points);
+								console.log(curTasks[j].statusCode, lastColIndex);
+								console.log(curTasks[j].statusCode != lastColIndex);
+                                console.log(curTasks[j].statusCode !== lastColIndex);
 								if(!isNaN(parseFloat(hoursToAdd)) && isNotDone){
 									totalHours += parseFloat(hoursToAdd);
 								}
