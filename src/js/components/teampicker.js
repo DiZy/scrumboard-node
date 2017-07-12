@@ -1,6 +1,13 @@
 teampicker = (function() {
+	let _selectpicker;
     let _teamsArray = [];
-    let _socket;
+    const _socket = io();
+    _socket.on('connect_failed', function() {
+        alert('Socket connection issue.');
+    });
+    _socket.on('error', function() {
+        alert('Socket issue.');
+    });
 
 
     function createTeamAddRequest(name, callback) {
@@ -134,26 +141,24 @@ teampicker = (function() {
             .appendTo(selectDiv);
     	selectpicker.selectpicker('refresh');
 
-        _socket = io();
-
         loadSelectOptions(function() {
             $('body').ploading({action: 'destroy'});
 
             selectpicker.change(function() {
                 let id = $(this).children(":selected").attr('id');
+                let selectedTeamId = _teamsArray[id]._id;
                 if(id) {
+                    if(team.getCurrentTeamId() != selectedTeamId) {
+                        _socket.emit('join room', selectedTeamId);
+                        initializeSocket(_socket);
+                    }
                     team.initialize(_teamsArray[id]);
-                    _socket.disconnect();
-                    _socket = io();
-                    _socket.emit('join room', _teamsArray[id]._id);
-                    initializeSocket(_socket);
                 }
             });
 
-            selectDiv.click(function(){
-                let inputs = $('.bs-searchbox').children('input');
-                inputs.attr('placeholder', 'Search through your existing teams or type a new team name');
-                inputs.off('input', handleSearch).on('input', handleSearch);
+            $('#select-div').click(function(){
+                $('.bs-searchbox>input').attr('placeholder', 'Search through your existing teams or type a new team name')
+                $('.bs-searchbox>input').off('input', handleSearch).on('input', handleSearch);
             });
 
             selectpicker.trigger('change');

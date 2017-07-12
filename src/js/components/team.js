@@ -5,6 +5,12 @@ team = (function() {
 	let _nextPersonAttr;
 
     return {
+    	getCurrentTeamId: function() {
+    		if(!_teamJson) {
+    			return null;
+    		}
+    		return _teamJson._id;
+    	},
     	initialize: function(teamData) {
     		$('body').ploading({action: 'show'});
     		$.ajax({
