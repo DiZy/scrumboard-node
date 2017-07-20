@@ -214,7 +214,6 @@ var story = function() {
                   })
                   .fail(function(data) {
                       alert("Internal Server Error");
-                      console.log(data);
                   });
           }
         });
@@ -243,7 +242,6 @@ var story = function() {
 
         })
         .done(function(data) {
-            console.log(data);
             if(data.type == 'success'){
                 //Socket handles
             }
@@ -254,7 +252,6 @@ var story = function() {
         })
         .fail(function(data) {
             alert("Internal Server Error");
-            console.log(data);
         });
     }
 
@@ -283,7 +280,6 @@ var story = function() {
             })
             .fail(function(data) {
                 alert("Internal Server Error");
-                console.log(data);
             });
         });
     }
@@ -301,7 +297,6 @@ var story = function() {
 
         })
         .done(function(data) {
-            console.log(data);
             if(data.type == 'success'){
                 //Handled by Socket
             }
@@ -312,7 +307,6 @@ var story = function() {
         })
         .fail(function(data) {
             alert("Internal Server Error");
-            console.log(data);
         });
     }
 
@@ -333,7 +327,6 @@ var story = function() {
 
             })
             .done(function(data) {
-                console.log(data);
                 if(data.type == 'success'){
                     //Socket handles
                 }
@@ -344,7 +337,6 @@ var story = function() {
             })
             .fail(function(data) {
                 alert("Internal Server Error");
-                console.log(data);
             });
         });
     }

@@ -14,7 +14,7 @@ editStoryModal = (function() {
 			$('#editModal .modal-title').text('Add story');
 		}
 
-		_storyJsonEdited = storyJson ? storyJson : {name: "New Story", points: "", teamId: teamId};
+		_storyJsonEdited = storyJson ? storyJson : {name: "New Story", points: "", teamId: teamId, tasks: []};
 		var modalBody = $('#editModal .modal-body');
 		var editDetails = $('<div>').attr('id', 'editDetails').appendTo(modalBody);
 

@@ -81,6 +81,20 @@ MongoCollection.prototype.updateOne = function(user, updatedData, callback) {
 	});	
 };
 
+MongoCollection.prototype.findAndUpdateOne = function(query, updatedData, callback) {
+	this.getCollection(function(error, thisCollection) {
+		if(error){
+			callback(error);
+		}
+		else {
+
+			thisCollection.findOneAndUpdate(query, updatedData, {upsert:false, returnOriginal: false}, function(error, result) {
+				callback(error, result);
+			});
+		}
+	});	
+};
+
 MongoCollection.prototype.aggregate = function(options, callback) {
 	this.getCollection(function(error, thisCollection) {
 		if(error){
