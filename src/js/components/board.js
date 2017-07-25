@@ -194,6 +194,14 @@ board = (function(){
         }
     }
 
+    function addStoryToBoard(storyData) {
+        if(storyData.teamId === _teamJson._id) {
+            let storyObj = story();
+            _storyObjMap[storyData._id] = storyObj;
+            storyObj.initialize(storyData, _storiesSection, _teamJson.columnNames);
+        }
+    }
+
     return {
         clear: function() {
             removeBoard();
@@ -243,11 +251,7 @@ board = (function(){
             return _storyObjMap[storyId].getPeopleDiv();
         },
         handleAddStory: function(storyData) {
-            if(storyData.teamId === _teamJson._id) {
-                let storyObj = story();
-                _storyObjMap[storyData._id] = storyObj;
-                storyObj.initialize(storyData, _storiesSection, _teamJson.columnNames);
-            }
+            addStoryToBoard(storyData);
         },
         handleRemoveStory: function(storyId) {
             _storyObjMap[storyId].handleRemove();
@@ -255,9 +259,13 @@ board = (function(){
         handleEditStory: function(storyData) {
             if(storyData.teamId !== _teamJson._id) {
                 _storyObjMap[storyData._id].handleRemove();
+                delete _storyObjMap[storyData._id];
+            }
+            else if(_storyObjMap[storyData._id]){
+                _storyObjMap[storyData._id].handleEdit(storyData);
             }
             else {
-                _storyObjMap[storyData._id].handleEdit(storyData);
+                addStoryToBoard(storyData);
             }
         },
         handleMoveStory: function(storyId, newStatusCode) {

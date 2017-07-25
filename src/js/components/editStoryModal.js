@@ -19,7 +19,7 @@ editStoryModal = (function() {
 
 		modalTitle.text(storyJson ? 'Edit Story' : 'Add Story');
 
-		_storyJsonEdited = storyJson ? storyJson : {name: "New Story", points: "", teamId: teamId};
+		_storyJsonEdited = storyJson ? storyJson : {name: "New Story", points: "", teamId: teamId, tasks: []};
 		editDetails = $('<div>').attr('id', 'editDetails').appendTo(modalBody);
 
         nameInput = $('<textarea>')

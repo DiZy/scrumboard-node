@@ -327,7 +327,7 @@ app.put('/editStory', requiresLogin, function(req, res) {
 				newTeam = team;
 			}
 			if(team.companyId === req.session.companyId && newTeam.companyId === req.session.companyId) {
-				storiesCollection.updateOne(
+				storiesCollection.findAndUpdateOne(
 					{'_id': newStoryJson._id, 'teamId': teamId},
 					{
 						$set : {
@@ -339,8 +339,10 @@ app.put('/editStory', requiresLogin, function(req, res) {
 					},
 					function(err, result) {
 						assert.equal(err, null);
-						socketio.sockets.in(teamId).emit('edit story', {story: newStoryJson});
-						return res.json({type: "success", story: newStoryJson });
+						var updatedStory = result.value;
+						socketio.sockets.in(teamId).emit('edit story', {story: updatedStory});
+						socketio.sockets.in(newTeamId).emit('edit story', {story: updatedStory});
+						return res.json({type: "success", story: updatedStory });
 					}
 				);
 				

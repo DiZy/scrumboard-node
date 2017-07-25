@@ -204,7 +204,7 @@ let story = function() {
 
                      })
                   .done(function(data) {
-                      if(data.type == 'success'){
+                      if(data.type === 'success'){
                           //Socket handles
                       }
                       else {
@@ -214,7 +214,6 @@ let story = function() {
                   })
                   .fail(function(data) {
                       alert("Internal Server Error");
-                      console.log(data);
                   });
           }
         });
@@ -223,8 +222,8 @@ let story = function() {
     }
 
     function personDropHandler(event, ui) {
-        var personDiv = ui.draggable;
-        var divToRenderTo = _storySticky.children('.people-row').children('.peopleDiv');
+        let personDiv = ui.draggable;
+        let divToRenderTo = _storySticky.children('.people-row').children('.peopleDiv');
         team.assignPersonToTask(personDiv.attr('data-person'), undefined, _storyJson._id);
         return true;
     }
@@ -282,7 +281,6 @@ let story = function() {
             })
             .fail(function(data) {
                 alert("Internal Server Error");
-                console.log(data);
             });
         });
     }
@@ -300,7 +298,6 @@ let story = function() {
 
         })
         .done(function(data) {
-            console.log(data);
             if(data.type === 'success'){
                 //Handled by Socket
             }
@@ -311,7 +308,6 @@ let story = function() {
         })
         .fail(function(data) {
             alert("Internal Server Error");
-            console.log(data);
         });
     }
 
@@ -332,7 +328,6 @@ let story = function() {
 
             })
             .done(function(data) {
-                console.log(data);
                 if(data.type === 'success'){
                     //Socket handles
                 }
@@ -343,7 +338,6 @@ let story = function() {
             })
             .fail(function(data) {
                 alert("Internal Server Error");
-                console.log(data);
             });
         });
     }
@@ -375,10 +369,10 @@ let story = function() {
             _storyJson.width = width;
             _storyJson.height = height;
 
-            var leftPanel = $(_storySticky.children('.task-panels').children()[0]);
-            var middlePanel = $(_storySticky.children('.task-panels').children()[1]);
-            var rightPanel = $(_storySticky.children('.task-panels').children()[2]);
-            var peopleRow = $(_storySticky.children('.people-row'));
+            let leftPanel = $(_storySticky.children('.task-panels').children()[0]);
+            let middlePanel = $(_storySticky.children('.task-panels').children()[1]);
+            let rightPanel = $(_storySticky.children('.task-panels').children()[2]);
+            let peopleRow = $(_storySticky.children('.people-row'));
 
             setDefaultSize(leftPanel, middlePanel, rightPanel, peopleRow);
         },
