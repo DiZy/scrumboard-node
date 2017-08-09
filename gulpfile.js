@@ -3,9 +3,11 @@ const sass = require('gulp-sass');
 const nodemon = require('gulp-nodemon');
 const gulpSupervisor = require('gulp-supervisor');
 const watch = require('gulp-watch');
+const del = require('del');
 
 gulp.task('clean', function() {
     //TODO figure out clean task
+    //return del(['build/**']);
 });
 
 gulp.task('scss', function() {

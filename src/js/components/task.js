@@ -4,6 +4,7 @@ let task = function() {
 	let _taskDiv;
 	let _storyId;
 	let _teamId;
+	let _taskUrl;
 
 	function render() {
 		_taskDiv = $('<div>').addClass('task');
@@ -138,11 +139,11 @@ let task = function() {
 			stop: function(e, ui) {
 				$.ajax({
 				    type: 'PUT',
-				    url: '/updateTaskStyling',
-				    data: {
+				    url: _taskUrl + '/styling',
+				    data: {/*
 				    	teamId: _teamId,
 				        storyId: _storyId,
-				        taskId: _taskJson._id,
+				        taskId: _taskJson._id,*/
 				        width: ui.size.width,
 				        height: ui.size.height
 				    },
@@ -188,17 +189,16 @@ let task = function() {
 
 	function updateStatusCode(newStatusCode) {
 		$.ajax({
-		    type: 'PUT',
-		    url: '/moveTask',
-		    data: {
+		    type: 'PATCH',
+		    url: _taskUrl + '/move',
+		    data: {/*
 		    	teamId: _teamId,
 		        storyId: _storyId,
-		        taskId: _taskJson._id,
+		        taskId: _taskJson._id,*/
 		        newStatusCode: newStatusCode
 		    },
 		    dataType: "json",
 		    contentType: "application/x-www-form-urlencoded"
-
 		})
 		.done(function(data) {
 		    if(data.type === 'success'){
@@ -217,12 +217,12 @@ let task = function() {
 	function removeTask() {
 		$.ajax({
 		    type: 'DELETE',
-		    url: '/deleteTask',
-		    data: {
+		    url: _taskUrl + '/delete',
+		    /*data: {
 		    	teamId: _teamId,
 		        storyId: _storyId,
 		        taskId: _taskJson._id
-		    },
+		    },*/
 		    dataType: "json",
 		    contentType: "application/x-www-form-urlencoded"
 
@@ -248,12 +248,12 @@ let task = function() {
 		}
 		editTaskModal.open(_taskJson, function(newTaskJson) {
 			$.ajax({
-                type: 'PUT',
-                url: '/editTask',
+                type: 'PATCH',
+                url: _taskUrl,
                 data: {
-                	teamId: _teamId,
+                	/*teamId: _teamId,
                     storyId: _storyId,
-                    taskId: _taskJson._id,
+                    taskId: _taskJson._id,*/
                     newTaskJson: newTaskJson
                 },
                 dataType: "json",
@@ -284,6 +284,7 @@ let task = function() {
     		_$storyRow = $storyRow;
     		_storyId = storyId;
     		_teamId = teamId;
+    		_taskUrl = '/teams/' + teamId + '/stories/' +storyId + '/tasks/' + taskJson._id;
     		render();
     	},
 		getPeopleDiv: function() {

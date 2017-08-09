@@ -2,14 +2,15 @@ burndown = (function() {
 	let _teamId;
 	let hoursData = [];
 	let _burndownChart;
+	let _burdownUrl;
 
 	function retrieveDataAndRenderChart() {
 		$.ajax({
 		    type: 'GET',
-		    url: '/getBurndown',
-		    data: {
+		    url: _burdownUrl,
+		    /*data: {
 		        teamId: _teamId
-		    },
+		    },*/
 		    dataType: "json",
 		    contentType: "application/x-www-form-urlencoded"
 
@@ -109,10 +110,10 @@ burndown = (function() {
 	function start() {
 		$.ajax({
 		    type: 'POST',
-		    url: '/startBurndown',
-		    data: {
+		    url: _burdownUrl + '/start',
+		    /*data: {
 		        teamId: _teamId
-		    },
+		    },*/
 		    dataType: "json",
 		    contentType: "application/x-www-form-urlencoded"
 
@@ -135,10 +136,10 @@ burndown = (function() {
 	function mark() {
 		$.ajax({
 		    type: 'POST',
-		    url: '/markBurndown',
-		    data: {
+		    url: _burdownUrl + '/mark',
+		    /*data: {
 		        teamId: _teamId
-		    },
+		    },*/
 		    dataType: "json",
 		    contentType: "application/x-www-form-urlencoded"
 
@@ -161,10 +162,10 @@ burndown = (function() {
 	function undo() {
 		$.ajax({
 		    type: 'POST',
-		    url: '/undoBurndown',
-		    data: {
+		    url: _burdownUrl + '/undo',
+		    /*data: {
 		        teamId: _teamId
-		    },
+		    },*/
 		    dataType: "json",
 		    contentType: "application/x-www-form-urlencoded"
 
@@ -187,6 +188,7 @@ burndown = (function() {
 	return {
 		initialize: function(teamId) {
 			_teamId = teamId;
+			_burdownUrl = '/teams/' + teamId + '/burndown';
 			retrieveDataAndRenderChart();
 			addEventHandlers();
 		},

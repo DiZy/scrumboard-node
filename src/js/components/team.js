@@ -3,6 +3,7 @@ team = (function() {
 	let _personIdToAttrMap;
 	let _personAttrToDataMap;
 	let _nextPersonAttr;
+	let _peopleUrl;
 
     return {
     	getCurrentTeamId: function() {
@@ -15,10 +16,10 @@ team = (function() {
     		$('body').ploading({action: 'show'});
     		$.ajax({
 	            type: 'GET',
-	            url: '/getTeamDetails',
-	            data: {
+	            url: '/teams/' + teamData._id,
+	            /*data: {
 	                teamId: teamData._id,
-	            },
+	            },*/
 	            dataType: "json",
 	            contentType: "application/x-www-form-urlencoded"
 
@@ -29,6 +30,7 @@ team = (function() {
 	            	_nextPersonAttr = 1;
 					_personIdToAttrMap = {};
 					_personAttrToDataMap = {};
+					_peopleUrl = '/teams/' + _teamJson._id + '/people';
 		    		board.render(_teamJson);
 		    		burndown.initialize(_teamJson._id);
 	            }
@@ -52,7 +54,7 @@ team = (function() {
     		return JSON.parse(JSON.stringify(toReturn));
     	},
     	getPeopleForStory: function(storyId) {
-    		var toReturn = [];
+    		let toReturn = [];
     		_teamJson.people.forEach(function(p) {
     			if(!p.taskId && p.storyId == storyId) {
     				toReturn.push(p);
@@ -63,14 +65,13 @@ team = (function() {
     	addPerson: function(personName) {
 			$.ajax({
 	            type: 'POST',
-	            url: '/addPersonToTeam',
+	            url: _peopleUrl,
 	            data: {
-	                teamId: _teamJson._id,
+	                /*teamId: _teamJson._id,*/
 	                personName: personName
 	            },
 	            dataType: "json",
 	            contentType: "application/x-www-form-urlencoded"
-
 	        })
 	        .done(function(data) {
 	            if(data.type === 'success'){
@@ -79,7 +80,6 @@ team = (function() {
 	            else {
 	                alert(data.error);
 	            }
-
 	        })
 	        .fail(function(data) {
 	            alert("Internal Server Error");
@@ -101,11 +101,11 @@ team = (function() {
     		if(p) {
 				$.ajax({
 		            type: 'PUT',
-		            url: '/assignPerson',
+		            url: _peopleUrl + '/' + p._id,
 		            data: {
-		                teamId: _teamJson._id,
-		                personId: p._id,
-		                newTaskId: taskId,
+		                /*teamId: _teamJson._id,*/
+		                /*personId: p._id,*/
+		                taskId: taskId,
 						storyId: storyId
 		            },
 		            dataType: "json",
@@ -129,16 +129,16 @@ team = (function() {
     	},
 
     	removePerson: function(attr) {
-    		let p = _personAttrToDataMap[attr];
+    		let person = _personAttrToDataMap[attr];
 
-    		if(p) {
+    		if(person) {
 				$.ajax({
 		            type: 'DELETE',
-		            url: '/removePersonFromTeam',
-		            data: {
+		            url: _peopleUrl + '/' + person._id,
+		            /*data: {
 		                teamId: _teamJson._id,
-		                personId: p._id
-		            },
+		                personId: person._id
+		            },*/
 		            dataType: "json",
 		            contentType: "application/x-www-form-urlencoded"
 

@@ -3,6 +3,8 @@ board = (function(){
     let _teamJson;
     let _storyObjMap;
     let _storiesSection;
+    let _teamsUrl;
+    let _storiesUrl;
 
     function renderPeople() {
         let peopleDiv = $('<div>').attr('id', 'unassignedPeople').appendTo('body');
@@ -80,10 +82,10 @@ board = (function(){
 
     function editColumns() {
         editColumnsModal.open(_teamJson.columnNames, function(newColumnNames) {
-            customAjax('PUT', '/updateTeamColumns',
-                {
-                    teamId: _teamJson._id,
-                    newColumnNames: newColumnNames
+            customAjax('PATCH', _teamsUrl,
+                {/*
+                    teamId: _teamJson._id,*/
+                    columnNames: newColumnNames
                 }
             );
         });
@@ -92,9 +94,9 @@ board = (function(){
     function createStory(storyJson) {
         $.ajax({
                 type: 'POST',
-                url: '/addStory',
+                url: _storiesUrl,
                 data: {
-                    teamId: storyJson.teamId,
+                    /*teamId: storyJson.teamId,*/
                     name: storyJson.name,
                     points: storyJson.points,
                     acceptanceCriteria: storyJson.acceptanceCriteria
@@ -147,10 +149,10 @@ board = (function(){
     function getListOfStoryJson(callback) {
     	$.ajax({
             type: 'GET',
-            url: '/getStories',
-            data: {
+            url: _storiesUrl,
+            /*data: {
                 teamId: _teamJson._id
-            },
+            },*/
             dataType: "json",
             contentType: "application/x-www-form-urlencoded"
 
@@ -206,8 +208,10 @@ board = (function(){
         clear: function() {
             removeBoard();
         },
-        render: function(teamjson) {
-        	_teamJson = teamjson;
+        render: function(teamJson) {
+        	_teamJson = teamJson;
+        	_teamsUrl = '/teams/' + teamJson._id;
+        	_storiesUrl = _teamsUrl + '/' + 'stories';
             removeBoard();
             renderPeople();
             renderHeader();

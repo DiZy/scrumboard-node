@@ -5,6 +5,7 @@ let story = function() {
     let _taskObjMap;
     let _storiesSection;
     let _columnNames;
+    let _storyUrl;
     let STORY_COLUMN = -1;
 
     function stickyDropHandler(e, ui) {
@@ -191,11 +192,11 @@ let story = function() {
           },
           stop: function(e, ui) {
               $.ajax({
-                         type: 'PUT',
-                         url: '/updateStoryStyling',
-                         data: {
+                         type: 'PATCH',
+                         url: _storyUrl + '/' + _storyJson._id + '/styling',
+                         data: {/*
                              teamId: _storyJson.teamId,
-                             storyId: _storyJson._id,
+                             storyId: _storyJson._id,*/
                              width: ui.size.width,
                              height: ui.size.height
                          },
@@ -231,10 +232,10 @@ let story = function() {
     function updateStatusCode(newStatusCode) {
         $.ajax({
             type: 'PUT',
-            url: '/moveStory',
-            data: {
+            url: _storyUrl + '/' + _storyJson._id + '/move',
+            data: {/*
                 teamId: _storyJson.teamId,
-                storyId: _storyJson._id,
+                storyId: _storyJson._id,*/
                 newStatusCode: newStatusCode
             },
             dataType: "json",
@@ -261,7 +262,7 @@ let story = function() {
         editStoryModal.open(oldTeamId, _storyJson, function(newStoryJson) {
             $.ajax({
                 type: 'PUT',
-                url: '/editStory',
+                url: _storyUrl + '/' + _storyJson._id + '/edit',
                 data: {
                     teamId: oldTeamId,
                     newStoryJson: newStoryJson
@@ -288,11 +289,11 @@ let story = function() {
     function removeStory() {
         $.ajax({
             type: 'DELETE',
-            url: '/deleteStory',
-            data: {
+            url: _storyUrl + '/' + _storyJson._id,
+            /*data: {
                 teamId: _storyJson.teamId,
                 storyId: _storyJson._id
-            },
+            },*/
             dataType: "json",
             contentType: "application/x-www-form-urlencoded"
 
@@ -315,10 +316,10 @@ let story = function() {
         editTaskModal.open(undefined, function(taskJson) {
             $.ajax({
                 type: 'POST',
-                url: '/addTask',
+                url: _storyUrl + '/' + _storyJson.id + '/tasks',
                 data: {
-                    teamId: _storyJson.teamId,
-                    storyId: _storyJson._id,
+                    /*teamId: _storyJson.teamId,
+                    storyId: _storyJson._id,*/
                     name: taskJson.name,
                     points: taskJson.points,
                     notes: taskJson.notes
@@ -347,6 +348,7 @@ let story = function() {
     		_storyJson = storyJson;
             _storiesSection = storiesSection;
             _columnNames = columnNames;
+            _storyUrl = '/teams/' + storyJson.teamId + '/stories';
     		render();
     	},
         getPeopleDiv: function() {

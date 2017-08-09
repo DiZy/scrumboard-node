@@ -1,6 +1,7 @@
 teampicker = (function() {
 	let _selectpicker;
     let _teamsArray = [];
+    let _teamsUrl = '/teams';
     const _socket = io();
     _socket.on('connect_failed', function() {
         alert('Socket connection issue.');
@@ -11,7 +12,7 @@ teampicker = (function() {
 
 
     function createTeamAddRequest(name, callback) {
-        customAjax('POST', '/addTeam',
+        customAjax('POST', _teamsUrl,
             {
                 name: name
             },
@@ -20,7 +21,7 @@ teampicker = (function() {
     }
 
 	function getTeams(callback) {
-		customAjax('GET', '/getTeams', {},
+		customAjax('GET', _teamsUrl, {},
             function(data) {
                 callback(data.teams);
             }
@@ -74,7 +75,7 @@ teampicker = (function() {
     function deleteTeam(teamId, teamName) {
         let confirmation = confirm('Are you sure you want to remove the team "' + teamName + '"?');
         if(confirmation) {
-            customAjax('DELETE', '/deleteTeam',
+            customAjax('DELETE', _teamsUrl,
                 {
                     teamId: teamId
                 },
@@ -90,9 +91,9 @@ teampicker = (function() {
 
     function editTeam(teamId, teamName) {
         editTeamNameModal.open(teamName, function(newTeamName) {
-            customAjax('put', '/editTeamName',
+            customAjax('put', _teamsUrl + '/' + teamId +'/edit',
                 {
-                    teamId: teamId,
+                    /*teamId: teamId,*/
                     newTeamName: newTeamName
                 },
                 function(data) {
@@ -146,8 +147,8 @@ teampicker = (function() {
 
             selectpicker.change(function() {
                 let id = $(this).children(":selected").attr('id');
-                let selectedTeamId = _teamsArray[id]._id;
                 if(id) {
+                    let selectedTeamId = _teamsArray[id]._id;
                     if(team.getCurrentTeamId() != selectedTeamId) {
                         _socket.emit('join room', selectedTeamId);
                         initializeSocket(_socket);
