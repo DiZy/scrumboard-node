@@ -81,8 +81,9 @@ teampicker = (function() {
                 },
                 function(data) {
                    loadSelectOptions(function() {
-                        $('.selectpicker').selectpicker('toggle');
-                        $('#select-div').find('.selectpicker').trigger('change');
+                       let selectPicker = $('#select-div').find('.selectpicker');
+                       selectPicker.selectpicker('toggle');
+                       selectPicker.trigger('change');
                    });
                 }
             );
@@ -98,8 +99,9 @@ teampicker = (function() {
                 },
                 function(data) {
                    loadSelectOptions(function() {
-                        $('#select-div .selectpicker').selectpicker('toggle');
-                        $('#select-div .selectpicker').trigger('change');
+                        let selectPicker = $('#select-div').find('.selectpicker');
+                        selectPicker.selectpicker('toggle');
+                        selectPicker.trigger('change');
                    });
                 }
             );
@@ -149,7 +151,7 @@ teampicker = (function() {
                 let id = $(this).children(":selected").attr('id');
                 if(id) {
                     let selectedTeamId = _teamsArray[id]._id;
-                    if(team.getCurrentTeamId() != selectedTeamId) {
+                    if(team.getCurrentTeamId() !== selectedTeamId) {
                         _socket.emit('join room', selectedTeamId);
                         initializeSocket(_socket);
                     }
@@ -158,8 +160,9 @@ teampicker = (function() {
             });
 
             $('#select-div').click(function(){
-                $('.bs-searchbox>input').attr('placeholder', 'Search through your existing teams or type a new team name')
-                $('.bs-searchbox>input').off('input', handleSearch).on('input', handleSearch);
+                let searchBox = $('.bs-searchbox>input');
+                searchBox.attr('placeholder', 'Search through your existing teams or type a new team name')
+                searchBox.off('input', handleSearch).on('input', handleSearch);
             });
 
             selectpicker.trigger('change');
