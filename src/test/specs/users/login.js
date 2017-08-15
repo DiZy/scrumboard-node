@@ -10,7 +10,8 @@ let browser = wdio.getBrowser({
 });
 let $ = browser.$;
 
-describe('User Creation', () => {
+describe('User Creation', function () {
+    this.timeout(10000);
     // Initialize selenium standalone server if it is not started yet
     before(wdio.initSelenium);
 
