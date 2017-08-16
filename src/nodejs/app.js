@@ -13,7 +13,7 @@ const loggedInRedirect = require('./controllers/helpers').loggedInRedirect;
 const requiresLoginRedirect = require('./controllers/helpers').requiresLoginRedirect;
 
 let server = require('http').Server(app);
-let socketio = require('socket.io')(server);
+let socketio = require('socket.io')();
 let socketInit = require('./socketInit');
 const routes = require('./controllers')(socketio);
 
@@ -48,6 +48,7 @@ app.get('/', loggedInRedirect, function(req, res) {
     res.render('pages/index');
 });
 
-server.listen(process.env.PORT || 5000, function() {
-    console.log("RUNNING ON PORT 5000");
-});
+module.exports = {
+    app: app,
+    socketio: socketio
+};

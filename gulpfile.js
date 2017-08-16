@@ -16,6 +16,11 @@ gulp.task('scss', function() {
         .pipe(gulp.dest('build/assets/css'));
 });
 
+gulp.task('bin', function() {
+    gulp.src('src/bin/**').
+        pipe(gulp.dest('build/bin'));
+});
+
 gulp.task('css', function() {
     gulp.src('src/css/**')
         .pipe(gulp.dest('build/assets/css'));
@@ -48,7 +53,7 @@ gulp.task('fonts', function() {
 
 gulp.task('run', function() {
     nodemon({
-        script: 'build/app.js'
+        script: 'build/bin/www.js'
     });
 });
 
@@ -88,7 +93,7 @@ gulp.task('fonts-debug', function() {
 });
 
 
-gulp.task('build', ['clean', 'scss', 'css', 'nodejs', 'js', 'images', 'fonts', 'views'], function() {
+gulp.task('build', ['clean', 'bin', 'scss', 'css', 'nodejs', 'js', 'images', 'fonts', 'views'], function() {
 
 });
 
