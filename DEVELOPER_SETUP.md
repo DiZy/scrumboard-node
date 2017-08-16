@@ -10,8 +10,11 @@ Fork the [upstream project](https://github.com/p-somers/scrumboard-node) on Gith
 Clone your new fork via `git`.
 
 ## Install dependencies
+NOTE FOR WINDOWS USERS: before doing this, if you plan on running functional tests, you need to run this:
+```
+npm install --global --production windows-build-tools
+```
 Install the program's dependencies by running `npm install` in the directory you just cloned.
-NOTE FOR WINDOWS USERS: before doing this, see "Testing" below
 
 ## Set up IDE
 
@@ -38,7 +41,7 @@ Set up the run configurations:
 To run the program all you have to do is run the "start Mongo" run configuration, and then run the "run" run configuration. After that you should be able to hit [http://localhost:5000](http://localhost:5000) in a web browser and see the program running.
 
 ## Keeping your fork up to date
-Since you want to be working on the latest version of the program, you will have to periodically update your Github fork to reflect what is in the upstream (DiZy) repo.
+Since you want to be working on the latest version of the program, you will have to periodically update your Github fork to reflect what is in the upstream repo.
 
 Whenever you want to start work on a feature, you should follow Github's help article on [syncing a fork](https://help.github.com/articles/syncing-a-fork/). I'll briefly repeat the terminal commands here:
 
@@ -54,17 +57,3 @@ git checkout master
 git merge upstream/master
 git push origin master
 ```
-
-## Testing
-On windows, you may need to run this (as administrator) before anything else:
-```
-npm install --global --production windows-build-tools
-```
-Test configuration file is src/test/config.json
-
-### Functional testing:
-  - Running the selenium server standalone from src/test/selenium: java -jar selenium-server-standalone-<VERSION>.jar -Dwebdriver.chrome.driver=chromedriver.exe
-  - Configuring WebDriverIO (wdio):
-    - node_modules\.bin\wdio config
-    - use all defaults except for url, which should be <your pc address>:<app port #> (e.g. http://poweradv-dev46:5000)
-    - [read webdriver.io instructions](http://webdriver.io/guide.html)
