@@ -6,26 +6,7 @@ const requiresLogin = require('./helpers').requiresLogin;
 const teams = require('../modules/collections').teams;
 const stories = require('../modules/collections').stories;
 
-const findTeam = async (teamId, companyId) => {
-    let team = await teams.findOne({'_id': teamId});
-    if(team.companyId === companyId) {
-        return team;
-    }
-    else {
-        throw new Error("You do not have permissions to access this team's stories.");
-    }
-};
-
 module.exports = function(socketio) {
-    /*routes.post('/', requiresLogin, async (req, res, next) => {
-        try {
-            let team = await findTeam(req.body.teamId, req.session.companyId);
-            debugger;
-        } catch (e) {
-            //this will eventually be handled by your error handling middleware
-            next(e)
-        }
-    });*/
     routes.post('/', requiresLogin, function(req, res) {
         let teamId = req.params.teamId;
         let name = req.body.name;
@@ -116,7 +97,7 @@ module.exports = function(socketio) {
                     newTeam = team;
                 }
                 if (team.companyId === req.session.companyId && newTeam.companyId === req.session.companyId) {
-                    stories.updateOne(
+                    stories.findAndUpdateOne(
                         {'_id': newStoryJson._id, 'teamId': teamId},
                         {
                             $set: {
@@ -128,8 +109,10 @@ module.exports = function(socketio) {
                         },
                         function (err, result) {
                             assert.equal(err, null);
-                            socketio.sockets.in(teamId).emit('edit story', {story: newStoryJson});
-                            return res.json({type: "success", story: newStoryJson});
+                            let updatedStory = result.value;
+                            socketio.sockets.in(teamId).emit('edit story', {story: updatedStory});
+                            socketio.sockets.in(newTeamId).emit('edit story', {story: updatedStory});
+                            return res.json({type: "success", story: updatedStory });
                         }
                     );
 
