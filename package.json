@@ -28,8 +28,14 @@
   },
   "devDependencies": {
     "chai": "^4.1.1",
+    "jasmine-core": "^2.7.0",
+    "karma": "^1.7.0",
+    "karma-cli": "^1.0.1",
+    "karma-jasmine": "^1.1.0",
+    "karma-phantomjs-launcher": "^1.0.4",
     "mocha": "^3.5.0",
     "nyc": "^11.1.0",
+    "phantomjs": "^2.1.7",
     "wdio": "^0.3.3",
     "wdio-mocha-framework": "^0.5.10"
   }
