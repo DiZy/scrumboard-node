@@ -5,7 +5,8 @@
   "main": "./build/app.js",
   "scripts": {
     "start": "node build/app.js",
-    "postinstall": "gulp build"
+    "postinstall": "gulp build",
+    "test": "karma start my.config.js --single-run"
   },
   "dependencies": {
     "bcryptjs": "2.4.3",
