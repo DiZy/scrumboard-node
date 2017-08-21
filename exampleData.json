@@ -15,10 +15,11 @@
 
 	"teams": [
 		{
-			"_id": 6,
-			"companyId": 6000,
-			"name": "david team",
-			"people": [
+			'_id': 6,
+			'companyId': 6000,
+			'name': 'david team',
+			'columnNames': ['Not Started', 'In Progress', 'To Be Verified', 'Done'],
+			'people': [
 				{
 					"_id" : 17,
 					"name": "DZ",
