@@ -4,7 +4,7 @@
 Download and install MongoDB from [here](https://www.mongodb.com/download-center). The latest version should work.
 
 ## Create a fork on Github
-Fork the [upstream project](https://github.com/p-somers/scrumboard-node) on Github so you have your own repository to make commits and create pull requests from.
+Fork the [upstream project](https://github.com/DiZy/scrumboard-node) on Github so you have your own repository to make commits and create pull requests from.
 
 ## Clone the fork
 Clone your new fork via `git`.
