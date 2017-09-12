@@ -316,7 +316,7 @@ let story = function() {
         editTaskModal.open(undefined, function(taskJson) {
             $.ajax({
                 type: 'POST',
-                url: _storyUrl + '/' + _storyJson.id + '/tasks',
+                url: _storyUrl + '/' + _storyJson._id + '/tasks',
                 data: {
                     /*teamId: _storyJson.teamId,
                     storyId: _storyJson._id,*/
