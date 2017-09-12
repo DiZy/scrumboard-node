@@ -2,11 +2,11 @@
 <% include ../partials/head %>
 <body>
  	<script src='/assets/js/socket.io.min.js'></script>
- 	<script src='/assets/js/components/editTeamNameModal.js'></script>
- 	<script src='/assets/js/components/editColumnsModal.js'></script>
-	<script src='/assets/js/components/editTaskModal.js'></script>
-    <script src='/assets/js/components/editStoryModal.js'></script>
-    <script src='/assets/js/components/addPersonModal.js'></script>
+ 	<script src='/assets/js/components/modal/editTeamName.js'></script>
+ 	<script src='/assets/js/components/modal/editColumns.js'></script>
+	<script src='/assets/js/components/modal/editTask.js'></script>
+    <script src='/assets/js/components/modal/editStory.js'></script>
+    <script src='/assets/js/components/modal/addPerson.js'></script>
     <script src='/assets/js/components/person.js'></script>
     <script src='/assets/js/components/task.js'></script>
     <script src='/assets/js/components/story.js'></script>
@@ -21,7 +21,7 @@
 
     <div id="sidebar" style="display: none;">
     	<span id="sidebar-close" class="glyphicon glyphicon-remove"></span>
-    	<a class="sidebar-item" href="/logout">Log Out</a>
+    	<a class="sidebar-item" href="/logOut">Log Out</a>
     </div>
 
 	<div id="select-div">

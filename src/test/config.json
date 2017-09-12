@@ -1,0 +1,5 @@
+{
+  "browser": "chrome",
+  "baseUrl": "http://localhost:5000",
+  "logLevel": "silent"
+}

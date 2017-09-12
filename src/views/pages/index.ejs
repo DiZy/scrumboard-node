@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <% include ../partials/head %>
 <body>
@@ -43,13 +44,13 @@
 
 		//Enter key press
 		$('#signInUsername').keypress(function(event){
-		  if(event.keyCode == 13){
+		  if(event.keyCode === 13){
 		    $('#signIn').click();
 		  }
 		});
 
 		$('#signInPassword').keypress(function(event){
-		  if(event.keyCode == 13){
+		  if(event.keyCode === 13){
 		    $('#signIn').click();
 		  }
 		});
@@ -59,11 +60,10 @@
 		});
 
 		$('#signIn').click(function() {
-			console.log("test");
 			$('#signIn').attr('disabled', true);
 			$.ajax({
 				type: 'POST',
-				url: '/signIn',
+				url: '/logIn',
 				data: {
 					username: $('#signInUsername').val(),
 					password: $('#signInPassword').val()
@@ -73,15 +73,13 @@
 
 			})
 			.done(function(data) {
-				console.log(data);
 				$('#signIn').attr('disabled', false);
-				if(data.type == 'success'){
-					location.href = '/teamhome';
+				if(data.type === 'success'){
+					location.href = '/home';
 				}
 				else {
 					alert(data.error);
 				}
-
 			})
 			.fail(function(data) {
 				$('#signIn').attr('disabled', false);
@@ -100,10 +98,9 @@
 				contentType: "application/x-www-form-urlencoded"
 			})
 			.done(function(data) {
-				console.log(data);
 				$('#signUpFormButton').attr('disabled', false);
-				if(data.type == 'success'){
-					location.href = '/teamhome';
+				if(data.type === 'success'){
+					location.href = '/home';
 				}
 				else {
 					alert(data.error);

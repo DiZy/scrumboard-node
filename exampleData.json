@@ -1,21 +1,19 @@
 {
-	"users": {
+	"users": [
 		{
-			'_id' : 512,
-			'name' : 'David',
-			'companyId' : 6000
-
+			"_id" : 512,
+			"name" : "David",
+			"companyId" : 6000
 		}
-
-	},
+    ],
 
 	"companies": {
-		'_id': 6000,
-		'name': 'David'
+		"_id": 6000,
+		"name": "David"
 
 	},
 
-	'teams': {
+	"teams": [
 		{
 			'_id': 6,
 			'companyId': 6000,
@@ -23,36 +21,36 @@
 			'columnNames': ['Not Started', 'In Progress', 'To Be Verified', 'Done'],
 			'people': [
 				{
-					'_id' : 17,
-					'name': 'DZ',
-					'taskId': 2000 //nullable
+					"_id" : 17,
+					"name": "DZ",
+					"taskId": 2000 //nullable
 				}
 			]
 		}
-	},
+	],
 
-	'stories': {
+	"stories": [
 		{
-			'_id': 7,
-			'teamId': 6,
-			'companyId': 6000,
-			'tasks': [{
-						'_id': 2000,
-						'name': 'call daniel'
+			"_id": 7,
+			"teamId": 6,
+			"companyId": 6000,
+			"tasks": [{
+						"_id": 2000,
+						"name": "call daniel"
 					},
 					{
-						'_id': 20001,
-						'name': 'create google doc'
+						"_id": 20001,
+						"name": "create google doc"
 					}]
 		}
-	},
+	],
 
-	'burndowns': {
+	"burndowns": [
 		{
-			'_id' : 20938,
-			'teamId': 6,
-			hoursData: [],
-			pointsData: []
+			"_id" : 20938,
+			"teamId": 6,
+			"hoursData": [],
+			"pointsData": []
 		}
-	}
+	]
 }

@@ -1,22 +1,22 @@
 burndown = (function() {
-	var _teamId;
-	var hoursData = [];
-	var _burndownChart;
+	let _teamId;
+	let hoursData = [];
+	let _burndownChart;
+	let _burdownUrl;
 
 	function retrieveDataAndRenderChart() {
 		$.ajax({
 		    type: 'GET',
-		    url: '/getBurndown',
-		    data: {
+		    url: _burdownUrl,
+		    /*data: {
 		        teamId: _teamId
-		    },
+		    },*/
 		    dataType: "json",
 		    contentType: "application/x-www-form-urlencoded"
 
 		})
 		.done(function(data) {
-		    console.log(data);
-		    if(data.type == 'success'){
+		    if(data.type === 'success'){
 		        renderChart(data.chartLabels, data.hoursData, data.pointsData);
 		    }
 		    else {
@@ -78,25 +78,29 @@ burndown = (function() {
 
 
 	function addEventHandlers() {
-		$('#burndown-toggle').unbind('click');
-		$('#burndown-toggle').click(function() {
+		let burndownToggle = $('#burndown-toggle'),
+			burndownStart = $('#burndown-start'),
+			burndownMark = $('#burndown-mark'),
+			burndownUndo = $('#burndown-undo');
+		burndownToggle.unbind('click');
+        burndownToggle.click(function() {
 			$('#burndown').slideToggle({ direction: "up" }, 300);
 		});
 
-		$('#burndown-start').unbind('click');
-		$('#burndown-start').click(function() {
-			var confirmation = confirm("Are you sure you want to reset the sprint data?");
+        burndownStart.unbind('click');
+        burndownStart.click(function() {
+			let confirmation = confirm("Are you sure you want to reset the sprint data?");
 			if (confirmation) {
 				start();
 			}
 		});
 
-		$('#burndown-mark').unbind('click');
-		$('#burndown-mark').click(mark);
+        burndownMark.unbind('click');
+        burndownMark.click(mark);
 
-		$('#burndown-undo').unbind('click');
-		$('#burndown-undo').click(function() {
-			var confirmation = confirm("Are you sure you want to undo the last point?");
+        burndownUndo.unbind('click');
+        burndownUndo.click(function() {
+			let confirmation = confirm("Are you sure you want to undo the last point?");
 			if (confirmation) {
 				undo();
 			}
@@ -106,17 +110,16 @@ burndown = (function() {
 	function start() {
 		$.ajax({
 		    type: 'POST',
-		    url: '/startBurndown',
-		    data: {
+		    url: _burdownUrl + '/start',
+		    /*data: {
 		        teamId: _teamId
-		    },
+		    },*/
 		    dataType: "json",
 		    contentType: "application/x-www-form-urlencoded"
 
 		})
 		.done(function(data) {
-		    console.log(data);
-		    if(data.type == 'success'){
+		    if(data.type === 'success'){
 		        //Socket handles
 		    }
 		    else {
@@ -126,24 +129,23 @@ burndown = (function() {
 		})
 		.fail(function(data) {
 		    alert("Internal Server Error");
-		    console.log(data);
+		    console.error(data);
 		});
 	}
 
 	function mark() {
 		$.ajax({
 		    type: 'POST',
-		    url: '/markBurndown',
-		    data: {
+		    url: _burdownUrl + '/mark',
+		    /*data: {
 		        teamId: _teamId
-		    },
+		    },*/
 		    dataType: "json",
 		    contentType: "application/x-www-form-urlencoded"
 
 		})
 		.done(function(data) {
-		    console.log(data);
-		    if(data.type == 'success'){
+		    if(data.type === 'success'){
 		    	//Socket handles
 		    }
 		    else {
@@ -153,24 +155,23 @@ burndown = (function() {
 		})
 		.fail(function(data) {
 		    alert("Internal Server Error");
-		    console.log(data);
+		    console.error(data);
 		});
 	}
 
 	function undo() {
 		$.ajax({
 		    type: 'POST',
-		    url: '/undoBurndown',
-		    data: {
+		    url: _burdownUrl + '/undo',
+		    /*data: {
 		        teamId: _teamId
-		    },
+		    },*/
 		    dataType: "json",
 		    contentType: "application/x-www-form-urlencoded"
 
 		})
 		.done(function(data) {
-		    console.log(data);
-		    if(data.type == 'success'){
+		    if(data.type === 'success'){
 		    	//Socket handles
 		    }
 		    else {
@@ -180,13 +181,14 @@ burndown = (function() {
 		})
 		.fail(function(data) {
 		    alert("Internal Server Error");
-		    console.log(data);
+		    console.error(data);
 		});
 	}
 
 	return {
 		initialize: function(teamId) {
 			_teamId = teamId;
+			_burdownUrl = '/teams/' + teamId + '/burndown';
 			retrieveDataAndRenderChart();
 			addEventHandlers();
 		},
@@ -197,8 +199,8 @@ burndown = (function() {
 			_burndownChart.update();
 		},
 		handleMark: function(newHours, newPoints) {
-			var hoursDataSet = _burndownChart.data.datasets[0].data;
-			var storyPointsDataSet = _burndownChart.data.datasets[1].data;
+			let hoursDataSet = _burndownChart.data.datasets[0].data;
+			let storyPointsDataSet = _burndownChart.data.datasets[1].data;
 			_burndownChart.data.labels.push(hoursDataSet.length + 1);
 			hoursDataSet.push(newHours);
 			storyPointsDataSet.push(newPoints);

@@ -1,12 +1,12 @@
-var person = (function() {
+let person = (function() {
 
-	var _personJson;
+	let _personJson;
 
 	return {
 		render: function(personJson, $div) {
 			_personJson = personJson;
-			var personDiv = $('<div>').addClass('person').text(personJson.name).appendTo($div);
-			var attrToUse = team.getNextPersonAttr();
+			let personDiv = $('<div>').addClass('person').text(personJson.name).appendTo($div);
+			let attrToUse = team.getNextPersonAttr();
 			team.putPersonInMap(attrToUse, personJson);
 			personDiv.attr('data-person', attrToUse);
 			personDiv.draggable({

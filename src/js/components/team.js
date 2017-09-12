@@ -1,8 +1,9 @@
 team = (function() {
-	var _teamJson;
-	var _personIdToAttrMap;
-	var _personAttrToDataMap;
-	var _nextPersonAttr;
+	let _teamJson;
+	let _personIdToAttrMap;
+	let _personAttrToDataMap;
+	let _nextPersonAttr;
+	let _peopleUrl;
 
     return {
     	getCurrentTeamId: function() {
@@ -15,20 +16,21 @@ team = (function() {
     		$('body').ploading({action: 'show'});
     		$.ajax({
 	            type: 'GET',
-	            url: '/getTeamDetails',
-	            data: {
+	            url: '/teams/' + teamData._id,
+	            /*data: {
 	                teamId: teamData._id,
-	            },
+	            },*/
 	            dataType: "json",
 	            contentType: "application/x-www-form-urlencoded"
 
 	        })
 	        .done(function(data) {
-	            if(data.type == 'success'){
+	            if(data.type === 'success'){
 	            	_teamJson = data.team;
 	            	_nextPersonAttr = 1;
 					_personIdToAttrMap = {};
 					_personAttrToDataMap = {};
+					_peopleUrl = '/teams/' + _teamJson._id + '/people';
 		    		board.render(_teamJson);
 		    		burndown.initialize(_teamJson._id);
 	            }
@@ -43,16 +45,16 @@ team = (function() {
 	        });
     	},
     	getPeopleForTask: function(taskId) {
-    		var toReturn = [];
+    		let toReturn = [];
     		_teamJson.people.forEach(function(p) {
-    			if(p.taskId == taskId) {
+    			if(p.taskId === taskId) {
     				toReturn.push(p);
     			}
     		});
     		return JSON.parse(JSON.stringify(toReturn));
     	},
     	getPeopleForStory: function(storyId) {
-    		var toReturn = [];
+    		let toReturn = [];
     		_teamJson.people.forEach(function(p) {
     			if(!p.taskId && p.storyId == storyId) {
     				toReturn.push(p);
@@ -63,23 +65,21 @@ team = (function() {
     	addPerson: function(personName) {
 			$.ajax({
 	            type: 'POST',
-	            url: '/addPersonToTeam',
+	            url: _peopleUrl,
 	            data: {
-	                teamId: _teamJson._id,
+	                /*teamId: _teamJson._id,*/
 	                personName: personName
 	            },
 	            dataType: "json",
 	            contentType: "application/x-www-form-urlencoded"
-
 	        })
 	        .done(function(data) {
-	            if(data.type == 'success'){
+	            if(data.type === 'success'){
 	            	//Socket
 	            }
 	            else {
 	                alert(data.error);
 	            }
-
 	        })
 	        .fail(function(data) {
 	            alert("Internal Server Error");
@@ -97,15 +97,15 @@ team = (function() {
     	},
 
     	assignPersonToTask: function(attr, taskId, storyId) {
-			var p = _personAttrToDataMap[attr];
+			let p = _personAttrToDataMap[attr];
     		if(p) {
 				$.ajax({
 		            type: 'PUT',
-		            url: '/assignPerson',
+		            url: _peopleUrl + '/' + p._id,
 		            data: {
-		                teamId: _teamJson._id,
-		                personId: p._id,
-		                newTaskId: taskId,
+		                /*teamId: _teamJson._id,*/
+		                /*personId: p._id,*/
+		                taskId: taskId,
 						storyId: storyId
 		            },
 		            dataType: "json",
@@ -113,7 +113,7 @@ team = (function() {
 
 		        })
 		        .done(function(data) {
-		            if(data.type == 'success'){
+		            if(data.type === 'success'){
 		                //Socket handles
 		            }
 		            else {
@@ -129,22 +129,22 @@ team = (function() {
     	},
 
     	removePerson: function(attr) {
-    		var p = _personAttrToDataMap[attr];
+    		let person = _personAttrToDataMap[attr];
 
-    		if(p) {
+    		if(person) {
 				$.ajax({
 		            type: 'DELETE',
-		            url: '/removePersonFromTeam',
-		            data: {
+		            url: _peopleUrl + '/' + person._id,
+		            /*data: {
 		                teamId: _teamJson._id,
-		                personId: p._id
-		            },
+		                personId: person._id
+		            },*/
 		            dataType: "json",
 		            contentType: "application/x-www-form-urlencoded"
 
 		        })
 		        .done(function(data) {
-		            if(data.type == 'success'){
+		            if(data.type === 'success'){
 		                //Socket handles
 		            }
 		            else {
@@ -163,11 +163,11 @@ team = (function() {
 			person().render(personData, $('#unassignedPeople'));	
 		},
 		handleRemovePerson: function(personId) {
-			var attr = _personIdToAttrMap[personId];
-			var personDiv = $('div[data-person=' + attr + ']');
+			let attr = _personIdToAttrMap[personId];
+			let personDiv = $('div[data-person=' + attr + ']');
 			personDiv.remove();
-			for(var i = 0; i < _teamJson.people.length; i++) {
-				if(_teamJson.people[i] && _teamJson.people[i]._id == personId) {
+			for(let i = 0; i < _teamJson.people.length; i++) {
+				if(_teamJson.people[i] && _teamJson.people[i]._id === personId) {
 					delete _teamJson.people[i];
 					break;
 				}
@@ -176,23 +176,23 @@ team = (function() {
 			delete _personAttrToDataMap[attr];
 		},
 		handleAssignPerson: function(personId, storyId, taskId) {
-			for(var i = 0; i < _teamJson.people.length; i++) {
-				if(_teamJson.people[i] && _teamJson.people[i]._id == personId) {
+			for(let i = 0; i < _teamJson.people.length; i++) {
+				if(_teamJson.people[i] && _teamJson.people[i]._id === personId) {
 					_teamJson.people[i].taskId = taskId;
 					_teamJson.people[i].storyId = storyId;
 				}
 			}
-			var attr = _personIdToAttrMap[personId];
-			var p = _personAttrToDataMap[attr];
+			let attr = _personIdToAttrMap[personId];
+			let p = _personAttrToDataMap[attr];
 
-			var personDiv = $('div[data-person=' + attr + ']');
+			let personDiv = $('div[data-person=' + attr + ']');
 
-			var divToRenderTo;
+			let divToRenderTo;
 			if(storyId && taskId) {
 				divToRenderTo = board.getPeopleDivForTask(storyId, taskId);
-			} 
+			}
 			else if(storyId) {
-				divToRenderTo = board.getPeopleDivForStory(storyId);	
+				divToRenderTo = board.getPeopleDivForStory(storyId);
 			}
 			else {
 				 divToRenderTo = $('#unassignedPeople')

@@ -1,6 +1,7 @@
 teampicker = (function() {
-	var _selectpicker;
-    var _teamsArray = [];
+	let _selectpicker;
+    let _teamsArray = [];
+    let _teamsUrl = '/teams';
     const _socket = io();
     _socket.on('connect_failed', function() {
         alert('Socket connection issue.');
@@ -11,7 +12,7 @@ teampicker = (function() {
 
 
     function createTeamAddRequest(name, callback) {
-        customAjax('POST', '/addTeam',
+        customAjax('POST', _teamsUrl,
             {
                 name: name
             },
@@ -20,7 +21,7 @@ teampicker = (function() {
     }
 
 	function getTeams(callback) {
-		customAjax('GET', '/getTeams', {},
+		customAjax('GET', _teamsUrl, {},
             function(data) {
                 callback(data.teams);
             }
@@ -28,35 +29,33 @@ teampicker = (function() {
 	}
 
     function loadSelectOptions(callback) {
-        $('.selectpicker>option').remove();
+        let selectPicker = $('.selectpicker');
+        selectPicker.children('option').remove();
         getTeams(function(teams) {
             _teamsArray = teams;
             if(teams.length > 0) {
-                for(var i = 0; i < teams.length; i++) {
-                    var newOption = $('<option>').text(teams[i].name).attr('id', i);
+                for(let i = 0; i < teams.length; i++) {
+                    let newOption = $('<option>').text(teams[i].name).attr('id', i);
                     newOption.val(teams[i]._id);
-                    $('.selectpicker').append(newOption);
+                    selectPicker.append(newOption);
                 }
-                $('.selectpicker').selectpicker('val', teams[teams.length - 1]._id);
-                $('.selectpicker').selectpicker('refresh');
-                $('.bootstrap-select .dropdown-menu li').each(function(index, value) {
-                    var editTeamButton = $('<span>').addClass('glyphicon glyphicon-edit edit-team').appendTo(value);
+                selectPicker.selectpicker('val', teams[teams.length - 1]._id);
+                selectPicker.selectpicker('refresh');
+                $('.bootstrap-select').find('.dropdown-menu li').each(function(index, value) {
+                    let editTeamButton = $('<span>').addClass('glyphicon glyphicon-edit edit-team').appendTo(value);
 
                     editTeamButton.click(function(e) {
                         e.stopPropagation();
                         editTeam(_teamsArray[index]._id, _teamsArray[index].name);
                     });
 
-                    var removeTeamButton = $('<span>').addClass('glyphicon glyphicon-remove-circle remove-team');
+                    let removeTeamButton = $('<span>').addClass('glyphicon glyphicon-remove-circle remove-team');
                     removeTeamButton.click(function(e) {
                         e.stopPropagation();
                         deleteTeam(_teamsArray[index]._id, _teamsArray[index].name);
                     });
 
                     removeTeamButton.appendTo(value);
-
-                
-
                 });
                 if(callback) {
                     callback();
@@ -64,8 +63,8 @@ teampicker = (function() {
             }
             else {
                 board.clear();
-                $('.selectpicker').selectpicker('refresh');
-                $('#select-div .bs-placeholder .filter-option').text('Please add or select a team here.');
+                selectPicker.selectpicker('refresh');
+                $('#select-div').find('.bs-placeholder').find('.filter-option').text('Please add or select a team here.');
                 if(callback) {
                     callback();
                 }
@@ -74,16 +73,17 @@ teampicker = (function() {
     }
 
     function deleteTeam(teamId, teamName) {
-        var confirmation = confirm('Are you sure you want to remove the team "' + teamName + '"?');
+        let confirmation = confirm('Are you sure you want to remove the team "' + teamName + '"?');
         if(confirmation) {
-            customAjax('DELETE', '/deleteTeam',
+            customAjax('DELETE', _teamsUrl,
                 {
                     teamId: teamId
                 },
                 function(data) {
                    loadSelectOptions(function() {
-                        $('.selectpicker').selectpicker('toggle');
-                        $('#select-div .selectpicker').trigger('change');
+                       let selectPicker = $('#select-div').find('.selectpicker');
+                       selectPicker.selectpicker('toggle');
+                       selectPicker.trigger('change');
                    });
                 }
             );
@@ -92,61 +92,66 @@ teampicker = (function() {
 
     function editTeam(teamId, teamName) {
         editTeamNameModal.open(teamName, function(newTeamName) {
-            customAjax('put', '/editTeamName',
+            customAjax('put', _teamsUrl + '/' + teamId +'/edit',
                 {
-                    teamId: teamId,
+                    /*teamId: teamId,*/
                     newTeamName: newTeamName
                 },
                 function(data) {
                    loadSelectOptions(function() {
-                        $('#select-div .selectpicker').selectpicker('toggle');
-                        $('#select-div .selectpicker').trigger('change');
+                        let selectPicker = $('#select-div').find('.selectpicker');
+                        selectPicker.selectpicker('toggle');
+                        selectPicker.trigger('change');
                    });
                 }
             );
         });
     }
 
-    var handleSearch = function() {
+    let handleSearch = function() {
+        let createDiv = $('#create');
         if($('.no-results').length > 0) {
-            if($('#create').length == 0) {
+            if(createDiv.length === 0) {
                 //add option to create
-                var dropdownMenu = $('#select-div .dropdown-menu .inner');
-                var addOption = $('<li>').attr('id', 'create').appendTo(dropdownMenu);
-                var addLink = $('<a>').appendTo(addOption);
-                var addSpan = $('<span>').addClass('text').text('CREATE THIS TEAM').css('color', 'red');
+                let selectDiv = $('#select-div');
+                let dropdownMenu = selectDiv.find('.dropdown-menu').find('.inner');
+                let addOption = $('<li>').attr('id', 'create').appendTo(dropdownMenu);
+                let addLink = $('<a>').appendTo(addOption);
+                let addSpan = $('<span>').addClass('text').text('CREATE THIS TEAM').css('color', 'red');
                 addSpan.appendTo(addLink);
 
                 addOption.click(function() {
-                    var newText = $('.bs-searchbox>input').val();
+                    let newText = $('.bs-searchbox').children('input').val();
                     createTeamAddRequest(newText, function() {
                         loadSelectOptions(function() {
-                            $('#select-div .selectpicker').trigger('change');
+                            selectDiv.find('.selectpicker').trigger('change');
                         });
                     });
                 });
             }
         }
         else {
-            $('#create').remove();
+            createDiv.remove();
         }
     };
 
     $(document).ready(function() {
         $('body').ploading({action: 'show'});
-
-    	_selectpicker = $('<select>').addClass('selectpicker').attr('data-live-search', 'true');
-    	_selectpicker.appendTo('#select-div');
-    	_selectpicker.selectpicker('refresh');
+        let selectDiv = $('#select-div');
+    	let selectpicker = $('<select>')
+            .addClass('selectpicker')
+            .attr('data-live-search', 'true')
+            .appendTo(selectDiv);
+    	selectpicker.selectpicker('refresh');
 
         loadSelectOptions(function() {
             $('body').ploading({action: 'destroy'});
 
-            $('#select-div .selectpicker').change(function() {
-                var id = $(this).children(":selected").attr('id');
-                var selectedTeamId = _teamsArray[id]._id;
+            selectpicker.change(function() {
+                let id = $(this).children(":selected").attr('id');
                 if(id) {
-                    if(team.getCurrentTeamId() != selectedTeamId) {
+                    let selectedTeamId = _teamsArray[id]._id;
+                    if(team.getCurrentTeamId() !== selectedTeamId) {
                         _socket.emit('join room', selectedTeamId);
                         initializeSocket(_socket);
                     }
@@ -155,11 +160,12 @@ teampicker = (function() {
             });
 
             $('#select-div').click(function(){
-                $('.bs-searchbox>input').attr('placeholder', 'Search through your existing teams or type a new team name');
-                $('.bs-searchbox>input').off('input', handleSearch).on('input', handleSearch);
+                let searchBox = $('.bs-searchbox>input');
+                searchBox.attr('placeholder', 'Search through your existing teams or type a new team name')
+                searchBox.off('input', handleSearch).on('input', handleSearch);
             });
 
-            $('#select-div .selectpicker').trigger('change');
+            selectpicker.trigger('change');
 
         });
 

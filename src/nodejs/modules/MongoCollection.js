@@ -1,7 +1,7 @@
-var mongoUrl = process.env.SCRUM_MONGO;
-var MongoClient = require('mongodb').MongoClient;
+let mongoUrl = process.env.SCRUM_MONGO;
+let MongoClient = require('mongodb').MongoClient;
 MongoCollection = function(collectionName) {
-	var that = this;
+	let that = this;
 	this.collectionName = collectionName;
 	MongoClient.connect(mongoUrl, function(err, db){
 		if(err) { 
@@ -9,7 +9,7 @@ MongoCollection = function(collectionName) {
 		}
 		that.db = db;
 	})
-}
+};
 
 MongoCollection.prototype.getCollection= function(callback) {
 	this.db.collection(this.collectionName, function(error, thisCollection) {
@@ -65,7 +65,7 @@ MongoCollection.prototype.removeOne = function(user, callback) {
 			});
 		}
 	});	
-}
+};
 
 MongoCollection.prototype.updateOne = function(user, updatedData, callback) {
 	this.getCollection(function(error, thisCollection) {
@@ -106,6 +106,6 @@ MongoCollection.prototype.aggregate = function(options, callback) {
 			});
 		}
 	});
-}
+};
 
 module.exports = MongoCollection;

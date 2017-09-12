@@ -3,15 +3,22 @@ const sass = require('gulp-sass');
 const nodemon = require('gulp-nodemon');
 const gulpSupervisor = require('gulp-supervisor');
 const watch = require('gulp-watch');
+const del = require('del');
 
 gulp.task('clean', function() {
     //TODO figure out clean task
+    //return del(['build/**']);
 });
 
 gulp.task('scss', function() {
     gulp.src('src/scss/**')
         .pipe(sass())
         .pipe(gulp.dest('build/assets/css'));
+});
+
+gulp.task('bin', function() {
+    gulp.src('src/bin/**').
+        pipe(gulp.dest('build/bin'));
 });
 
 gulp.task('css', function() {
@@ -46,7 +53,7 @@ gulp.task('fonts', function() {
 
 gulp.task('run', function() {
     nodemon({
-        script: 'build/app.js'
+        script: 'build/bin/www.js'
     });
 });
 
@@ -86,7 +93,7 @@ gulp.task('fonts-debug', function() {
 });
 
 
-gulp.task('build', ['clean', 'scss', 'css', 'nodejs', 'js', 'images', 'fonts', 'views'], function() {
+gulp.task('build', ['clean', 'bin', 'scss', 'css', 'nodejs', 'js', 'images', 'fonts', 'views'], function() {
 
 });
 
