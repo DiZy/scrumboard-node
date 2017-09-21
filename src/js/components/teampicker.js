@@ -92,10 +92,10 @@ teampicker = (function() {
 
     function editTeam(teamId, teamName) {
         editTeamNameModal.open(teamName, function(newTeamName) {
-            customAjax('put', _teamsUrl + '/' + teamId +'/edit',
+            customAjax('patch', _teamsUrl + '/' + teamId,
                 {
                     /*teamId: teamId,*/
-                    newTeamName: newTeamName
+                    name: newTeamName
                 },
                 function(data) {
                    loadSelectOptions(function() {
